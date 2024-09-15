@@ -258,10 +258,10 @@ volume-step=5
 power-button-action='interactive'
 
 [org/gnome/shell]
-app-picker-layout=[{'4999c2ff-841b-41a1-8870-3ef9c4058011': <{'position': <0>}>, 'Utilities': <{'position': <1>}>, 'org.gnome.Snapshot.desktop': <{'position': <2>}>, 'org.gnome.Contacts.desktop': <{'position': <3>}>, 'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Weather.desktop': <{'position': <5>}>, 'org.gnome.clocks.desktop': <{'position': <6>}>, 'org.gnome.Maps.desktop': <{'position': <7>}>, 'org.fedoraproject.MediaWriter.desktop': <{'position': <8>}>, 'simple-scan.desktop': <{'position': <9>}>, 'org.gnome.Totem.desktop': <{'position': <10>}>, 'org.gnome.Rhythmbox3.desktop': <{'position': <11>}>, 'org.gnome.Calculator.desktop': <{'position': <12>}>, 'org.gnome.Settings.desktop': <{'position': <13>}>, 'org.gnome.SystemMonitor.desktop': <{'position': <14>}>, 'org.gnome.Boxes.desktop': <{'position': <15>}>, 'nvidia-settings.desktop': <{'position': <16>}>, 'org.gnome.Tour.desktop': <{'position': <17>}>, 'yelp.desktop': <{'position': <18>}>, 'google-chrome.desktop': <{'position': <19>}>, 'htop.desktop': <{'position': <20>}>, 'org.bleachbit.BleachBit.desktop': <{'position': <21>}>}, {'btop.desktop': <{'position': <0>}>, 'com.github.qarmin.czkawka.desktop': <{'position': <1>}>, 'ca.desrt.dconf-editor.desktop': <{'position': <2>}>, 'com.mattjakeman.ExtensionManager.desktop': <{'position': <3>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <4>}>, 'org.codeberg.dnkl.foot.desktop': <{'position': <5>}>, 'org.codeberg.dnkl.footclient.desktop': <{'position': <6>}>, 'org.codeberg.dnkl.foot-server.desktop': <{'position': <7>}>, 'it.mijorus.gearlever.desktop': <{'position': <8>}>, 'fr.handbrake.ghb.desktop': <{'position': <9>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <10>}>, 'org.kde.kdeconnect.nonplasma.desktop': <{'position': <11>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <12>}>, 'org.kde.kdeconnect.sms.desktop': <{'position': <13>}>, 'org.gnome.World.PikaBackup.desktop': <{'position': <14>}>, 'org.qbittorrent.qBittorrent.desktop': <{'position': <15>}>, 'it.mijorus.smile.desktop': <{'position': <16>}>, 'stacer.desktop': <{'position': <17>}>, 'org.mozilla.thunderbird.desktop': <{'position': <18>}>}, {'timeshift-gtk.desktop': <{'position': <0>}>, 'vlc.desktop': <{'position': <1>}>}]
+app-picker-layout=[{'4999c2ff-841b-41a1-8870-3ef9c4058011': <{'position': <0>}>, 'Utilities': <{'position': <1>}>, 'org.gnome.Snapshot.desktop': <{'position': <2>}>, 'org.gnome.Contacts.desktop': <{'position': <3>}>, 'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Weather.desktop': <{'position': <5>}>, 'org.gnome.clocks.desktop': <{'position': <6>}>, 'org.gnome.Maps.desktop': <{'position': <7>}>, 'org.fedoraproject.MediaWriter.desktop': <{'position': <8>}>, 'simple-scan.desktop': <{'position': <9>}>, 'org.gnome.Totem.desktop': <{'position': <10>}>, 'org.gnome.Rhythmbox3.desktop': <{'position': <11>}>, 'org.gnome.Calculator.desktop': <{'position': <12>}>, 'org.gnome.Settings.desktop': <{'position': <13>}>, 'org.gnome.SystemMonitor.desktop': <{'position': <14>}>, 'org.gnome.Boxes.desktop': <{'position': <15>}>, 'nvidia-settings.desktop': <{'position': <16>}>, 'org.gnome.Tour.desktop': <{'position': <17>}>, 'yelp.desktop': <{'position': <18>}>, 'google-chrome.desktop': <{'position': <19>}>, 'htop.desktop': <{'position': <20>}>, 'org.bleachbit.BleachBit.desktop': <{'position': <21>}>, 'btop.desktop': <{'position': <22>}>, 'com.github.qarmin.czkawka.desktop': <{'position': <23>}>}, {'ca.desrt.dconf-editor.desktop': <{'position': <0>}>, 'com.mattjakeman.ExtensionManager.desktop': <{'position': <1>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <2>}>, 'org.codeberg.dnkl.foot.desktop': <{'position': <3>}>, 'org.codeberg.dnkl.footclient.desktop': <{'position': <4>}>, 'org.codeberg.dnkl.foot-server.desktop': <{'position': <5>}>, 'it.mijorus.gearlever.desktop': <{'position': <6>}>, 'fr.handbrake.ghb.desktop': <{'position': <7>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <8>}>, 'org.kde.kdeconnect.nonplasma.desktop': <{'position': <9>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <10>}>, 'org.kde.kdeconnect.sms.desktop': <{'position': <11>}>, 'org.gnome.World.PikaBackup.desktop': <{'position': <12>}>, 'org.qbittorrent.qBittorrent.desktop': <{'position': <13>}>, 'it.mijorus.smile.desktop': <{'position': <14>}>, 'stacer.desktop': <{'position': <15>}>, 'org.mozilla.thunderbird.desktop': <{'position': <16>}>, 'timeshift-gtk.desktop': <{'position': <17>}>, 'vlc.desktop': <{'position': <18>}>}]
 disabled-extensions=@as []
 enabled-extensions=['background-logo@fedorahosted.org', 'appindicatorsupport@rgcjonas.gmail.com']
-favorite-apps=['org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'org.mozilla.firefox.desktop', 'com.bitwarden.desktop.desktop', 'code.desktop', 'io.beekeeperstudio.Studio.desktop', 'com.usebruno.Bruno.desktop', 'com.logseq.Logseq.desktop', 'discord.desktop', 'com.slack.Slack.desktop', 'org.gnome.Solanum.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Software.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'org.mozilla.firefox.desktop', 'code.desktop', 'io.beekeeperstudio.Studio.desktop', 'com.usebruno.Bruno.desktop', 'com.logseq.Logseq.desktop', 'com.bitwarden.desktop.desktop', 'discord.desktop', 'com.slack.Slack.desktop', 'org.gnome.Solanum.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Software.desktop']
 welcome-dialog-last-shown-version='46.4'
 
 [org/gnome/shell/world-clocks]
@@ -271,7 +271,7 @@ locations=@av []
 check-timestamp=int64 1726246999
 download-updates=false
 first-run=false
-flatpak-purge-timestamp=int64 1726318207
+flatpak-purge-timestamp=int64 1726414189
 install-timestamp=int64 1726246803
 packagekit-historical-updates-timestamp=uint64 1726246803
 update-notification-timestamp=int64 1726246974
@@ -284,8 +284,11 @@ default='67af2a7a-bb72-424a-8245-0c6cebb52301'
 list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '67af2a7a-bb72-424a-8245-0c6cebb52301']
 
 [org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301]
+audible-bell=false
 bold-is-bright=true
+font='MesloLGLDZ Nerd Font 11'
 palette=['rgb(23,20,33)', 'rgb(192,28,40)', 'rgb(38,162,105)', 'rgb(162,115,76)', 'rgb(18,72,139)', 'rgb(163,71,186)', 'rgb(42,161,179)', 'rgb(208,207,204)', 'rgb(94,92,100)', 'rgb(246,97,81)', 'rgb(51,209,122)', 'rgb(233,173,12)', 'rgb(42,123,222)', 'rgb(192,97,203)', 'rgb(51,199,222)', 'rgb(255,255,255)']
+use-system-font=false
 use-theme-colors=true
 use-transparent-background=false
 visible-name='danko'
@@ -303,8 +306,8 @@ view-type='list'
 window-size=(867, 561)
 
 [org/gtk/settings/color-chooser]
-custom-colors=[(0.80392156862745101, 0.0, 0.0, 1.0)]
-selected-color=(true, 0.80392156862745101, 0.0, 0.0, 1.0)
+custom-colors=[(0.090196078431372548, 0.078431372549019607, 0.12941176470588237, 1.0), (0.80392156862745101, 0.0, 0.0, 1.0)]
+selected-color=(true, 0.090196078431372548, 0.078431372549019607, 0.12941176470588237, 1.0)
 
 [org/gtk/settings/file-chooser]
 clock-format='24h'
