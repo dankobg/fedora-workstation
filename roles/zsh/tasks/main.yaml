@@ -5,3 +5,84 @@
   ansible.builtin.dnf:
     name: zsh
     state: latest
+
+- name: Get zsh path
+  ansible.builtin.command: which zsh
+  changed_when: false
+  register: zsh_path
+
+- name: Copy .zshenv
+  ansible.builtin.copy:
+    src: .zshenv
+    dest: "/home/{{ username }}/"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0644"
+
+- name: Copy zsh config files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/home/{{ username }}/.config/zsh"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0644"
+  loop:
+    - ".aliasrc"
+    - ".optionrc"
+    - ".pluginrc"
+    - ".p10k.zsh"
+    - ".zshrc"
+
+- name: Ensure plugins directory exists
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config/zsh/plugins"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+  register: plugins_dir
+
+- name: Clone powerlevel10k repository
+  ansible.builtin.git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    version: master
+    dest: "{{ plugins_dir.path }}/powerlevel10k"
+    depth: 1
+    clone: true
+
+- name: Clone zsh-autosuggestions repository
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    version: master
+    dest: "{{ plugins_dir.path }}/zsh-autosuggestions"
+    depth: 1
+    clone: true
+
+- name: Clone zsh-syntax-highlighting repository
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    version: master
+    dest: "{{ plugins_dir.path }}/zsh-syntax-highlighting"
+    depth: 1
+    clone: true
+
+- name: Clone fzf-tab repository
+  ansible.builtin.git:
+    repo: https://github.com/Aloxaf/fzf-tab.git
+    version: master
+    dest: "{{ plugins_dir.path }}/fzf-tab"
+    depth: 1
+    clone: true
+
+- name: Clone zsh-completions repository
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-completions.git
+    version: master
+    dest: "{{ plugins_dir.path }}/zsh-completions"
+    depth: 1
+    clone: true
+
+- name: Change shell to zsh
+  ansible.builtin.user:
+    name: "{{ username }}"
+    shell: "{{ zsh_path.stdout }}"

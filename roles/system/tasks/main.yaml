@@ -56,5 +56,6 @@
       - "gawk"
       - "iptables"
       - "nano"
+      - "wl-clipboard"
     state: latest
   notify: Remove packages not needed anymore
