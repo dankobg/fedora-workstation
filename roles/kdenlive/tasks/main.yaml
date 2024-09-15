@@ -1,0 +1,7 @@
+---
+# tasks file for kdenlive
+
+- name: Install kdenlive
+  ansible.builtin.dnf:
+    name: kdenlive
+    state: latest

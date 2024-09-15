@@ -1,0 +1,7 @@
+---
+# tasks file for ripgrep
+
+- name: Install ripgrep
+  ansible.builtin.dnf:
+    name: ripgrep
+    state: latest

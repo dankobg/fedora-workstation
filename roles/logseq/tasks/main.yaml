@@ -1,0 +1,7 @@
+---
+# tasks file for logseq
+
+- name: Install Logseq
+  community.general.flatpak:
+    name: com.logseq.Logseq
+    state: latest

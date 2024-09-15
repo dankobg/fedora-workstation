@@ -1,0 +1,7 @@
+---
+# tasks file for bat
+
+- name: Install bat
+  ansible.builtin.dnf:
+    name: bat
+    state: latest

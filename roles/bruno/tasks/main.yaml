@@ -1,0 +1,7 @@
+---
+# tasks file for bruno
+
+- name: Install Bruno
+  community.general.flatpak:
+    name: com.usebruno.Bruno
+    state: latest

@@ -1,0 +1,109 @@
+---
+# tasks file for git
+
+- name: Install git
+  ansible.builtin.dnf:
+    name: git
+    state: latest
+
+- name: Configure git config
+  block:
+    - name: Ensure git config directory exists
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.config/git"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      register: config_dir
+
+    - name: Ensure git config file exists
+      ansible.builtin.file:
+        path: "{{ config_dir.path }}/config"
+        state: touch
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+        modification_time: preserve
+        access_time: preserve
+      register: config_file
+
+    - name: Set color ui
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: color.ui
+        scope: file
+        value: auto
+        state: present
+
+    - name: Set color status
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: color.status
+        scope: file
+        value: auto
+        state: present
+
+    - name: Set color branch
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: color.branch
+        scope: file
+        value: auto
+        state: present
+
+    - name: Set diff colorMoved
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: diff.colorMoved
+        scope: file
+        value: zebra
+        state: present
+
+    - name: Set core editor
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: core.editor
+        scope: file
+        value: "{{ git_core_editor }}"
+        state: present
+
+    - name: Set user name
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: user.name
+        scope: file
+        value: "{{ git_user_name }}"
+        state: present
+
+    - name: Set user email
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: user.email
+        scope: file
+        value: "{{ git_user_email }}"
+        state: present
+
+    - name: Set init default branch
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: init.defaultBranch
+        scope: file
+        value: main
+        state: present
+
+    - name: Set pull rebase
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: pull.rebase
+        scope: file
+        value: true
+        state: present
+
+    - name: Set fetch prune
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: fetch.prune
+        scope: file
+        value: true
+        state: present

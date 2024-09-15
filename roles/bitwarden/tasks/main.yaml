@@ -1,0 +1,7 @@
+---
+# tasks file for bitwarden
+
+- name: Install Bitwarden
+  community.general.flatpak:
+    name: com.bitwarden.desktop
+    state: latest

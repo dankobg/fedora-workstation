@@ -1,0 +1,7 @@
+---
+# tasks file for traceroute
+
+- name: Install traceroute
+  ansible.builtin.dnf:
+    name: traceroute
+    state: latest

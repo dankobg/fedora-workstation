@@ -1,0 +1,46 @@
+---
+# tasks file for xh
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/ducaale/xh/releases/latest
+    return_content: true
+  register: xh_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    xh_latest_release_version: "{{ xh_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: x86_64
+      arm: arm64
+  ansible.builtin.set_fact:
+    xh_release_artifact: "xh-{{ xh_latest_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-musl"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: xh_
+  register: xh_tempdir
+
+- name: Unarchive artifact
+  ansible.builtin.unarchive:
+    src: "https://github.com/ducaale/xh/releases/download/{{ xh_latest_release_version }}/{{ xh_release_artifact }}.tar.gz"
+    dest: "{{ xh_tempdir.path }}"
+    remote_src: true
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ xh_tempdir.path }}/{{ xh_release_artifact }}/xh"
+    dest: /usr/local/bin
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ xh_tempdir.path }}"
+    state: absent

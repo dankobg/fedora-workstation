@@ -1,0 +1,7 @@
+---
+# tasks file for discord
+
+- name: Install Discord
+  ansible.builtin.dnf:
+    name: discord
+    state: latest

@@ -1,0 +1,9 @@
+---
+# tasks file for handbrake
+
+- name: Install HandBrake
+  ansible.builtin.dnf:
+    name:
+      - handbrake
+      - handbrake-gui
+    state: latest

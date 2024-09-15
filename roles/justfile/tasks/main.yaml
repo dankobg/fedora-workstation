@@ -1,0 +1,7 @@
+---
+# tasks file for justfile
+
+- name: Install justfile
+  ansible.builtin.dnf:
+    name: just
+    state: latest

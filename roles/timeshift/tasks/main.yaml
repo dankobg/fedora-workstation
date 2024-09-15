@@ -1,0 +1,7 @@
+---
+# tasks file for timeshift
+
+- name: Install Timeshift
+  ansible.builtin.dnf:
+    name: timeshift
+    state: latest

@@ -1,0 +1,7 @@
+---
+# tasks file for gimp
+
+- name: Install gimp
+  ansible.builtin.dnf:
+    name: gimp
+    state: latest

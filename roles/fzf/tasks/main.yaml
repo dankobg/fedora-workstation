@@ -1,0 +1,7 @@
+---
+# tasks file for fzf
+
+- name: Install fzf
+  ansible.builtin.dnf:
+    name: fzf
+    state: latest

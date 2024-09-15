@@ -1,0 +1,6 @@
+---
+# handlers file for system
+
+- name: Remove packages not needed anymore
+  ansible.builtin.dnf:
+    autoremove: true

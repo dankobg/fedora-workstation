@@ -1,0 +1,7 @@
+---
+# tasks file for nmap
+
+- name: Install nmap
+  ansible.builtin.dnf:
+    name: nmap
+    state: latest

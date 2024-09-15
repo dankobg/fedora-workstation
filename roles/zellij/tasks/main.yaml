@@ -1,0 +1,46 @@
+---
+# tasks file for zellij
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/zellij-org/zellij/releases/latest
+    return_content: true
+  register: zellij_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    zellij_latest_release_version: "{{ zellij_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: x86_64
+      arm: aarch64
+  ansible.builtin.set_fact:
+    zellij_release_artifact: "zellij-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-musl"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: zellij_
+  register: zellij_tempdir
+
+- name: Unarchive artifact
+  ansible.builtin.unarchive:
+    src: "https://github.com/zellij-org/zellij/releases/download/{{ zellij_latest_release_version }}/{{ zellij_release_artifact }}.tar.gz"
+    dest: "{{ zellij_tempdir.path }}"
+    remote_src: true
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ zellij_tempdir.path }}/zellij"
+    dest: /usr/local/bin
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ zellij_tempdir.path }}"
+    state: absent

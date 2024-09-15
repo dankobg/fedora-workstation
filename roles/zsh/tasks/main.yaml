@@ -1,0 +1,7 @@
+---
+# tasks file for zsh
+
+- name: Install zsh
+  ansible.builtin.dnf:
+    name: zsh
+    state: latest

@@ -1,0 +1,7 @@
+---
+# tasks file for stacer
+
+- name: Install Stacer
+  ansible.builtin.dnf:
+    name: stacer
+    state: latest

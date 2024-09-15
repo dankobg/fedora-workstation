@@ -1,0 +1,14 @@
+---
+- name: Setup Fedora Gnome workstation
+  hosts: workstation
+  connection: local
+  vars_files:
+    - group_vars/all/vars.yaml
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Include selected roles
+      ansible.builtin.include_role:
+        name: "{{ item }}"
+      loop: "{{ roles_selected }}"

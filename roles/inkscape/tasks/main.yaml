@@ -1,0 +1,7 @@
+---
+# tasks file for inkscape
+
+- name: Install Inkscape
+  ansible.builtin.dnf:
+    name: inkscape
+    state: latest

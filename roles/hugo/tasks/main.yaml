@@ -1,0 +1,7 @@
+---
+# tasks file for hugo
+
+- name: Install Hugo
+  ansible.builtin.dnf:
+    name: hugo
+    state: latest

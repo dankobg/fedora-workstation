@@ -1,0 +1,7 @@
+---
+# tasks file for obs
+
+- name: Install obs
+  ansible.builtin.dnf:
+    name: obs-studio
+    state: latest

@@ -1,0 +1,46 @@
+---
+# tasks file for lazygit
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+    return_content: true
+  register: lazygit_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    lazygit_latest_release_version: "{{ lazygit_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: x86_64
+      arm: arm64
+  ansible.builtin.set_fact:
+    lazygit_release_artifact: "lazygit_{{ lazygit_latest_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: lazygit_
+  register: lazygit_tempdir
+
+- name: Unarchive artifact
+  ansible.builtin.unarchive:
+    src: "https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_latest_release_version }}/{{ lazygit_release_artifact }}.tar.gz"
+    dest: "{{ lazygit_tempdir.path }}"
+    remote_src: true
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ lazygit_tempdir.path }}/lazygit"
+    dest: /usr/local/bin/
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ lazygit_tempdir.path }}"
+    state: absent

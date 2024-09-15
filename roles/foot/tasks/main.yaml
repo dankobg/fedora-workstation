@@ -1,0 +1,7 @@
+---
+# tasks file for foot
+
+- name: Install foot
+  ansible.builtin.dnf:
+    name: foot
+    state: latest

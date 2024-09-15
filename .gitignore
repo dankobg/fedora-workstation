@@ -1,0 +1,11 @@
+vault_password.txt
+
+*.retry
+*.log
+
+.DS_Store              
+Thumbs.db
+
+.idea/
+.vscode/
+test.yaml

@@ -1,0 +1,60 @@
+---
+# tasks file for fonts
+
+- name: Set the fonts directory fact
+  ansible.builtin.set_fact:
+    fonts_directory: "{{ fonts_system_directory if fonts_installation == 'system' else '/home/' + username + '/' + fonts_user_directory }}"
+
+- name: Ensure fonts directory exists
+  ansible.builtin.file:
+    path: "{{ fonts_directory }}"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+    modification_time: preserve
+    access_time: preserve
+
+- name: Copy Microsoft fonts
+  ansible.builtin.copy:
+    src: microsoft
+    dest: "{{ fonts_directory }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0644"
+  when: fonts_enable_microsoft
+  notify: Update font cache
+
+- name: Remove microsoft fonts
+  ansible.builtin.file:
+    path: "{{ fonts_directory }}/microsoft"
+    state: absent
+  when: not fonts_enable_microsoft
+  notify: Update font cache
+
+- name: Get the Nerd Fonts latest GitHub release
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest
+    return_content: true
+  register: fonts_nerd_fonts_latest_release_data
+
+- name: Set the latest Nerd Fonts version
+  ansible.builtin.set_fact:
+    fonts_nerd_fonts_latest_version: "{{ fonts_nerd_fonts_latest_release_data.json.tag_name }}"
+
+- name: Ensure individual font directories exist
+  ansible.builtin.file:
+    path: "{{ fonts_directory }}/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop: "{{ fonts_nerd_fonts }}"
+
+- name: Unarchive remote Nerd Fonts
+  ansible.builtin.unarchive:
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ fonts_nerd_fonts_latest_version }}/{{ item }}.tar.xz"
+    dest: "{{ fonts_directory }}/{{ item }}"
+    remote_src: true
+  loop: "{{ fonts_nerd_fonts }}"
+  notify: Update font cache

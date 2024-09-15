@@ -1,0 +1,48 @@
+---
+# tasks file for devspace
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/devspace-sh/devspace/releases/latest
+    return_content: true
+  register: devspace_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    devspace_latest_release_version: "{{ devspace_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: amd64
+      arm: arm64
+  ansible.builtin.set_fact:
+    devspace_release_artifact: "devspace-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: devspace_
+  register: devspace_tempdir
+
+- name: Download artifact
+  ansible.builtin.get_url:
+    url: "https://github.com/devspace-sh/devspace/releases/download/{{ devspace_latest_release_version }}/{{ devspace_release_artifact }}"
+    dest: "{{ devspace_tempdir.path }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ devspace_tempdir.path }}/{{ devspace_release_artifact }}"
+    dest: /usr/local/bin/devspace
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ devspace_tempdir.path }}"
+    state: absent

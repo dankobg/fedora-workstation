@@ -1,0 +1,7 @@
+---
+# tasks file for czkawka
+
+- name: Install czkawka
+  community.general.flatpak:
+    name: com.github.qarmin.czkawka
+    state: latest

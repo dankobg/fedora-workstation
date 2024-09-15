@@ -1,0 +1,6 @@
+---
+# tasks file for davinciresolve
+
+- name: TODO, Not implemented
+  ansible.builtin.debug:
+    msg: "Need to fill a form maybe?"

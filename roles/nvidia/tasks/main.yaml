@@ -1,0 +1,36 @@
+---
+# tasks file for nvidia
+
+- name: Install Nvidia GPU drivers
+  ansible.builtin.dnf:
+    name:
+      - akmod-nvidia
+      - xorg-x11-drv-nvidia-cuda
+      - intel-media-driver
+    state: latest
+    update_cache: true
+
+- name: Check the kernel module version
+  ansible.builtin.command: modinfo -F version nvidia
+  register: kernel_module_status
+  changed_when: false
+  failed_when: >
+    not (kernel_module_status.stdout | regex_search('^\d+\.\d+\.\d+$') or 'Module nvidia not found' in kernel_module_status.stdout)
+
+- name: Display the kernel module status
+  ansible.builtin.debug:
+    msg: "{{ kernel_module_status.stdout }}"
+  failed_when: false
+
+- name: Wait for the kernel module to be built
+  ansible.builtin.pause:
+    seconds: 30
+  when: "'Module nvidia not found' in kernel_module_status.stdout"
+  failed_when: false
+
+- name: Check if a reboot is required
+  ansible.builtin.command: dnf needs-restarting -r -s
+  register: reboot_required
+  changed_when: reboot_required.rc == 1
+  failed_when: false
+  notify: Reboot machine

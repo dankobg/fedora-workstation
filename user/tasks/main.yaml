@@ -1,0 +1,24 @@
+---
+# tasks file for user
+
+- name: Set groups
+  ansible.builtin.set_fact:
+    groups_wanted:
+      - "{{ username }}"
+      - wheel
+      # - docker
+
+- name: Ensure groups exist
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ groups_wanted }}"
+
+- name: Setup user
+  ansible.builtin.user:
+    name: "{{ username }}"
+    password: "{{ user_hashed_password }}"
+    create_home: true
+    groups: "{{ groups_wanted }}"
+    append: true
+    state: present

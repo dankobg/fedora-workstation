@@ -1,0 +1,10 @@
+---
+# tasks file for ssh
+
+- name: Copy SSH keys
+  ansible.builtin.copy:
+    src: keys/
+    dest: "/home/{{ username }}/.ssh"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0600"

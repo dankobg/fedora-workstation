@@ -1,0 +1,49 @@
+---
+# tasks file for kitty
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/kovidgoyal/kitty/releases/latest
+    return_content: true
+  register: kitty_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    kitty_latest_release_version: "{{ kitty_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: x86_64
+      arm: arm64
+  ansible.builtin.set_fact:
+    kitty_release_artifact: "kitty-{{ kitty_latest_release_version[1:] }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: kitty_
+  register: kitty_tempdir
+
+- name: Unarchive artifact
+  ansible.builtin.unarchive:
+    src: "https://github.com/kovidgoyal/kitty/releases/download/{{ kitty_latest_release_version }}/{{ kitty_release_artifact }}.txz"
+    dest: "{{ kitty_tempdir.path }}"
+    remote_src: true
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ kitty_tempdir.path }}/bin/{{ item }}"
+    dest: /usr/local/bin
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+  loop:
+    - kitty
+    - kitten
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ kitty_tempdir.path }}"
+    state: absent

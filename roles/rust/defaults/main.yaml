@@ -1,0 +1,4 @@
+---
+# defaults file for rust
+
+rust_installation_method: rustup

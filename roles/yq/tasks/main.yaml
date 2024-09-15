@@ -1,0 +1,46 @@
+---
+# tasks file for yq
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/mikefarah/yq/releases/latest
+    return_content: true
+  register: yq_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    yq_latest_release_version: "{{ yq_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: amd64
+      arm: arm64
+  ansible.builtin.set_fact:
+    yq_release_artifact: "yq_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: yq_
+  register: yq_tempdir
+
+- name: Download artifact
+  ansible.builtin.get_url:
+    url: "https://github.com/mikefarah/yq/releases/download/{{ yq_latest_release_version }}/{{ yq_release_artifact }}"
+    dest: "{{ yq_tempdir.path }}"
+    mode: a+x
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ yq_tempdir.path }}/{{ yq_release_artifact }}"
+    dest: /usr/local/bin/yq
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ yq_tempdir.path }}"
+    state: absent

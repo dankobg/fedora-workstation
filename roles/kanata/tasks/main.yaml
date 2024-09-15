@@ -1,0 +1,40 @@
+---
+# tasks file for kanata
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/jtroo/kanata/releases/latest
+    return_content: true
+  register: kanata_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    kanata_latest_release_version: "{{ kanata_latest_release_data.json.tag_name }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: kanata_
+  register: kanata_tempdir
+
+- name: Download artifact
+  ansible.builtin.get_url:
+    url: "https://github.com/jtroo/kanata/releases/download/{{ kanata_latest_release_version }}/kanata"
+    dest: "{{ kanata_tempdir.path }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ kanata_tempdir.path }}/kanata"
+    dest: /usr/local/bin
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ kanata_tempdir.path }}"
+    state: absent

@@ -1,0 +1,7 @@
+---
+# tasks file for gearlever
+
+- name: Install Gearlever
+  community.general.flatpak:
+    name: it.mijorus.gearlever
+    state: latest

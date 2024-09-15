@@ -1,0 +1,7 @@
+---
+# tasks file for fd
+
+- name: Install fd
+  ansible.builtin.dnf:
+    name: fd-find
+    state: latest

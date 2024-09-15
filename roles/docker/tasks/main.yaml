@@ -1,0 +1,63 @@
+---
+# tasks file for docker
+
+- name: Ensure DNF config-manager plugin exists to manage repository
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: latest
+
+- name: Add repo
+  ansible.builtin.command:
+    cmd: sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Ensure old packages don't exist
+  ansible.builtin.dnf:
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-selinux
+      - docker-engine-selinux
+      - docker-engine
+    state: absent
+
+- name: Install Docker
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+
+- name: Add users to docker group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users }}"
+
+# todo: use a template
+- name: Copy daemon.json
+  ansible.builtin.copy:
+    src: daemon.json
+    dest: /etc/docker/
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart docker daemon
+
+- name: Ensure Docker is started and enabled at boot
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - docker
+    - containerd

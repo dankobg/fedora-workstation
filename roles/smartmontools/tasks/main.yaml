@@ -1,0 +1,7 @@
+---
+# tasks file for smartmontools
+
+- name: Install smartmontools
+  ansible.builtin.dnf:
+    name: smartmontools
+    state: latest

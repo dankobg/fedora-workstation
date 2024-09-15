@@ -1,0 +1,25 @@
+---
+# tasks file for multimedia
+
+- name: Install multimedia codecs
+  ansible.builtin.dnf:
+    name:
+      - '@Multimedia'
+      - '@Sound and Video'
+      - 'gstreamer1-plugins-base'
+      - 'gstreamer1-plugins-bad-*'
+      - 'gstreamer1-plugins-good-*'
+      - 'gstreamer1-plugin-openh264'
+      - 'gstreamer1-libav'
+      - 'lame*'
+      - 'ffmpeg-libs'
+      - 'ffmpegthumbnailer'
+      - 'mozilla-openh264'
+    exclude:
+      - 'gstreamer1-plugins-bad-free-devel'
+      - 'lame-devel'
+      - 'PackageKit-gstreamer-plugin'
+    state: latest
+    enablerepo: fedora-cisco-openh264
+    allowerasing: true
+    install_weak_deps: false

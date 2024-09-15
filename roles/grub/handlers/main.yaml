@@ -1,0 +1,6 @@
+---
+# handlers file for grub
+
+- name: Regenerate GRUB configuration file
+  ansible.builtin.command: grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
+  changed_when: true

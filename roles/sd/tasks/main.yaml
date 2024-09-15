@@ -1,0 +1,7 @@
+---
+# tasks file for sd
+
+- name: Install sd
+  ansible.builtin.dnf:
+    name: sd
+    state: latest

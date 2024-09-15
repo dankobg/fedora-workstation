@@ -1,0 +1,7 @@
+---
+# tasks file for zoxide
+
+- name: Install zoxide
+  ansible.builtin.dnf:
+    name: zoxide
+    state: latest

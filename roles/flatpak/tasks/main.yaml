@@ -1,0 +1,18 @@
+---
+# tasks file for flatpak
+
+- name: Install Flatpak
+  ansible.builtin.dnf:
+    name: flatpak
+    state: latest
+
+- name: Add Flathub repository
+  community.general.flatpak_remote:
+    name: flathub
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    state: present
+    enabled: true
+
+- name: Update Flatpak metadata
+  ansible.builtin.command: flatpak update --appstream
+  changed_when: true

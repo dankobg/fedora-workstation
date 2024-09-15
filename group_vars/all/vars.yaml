@@ -1,0 +1,144 @@
+---
+username: danko
+hostname: fedora
+user_hashed_password: "{{ vault_user_hashed_password }}"
+laptop: false
+dual_boot: true
+sudo_password: "{{ vault_sudo_password }}"
+fedora_ssh_private_key: "{{ vault_fedora_ssh_private_key }}"
+
+git_user_name: "{{ vault_git_user_name }}"
+git_user_email: "{{ vault_git_user_email }}"
+git_core_editor: "hx" # or code --wait --new-window
+
+archs:
+  arm: arm
+  armv6l: arm
+  armv7l: arm
+  armv8l: arm
+  armv9l: arm
+  aarch64: arm
+  arm64: arm
+  x86_64: amd
+  x86-64: amd
+  amd64: amd
+
+roles_selected:
+  - system
+  - nvidia
+  - firmware
+  - grub
+  - fstrim
+  - zram
+  - user
+  - ssh
+  - dnf
+  - multimedia
+  - flatpak
+  - fonts
+  - gnome
+  - libreoffice
+  - age
+  - ansible
+  - ansible-lint
+  - atlas
+  - bat
+  - beekeeper-studio
+  - bitwarden
+  - bitwarden-cli
+  - bleachbit
+  - bruno
+  - btop
+  - czkawka
+  - dconf-editor
+  - deno
+  - devspace
+  - discord
+  - docker
+  - dust
+  - extension-manager
+  - eza
+  - fastfetch
+  - fd
+  - firefox
+  - flatseal
+  - foot
+  - fzf
+  - gearlever
+  - gh-cli
+  - git
+  - git-delta
+  - glow
+  - go
+  - golangci-lint
+  - google-chrome
+  - goreleaser
+  - handbrake
+  - helix
+  - helm
+  - hostctl
+  - httpie
+  - hugo
+  - iftop
+  - jq
+  - justfile
+  - k3d
+  - k9s
+  - kanata
+  - kde-connect
+  - kitty
+  - ksops
+  - kubectl
+  - kubectx
+  - kubens
+  - kustomize
+  - lazydocker
+  - lazygit
+  - logseq
+  - mkcert
+  - ncdu
+  - net-tools
+  - nmap
+  - node
+  - onefetch
+  - pika-backup
+  - protoc
+  - python
+  - qbittorrent
+  - rclone
+  - restic
+  - ripgrep
+  - rsync
+  - rust
+  - sd
+  - slack
+  - smartmontools
+  - smile
+  - solanum
+  - sops
+  - stacer
+  - taskfile
+  - tcpdump
+  - thunderbird
+  - timeshift
+  - tlrc
+  - traceroute
+  - vlc
+  - vscode
+  - whois
+  - xh
+  - yq
+  - zed
+  - zellij
+  - zoxide
+  - zsh
+
+  # maybe tag these with (audio/video/editting or something, i don't use them right now)
+  # - audacity
+  # - gimp
+  # - inkscape
+  # - obs
+  # - kdenlive
+  # - davinciresolve
+  # - krita
+  # - tlp

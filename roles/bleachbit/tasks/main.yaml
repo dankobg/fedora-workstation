@@ -1,0 +1,7 @@
+---
+# tasks file for bleachbit
+
+- name: Install Bleachbit
+  ansible.builtin.dnf:
+    name: bleachbit
+    state: latest

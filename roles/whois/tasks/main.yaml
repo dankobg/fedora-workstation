@@ -1,0 +1,7 @@
+---
+# tasks file for whois
+
+- name: Install whois
+  ansible.builtin.dnf:
+    name: whois
+    state: latest

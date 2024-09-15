@@ -1,0 +1,60 @@
+---
+# tasks file for system
+
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+
+- name: Copy hosts file
+  ansible.builtin.copy:
+    src: hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Update DNF package cache
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_cache: true
+    update_only: true
+
+- name: Upgrade all packages to the latest version
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Install development tools and libraries group packages
+  ansible.builtin.dnf:
+    name:
+      - "@Development Tools"
+      - "@C Development Tools and Libraries"
+    state: latest
+  notify: Remove packages not needed anymore
+
+- name: Install common core packages
+  ansible.builtin.dnf:
+    name:
+      - "dnf-plugins-core"
+      - "git"
+      - "openssl"
+      - "curl"
+      - "wget"
+      - "tar"
+      - "zip"
+      - "unzip"
+      - "gzip"
+      - "gunzip"
+      - "bzip2"
+      - "make"
+      - "pwgen"
+      - "mkpasswd"
+      - "htop"
+      - "sed"
+      - "tree"
+      - "gawk"
+      - "iptables"
+      - "nano"
+    state: latest
+  notify: Remove packages not needed anymore

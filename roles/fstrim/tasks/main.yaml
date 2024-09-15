@@ -1,0 +1,20 @@
+---
+# tasks file for fstrim
+
+- name: Copy fstrim systemd service and timer files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/system
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - fstrim.service
+    - fstrim.timer
+  notify: Reload systemd daemon
+
+- name: Start and enable fstrim timer
+  ansible.builtin.service:
+    name: fstrim.timer
+    state: started
+    enabled: true

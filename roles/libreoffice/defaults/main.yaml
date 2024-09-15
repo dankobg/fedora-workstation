@@ -1,0 +1,7 @@
+---
+# defaults file for libreoffice
+
+libreoffice_apps:
+  - 'libreoffice-calc'
+  - 'libreoffice-impress'
+  - 'libreoffice-writer'

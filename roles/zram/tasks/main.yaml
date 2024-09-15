@@ -1,0 +1,11 @@
+---
+# tasks file for zram
+
+- name: Copy zram-generator.conf
+  ansible.builtin.copy:
+    src: zram-generator.conf
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd daemon

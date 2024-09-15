@@ -1,0 +1,46 @@
+---
+# tasks file for k9s
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/derailed/k9s/releases/latest
+    return_content: true
+  register: k9s_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    k9s_latest_release_version: "{{ k9s_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: amd64
+      arm: arm64
+  ansible.builtin.set_fact:
+    k9s_release_artifact: "k9s_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: k9s_
+  register: k9s_tempdir
+
+- name: Unarchive artifact
+  ansible.builtin.unarchive:
+    src: "https://github.com/derailed/k9s/releases/download/{{ k9s_latest_release_version }}/{{ k9s_release_artifact }}.tar.gz"
+    dest: "{{ k9s_tempdir.path }}"
+    remote_src: true
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ k9s_tempdir.path }}/k9s"
+    dest: /usr/local/bin/
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ k9s_tempdir.path }}"
+    state: absent

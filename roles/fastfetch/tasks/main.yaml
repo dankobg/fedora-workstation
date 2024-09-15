@@ -1,0 +1,49 @@
+---
+# tasks file for fastfetch
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest
+    return_content: true
+  register: fastfetch_latest_release_data
+
+- name: Set the latest release version
+  ansible.builtin.set_fact:
+    fastfetch_latest_release_version: "{{ fastfetch_latest_release_data.json.tag_name }}"
+
+- name: Set the release artifact
+  vars:
+    arch_name:
+      amd: amd64
+      arm: aarch64
+  ansible.builtin.set_fact:
+    fastfetch_release_artifact: "fastfetch-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+- name: Create download temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: fastfetch_
+  register: fastfetch_tempdir
+
+- name: Unarchive artifact
+  ansible.builtin.unarchive:
+    src: "https://github.com/fastfetch-cli/fastfetch/releases/download/{{ fastfetch_latest_release_version }}/{{ fastfetch_release_artifact }}.tar.gz"
+    dest: "{{ fastfetch_tempdir.path }}"
+    remote_src: true
+
+- name: Copy binary
+  ansible.builtin.copy:
+    src: "{{ fastfetch_tempdir.path }}/{{ fastfetch_release_artifact }}/usr/bin/{{ item }}"
+    dest: /usr/local/bin/
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: a+x
+    remote_src: true
+  loop:
+    - fastfetch
+    - flashfetch
+
+- name: Cleanup temp files
+  ansible.builtin.file:
+    path: "{{ fastfetch_tempdir.path }}"
+    state: absent

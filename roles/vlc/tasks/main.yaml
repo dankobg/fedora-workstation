@@ -1,0 +1,7 @@
+---
+# tasks file for vlc
+
+- name: Install VLC
+  ansible.builtin.dnf:
+    name: vlc
+    state: latest

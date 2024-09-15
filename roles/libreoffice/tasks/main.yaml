@@ -1,0 +1,7 @@
+---
+# tasks file for libreoffice
+
+- name: Install LibreOffice apps
+  ansible.builtin.dnf:
+    name: "{{ libreoffice_apps }}"
+    state: latest
