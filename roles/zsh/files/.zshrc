@@ -31,6 +31,8 @@ bindkey '^[[3;5~' kill-word
 bindkey '^H' backward-kill-word
 bindkey '^[[1;5D' backward-word 
 bindkey '^[[1;5C' forward-word
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
 
 zstyle :compinstall filename '$ZDOTDIR/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
