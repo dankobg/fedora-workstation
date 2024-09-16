@@ -26,6 +26,11 @@ setopt nobeep
 bindkey -e
 bindkey '^P' history-search-backward
 bindkey '^N' history-search-forward
+bindkey '^[[3~' delete-char
+bindkey '^[[3;5~' kill-word
+bindkey '^H' backward-kill-word
+bindkey '^[[1;5D' backward-word 
+bindkey '^[[1;5C' forward-word
 
 zstyle :compinstall filename '$ZDOTDIR/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
