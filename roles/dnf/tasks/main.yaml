@@ -2,9 +2,9 @@
 # tasks file for dnf
 
 - name: Copy DNF configuration file
-  ansible.builtin.copy:
-    src: dnf.conf
-    dest: /etc/dnf/
+  ansible.builtin.template:
+    src: dnf.conf.j2
+    dest: /etc/dnf/dnf.conf
     owner: root
     group: root
     mode: "0644"

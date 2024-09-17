@@ -1,2 +1,24 @@
 ---
 # defaults file for system
+
+system_common_packages:
+  - dnf-plugins-core
+  - git
+  - openssl
+  - curl
+  - wget
+  - tar
+  - zip
+  - unzip
+  - gzip
+  - bzip2
+  - make
+  - pwgen
+  - mkpasswd
+  - htop
+  - sed
+  - tree
+  - gawk
+  - iptables
+  - nano
+  - wl-clipboard

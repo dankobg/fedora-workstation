@@ -13,6 +13,6 @@
     state: present
     enabled: true
 
-- name: Update Flatpak metadata
+- name: Update Flatpak appstream metadata
   ansible.builtin.command: flatpak update --appstream
-  changed_when: true
+  changed_when: false

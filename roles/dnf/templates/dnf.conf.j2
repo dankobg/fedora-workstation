@@ -1,0 +1,21 @@
+[main]
+gpgcheck={{ dnf_conf.gpgcheck | default(True)}}
+installonly_limit={{ dnf_conf.installonly_limit | default(3)}}
+clean_requirements_on_remove={{ dnf_conf.clean_requirements_on_remove | default(True)}}
+best={{ dnf_conf.best | default(False)}}
+skip_if_unavailable={{ dnf_conf.skip_if_unavailable | default(True)}}
+fastestmirror={{ dnf_conf.fastestmirror | default(True)}}
+max_parallel_downloads={{ dnf_conf.max_parallel_downloads | default(10)}}
+deltarpm={{ dnf_conf.deltarpm | default(True)}}
+defaultyes={{ dnf_conf.defaultyes | default(True)}}
+assumeyes={{ dnf_conf.assumeyes | default(False)}}
+
+{% for key, value in dnf_conf.items() %}
+{% if key not in ['gpgcheck', 'installonly_limit', 'clean_requirements_on_remove', 'best', 'skip_if_unavailable', 'fastestmirror', 'max_parallel_downloads', 'deltarpm', 'defaultyes', 'assumeyes'] %}
+{% if value is boolean %}
+{{ key }}={{ value | ternary('True', 'False') }}
+{% else %}
+{{ key }}={{ value }}
+{% endif %}
+{% endif %}
+{% endfor %}

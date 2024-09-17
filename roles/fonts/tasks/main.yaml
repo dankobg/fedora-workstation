@@ -3,7 +3,7 @@
 
 - name: Set the fonts directory fact
   ansible.builtin.set_fact:
-    fonts_directory: "{{ fonts_system_directory if fonts_installation == 'system' else '/home/' + username + '/' + fonts_user_directory }}"
+    fonts_directory: "{{ fonts_system_directory if fonts_installation == 'system' else fonts_user_directory }}"
 
 - name: Ensure fonts directory exists
   ansible.builtin.file:
@@ -12,25 +12,6 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: "0755"
-    modification_time: preserve
-    access_time: preserve
-
-- name: Copy Microsoft fonts
-  ansible.builtin.copy:
-    src: microsoft
-    dest: "{{ fonts_directory }}"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: "0644"
-  when: fonts_enable_microsoft
-  notify: Update font cache
-
-- name: Remove microsoft fonts
-  ansible.builtin.file:
-    path: "{{ fonts_directory }}/microsoft"
-    state: absent
-  when: not fonts_enable_microsoft
-  notify: Update font cache
 
 - name: Get the Nerd Fonts latest GitHub release
   ansible.builtin.uri:
@@ -44,17 +25,43 @@
 
 - name: Ensure individual font directories exist
   ansible.builtin.file:
-    path: "{{ fonts_directory }}/{{ item }}"
+    path: "{{ fonts_directory }}/{{ item.name }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{ 'root' if fonts_installation == 'system' else username }}"
+    group: "{{ 'root' if fonts_installation == 'system' else username }}"
     mode: "0755"
-  loop: "{{ fonts_nerd_fonts }}"
+  loop: "{{ fonts_nerd_fonts | selectattr('state', '==', 'present') }}"
 
 - name: Unarchive remote Nerd Fonts
   ansible.builtin.unarchive:
-    src: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ fonts_nerd_fonts_latest_version }}/{{ item }}.tar.xz"
-    dest: "{{ fonts_directory }}/{{ item }}"
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ fonts_nerd_fonts_latest_version }}/{{ item.name }}.tar.xz"
+    dest: "{{ fonts_directory }}/{{ item.name }}"
+    owner: "{{ 'root' if fonts_installation == 'system' else username }}"
+    group: "{{ 'root' if fonts_installation == 'system' else username }}"
+    mode: "0644"
     remote_src: true
-  loop: "{{ fonts_nerd_fonts }}"
+  loop: "{{ fonts_nerd_fonts | selectattr('state', '==', 'present') }}"
   notify: Update font cache
+
+- name: Copy Microsoft fonts
+  ansible.builtin.copy:
+    src: microsoft
+    dest: "{{ fonts_directory }}"
+    owner: "{{ 'root' if fonts_installation == 'system' else username }}"
+    group: "{{ 'root' if fonts_installation == 'system' else username }}"
+    mode: "0755"
+  when: fonts_enable_microsoft
+  notify: Update font cache
+
+- name: Remove microsoft fonts
+  ansible.builtin.file:
+    path: "{{ fonts_directory }}/microsoft"
+    state: absent
+  when: not fonts_enable_microsoft
+  notify: Update font cache
+
+- name: Remove unwanted Nerd Fonts
+  ansible.builtin.file:
+    path: "{{ fonts_directory }}/{{ item.name }}"
+    state: absent
+  loop: "{{ fonts_nerd_fonts | selectattr('state', '==', 'absent') }}"

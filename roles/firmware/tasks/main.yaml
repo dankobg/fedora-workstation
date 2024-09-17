@@ -4,28 +4,27 @@
 - name: Install firmware update manager
   ansible.builtin.dnf:
     name: fwupd
-    state: latest
+    state: "{{ firmware_state }}"
 
 - name: Refresh firmware
   ansible.builtin.command: "fwupdmgr refresh"
   register: firmware_refresh
-  changed_when: "'Metadata is up to date' not in firmware_refresh.stdout and firmware_refresh.rc == 0"
-  failed_when: false
+  changed_when: "'Metadata is up to date' not in firmware_refresh.stdout and firmware_refresh.rc != 2"
+  failed_when: "'Metadata is up to date' not in firmware_refresh.stdout and firmware_refresh.rc not in [0, 2]"
 
 - name: Get firmware devices
   ansible.builtin.command: "fwupdmgr get-devices"
   register: firmware_get_devices
-  changed_when: firmware_get_devices.rc == 0
-  failed_when: false
+  changed_when: false
 
 - name: Get firmware updates
   ansible.builtin.command: "fwupdmgr get-updates"
   register: firmware_get_updates
-  changed_when: "'No updatable devices' not in firmware_get_updates.stdout and firmware_get_updates.rc == 0"
-  failed_when: false
+  changed_when: "'No updatable devices' not in firmware_get_updates.stdout and firmware_get_updates.rc != 2"
+  failed_when: "'No updatable devices' not in firmware_get_updates.stdout and firmware_get_updates.rc not in [0, 2]"
 
 - name: Update firmware
   ansible.builtin.command: "fwupdmgr update"
   register: firmware_update
-  changed_when: "'No updatable devices' not in firmware_update.stdout and firmware_update.rc == 0"
-  failed_when: false
+  changed_when: "'No updatable devices' not in firmware_update.stdout and firmware_update.rc != 2"
+  failed_when: "'No updatable devices' not in firmware_update.stdout and firmware_update.rc not in [0, 2]"

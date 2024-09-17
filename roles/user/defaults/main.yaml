@@ -1,2 +1,6 @@
 ---
 # defaults file for user
+
+user_groups:
+  - "{{ username }}"
+  - wheel

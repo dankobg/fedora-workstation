@@ -1,2 +1,14 @@
 ---
 # defaults file for dnf
+
+dnf_conf:
+  gpgcheck: true
+  installonly_limit: 3
+  clean_requirements_on_remove: true
+  best: false
+  skip_if_unavailable: true
+  fastestmirror: true
+  max_parallel_downloads: 10
+  deltarpm: true
+  defaultyes: true
+  assumeyes: false

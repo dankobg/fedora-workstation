@@ -1,24 +1,17 @@
 ---
 # tasks file for grub
 
-# Maybe use a template instead of static file...
-- name: Copy grub configuration file
-  ansible.builtin.copy:
-    src: grub
-    dest: /etc/default/
-    owner: root
-    group: root
-    mode: "0644"
-
 - name: Get grub menu entries
   ansible.builtin.shell: set -o pipefail; grep -P "^menuentry" /boot/grub2/grub.cfg | cut -d "'" -f2
   changed_when: "'Windows Boot Manager' not in grub_entries.stdout"
   register: grub_entries
+  when: grub_dual_boot
 
-- name: Ensure default grub entry is set to Windows
-  ansible.builtin.lineinfile:
-    path: /etc/default/grub
-    regexp: "^GRUB_DEFAULT="
-    line: 'GRUB_DEFAULT="{{ grub_entries.stdout }}"'
-    state: present
+- name: Copy grub configuration file
+  ansible.builtin.template:
+    src: grub.j2
+    dest: /etc/default/grub
+    owner: root
+    group: root
+    mode: "0644"
   notify: Regenerate GRUB configuration file

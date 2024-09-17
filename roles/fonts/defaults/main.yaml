@@ -1,11 +1,16 @@
 ---
 # defaults file for fonts
 
-fonts_system_directory: '/usr/local/share/fonts'
-fonts_user_directory: '.local/share/fonts.'
-fonts_installation: 'system'
+fonts_system_directory: /usr/local/share/fonts
+fonts_user_directory: "/home/{{ username }}/.local/share/fonts"
+fonts_installation: system # or user
+
 fonts_enable_microsoft: false
+
 fonts_nerd_fonts:
-  - 'FiraCode'
-  - 'Meslo'
-  - 'JetBrainsMono'
+  - name: FiraCode
+    state: present
+  - name: JetBrainsMono
+    state: present
+  - name: Meslo
+    state: present

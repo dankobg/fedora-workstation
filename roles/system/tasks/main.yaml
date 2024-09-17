@@ -35,27 +35,6 @@
 
 - name: Install common core packages
   ansible.builtin.dnf:
-    name:
-      - "dnf-plugins-core"
-      - "git"
-      - "openssl"
-      - "curl"
-      - "wget"
-      - "tar"
-      - "zip"
-      - "unzip"
-      - "gzip"
-      - "gunzip"
-      - "bzip2"
-      - "make"
-      - "pwgen"
-      - "mkpasswd"
-      - "htop"
-      - "sed"
-      - "tree"
-      - "gawk"
-      - "iptables"
-      - "nano"
-      - "wl-clipboard"
+    name: "{{ system_common_packages }}"
     state: latest
   notify: Remove packages not needed anymore

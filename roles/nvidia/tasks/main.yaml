@@ -31,6 +31,6 @@
 - name: Check if a reboot is required
   ansible.builtin.command: dnf needs-restarting -r -s
   register: reboot_required
-  changed_when: reboot_required.rc == 1
+  changed_when: "'Reboot should not be necessary' not in reboot_required.stdout"
   failed_when: false
   notify: Reboot machine

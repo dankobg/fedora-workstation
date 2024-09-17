@@ -6,6 +6,10 @@ to finish:
 - rust
 - zsh
 
+roles that perform some changes:
+
+- gnome
+
 TODO: verify checksums for manuall downloads for apps:
 
 - [] taskfile

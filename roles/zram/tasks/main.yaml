@@ -2,9 +2,9 @@
 # tasks file for zram
 
 - name: Copy zram-generator.conf
-  ansible.builtin.copy:
-    src: zram-generator.conf
-    dest: /etc/systemd/system/
+  ansible.builtin.template:
+    src: zram-generator.conf.j2
+    dest: /etc/systemd/system/zram-generator.conf
     owner: root
     group: root
     mode: "0644"
