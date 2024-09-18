@@ -2,5 +2,6 @@
 # handlers file for gnome
 
 - name: Update dconf db
-  ansible.builtin.command: dconf update
+  ansible.builtin.command:
+    cmd: dconf update
   changed_when: true

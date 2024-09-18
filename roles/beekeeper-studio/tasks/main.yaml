@@ -4,4 +4,4 @@
 - name: Install Beekeeper Studio
   community.general.flatpak:
     name: io.beekeeperstudio.Studio
-    state: latest
+    state: "{{ beekeeper_studio_state }}"

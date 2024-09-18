@@ -1,2 +1,5 @@
 ---
 # defaults file for atlas
+
+atlas_state: present
+atlas_version: latest

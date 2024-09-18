@@ -11,7 +11,8 @@
     update_cache: true
 
 - name: Check the kernel module version
-  ansible.builtin.command: modinfo -F version nvidia
+  ansible.builtin.command:
+    cmd: modinfo -F version nvidia
   register: kernel_module_status
   changed_when: false
   failed_when: >
@@ -29,7 +30,8 @@
   failed_when: false
 
 - name: Check if a reboot is required
-  ansible.builtin.command: dnf needs-restarting -r -s
+  ansible.builtin.command:
+    cmd: dnf needs-restarting -r -s
   register: reboot_required
   changed_when: "'Reboot should not be necessary' not in reboot_required.stdout"
   failed_when: false

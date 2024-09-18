@@ -3,5 +3,6 @@
 
 - name: Install LibreOffice apps
   ansible.builtin.dnf:
-    name: "{{ libreoffice_apps }}"
-    state: latest
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  loop: "{{ libreoffice_apps }}"

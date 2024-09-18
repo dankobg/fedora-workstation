@@ -14,5 +14,6 @@
     enabled: true
 
 - name: Update Flatpak appstream metadata
-  ansible.builtin.command: flatpak update --appstream
+  ansible.builtin.command:
+    cmd: flatpak update --appstream
   changed_when: false

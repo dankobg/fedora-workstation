@@ -4,4 +4,4 @@
 - name: Install ansible-lint
   ansible.builtin.dnf:
     name: ansible-lint
-    state: latest
+    state: "{{ ansible_lint_state }}"

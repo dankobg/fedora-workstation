@@ -7,7 +7,8 @@
     state: latest
 
 - name: Get zsh path
-  ansible.builtin.command: which zsh
+  ansible.builtin.command:
+    cmd: which zsh
   changed_when: false
   register: zsh_path
 

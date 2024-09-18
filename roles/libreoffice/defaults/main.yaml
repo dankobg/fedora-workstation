@@ -2,6 +2,9 @@
 # defaults file for libreoffice
 
 libreoffice_apps:
-  - 'libreoffice-calc'
-  - 'libreoffice-impress'
-  - 'libreoffice-writer'
+  - name: libreoffice-calc
+    state: latest
+  - name: libreoffice-impress
+    state: latest
+  - name: libreoffice-writer
+    state: latest

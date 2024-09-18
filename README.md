@@ -1,10 +1,8 @@
 {{ ansible_managed | comment }} adds managed by ansible haders to start of document
 
-to finish:
+TODO: roles
 
-- user
 - rust
-- zsh
 
 roles that perform some changes:
 
@@ -12,18 +10,20 @@ roles that perform some changes:
 
 TODO: verify checksums for manuall downloads for apps:
 
-- [] taskfile
+- [] bw-cli
 - [] devspace
 - [] docker
-- [] bw-cli
 - [] eza
 - [] fastfetch
-- [] nerdfonts
 - [] gh-cli
 - [] glow
 - [] go
+- [] golangci-lint
 - [] goreleaser
 - [] hostctl
+- [] jq
+- [] justfile
+- [] k3d
 - [] k9s
 - [] kanata
 - [] kitty
@@ -34,16 +34,14 @@ TODO: verify checksums for manuall downloads for apps:
 - [] kustomize
 - [] lazydocker
 - [] lazygit
+- [] nerdfonts
+- [] node
 - [] rclone
 - [] restic
 - [] sops
-- [] zellij
-- [] golangci-lint
-- [] jq
+- [] taskfile
 - [] yq
-- [] justfile
-- [] k3d
-- [] node
+- [] zellij
 
 - Template replace all danko hardcoded...
 - Make better default vars...

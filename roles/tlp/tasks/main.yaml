@@ -23,5 +23,6 @@
         enabled: true
 
     - name: Mask conflicting services # noqa: command-instead-of-module
-      ansible.builtin.command: systemctl mask systemd-rfkill.service systemd-rfkill.socket
+      ansible.builtin.command:
+        cmd: systemctl mask systemd-rfkill.service systemd-rfkill.socket
       changed_when: true

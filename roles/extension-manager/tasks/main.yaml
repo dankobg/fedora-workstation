@@ -7,7 +7,8 @@
     state: latest
 
 - name: Get the gnome shell version
-  ansible.builtin.command: gnome-shell --version
+  ansible.builtin.command:
+    cmd: gnome-shell --version
   changed_when: false
   register: gnome_shell_version_data
 
@@ -35,6 +36,7 @@
   loop: "{{ gnome_extensions_info.results }}"
 
 - name: Enable extensions
-  ansible.builtin.command: "gnome-shell-extension-tool {{ '-e' if (gnome_extensions | selectattr('id', '==', item.json.pk) | first).state == 'present' else '-d' }} {{ item.json.uuid }}"
+  ansible.builtin.command:
+    cmd: "gnome-shell-extension-tool {{ '-e' if (gnome_extensions | selectattr('id', '==', item.json.pk) | first).state == 'present' else '-d' }} {{ item.json.uuid }}"
   changed_when: false
   loop: "{{ gnome_extensions_info.results }}"

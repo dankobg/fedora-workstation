@@ -4,4 +4,4 @@
 - name: Install age
   ansible.builtin.dnf:
     name: age
-    state: latest
+    state: "{{ age_state }}"
