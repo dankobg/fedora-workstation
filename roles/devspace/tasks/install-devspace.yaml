@@ -1,0 +1,68 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type devspace
+  changed_when: false
+  register: devspace_installed
+  failed_when: "not ('devspace: not found' in devspace_installed.stderr or 'devspace is' in devspace_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: devspace --version
+  changed_when: false
+  register: devspace_installed_version_data
+  failed_when: "'devspace version' not in devspace_installed_version_data.stdout"
+  when: devspace_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    devspace_installed_version: "{{ 'v' + devspace_installed_version_data.stdout.split()[2] if devspace_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/devspace-sh/devspace/releases/latest
+    return_content: true
+  register: devspace_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    devspace_release_version: "{{ devspace_latest_release_data.json.tag_name if devspace_version == 'latest' else devspace_version }}"
+
+- name: Download and install
+  when: devspace_installed_version != devspace_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: amd64
+          arm: arm64
+      ansible.builtin.set_fact:
+        devspace_release_artifact: "devspace-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: devspace_
+      register: devspace_tempdir
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "https://github.com/devspace-sh/devspace/releases/download/{{ devspace_release_version }}/{{ devspace_release_artifact }}"
+        dest: "{{ devspace_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ devspace_tempdir.path }}/{{ devspace_release_artifact }}"
+        dest: /usr/local/bin/devspace
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ devspace_tempdir.path }}"
+        state: absent

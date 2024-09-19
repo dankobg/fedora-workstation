@@ -1,0 +1,79 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type kubectl
+  changed_when: false
+  register: kubectl_installed
+  failed_when: "not ('kubectl: not found' in kubectl_installed.stderr or 'kubectl is' in kubectl_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: kubectl version
+  changed_when: false
+  register: kubectl_installed_version_data
+  failed_when: "'Version' not in kubectl_installed_version_data.stdout"
+  when: kubectl_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    kubectl_installed_version: "{{ kubectl_installed_version_data.stdout_lines[0].split()[2] if kubectl_installed.rc == 0 else '' }}"
+
+- name: Get the stable release data
+  ansible.builtin.uri:
+    url: https://dl.k8s.io/release/stable.txt
+    return_content: true
+  register: kubectl_stable_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    kubectl_release_version: "{{ kubectl_stable_release_data.content if kubectl_version == 'latest' else kubectl_version }}"
+
+- name: Download and install
+  when: kubectl_installed_version != kubectl_release_version
+  block:
+    - name: Set the stable release version variable
+      ansible.builtin.set_fact:
+        kubectl_stable_release_version: "{{ kubectl_stable_release_data.content }}"
+
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: amd64
+          arm: arm64
+      ansible.builtin.set_fact:
+        kubectl_arch: "{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: kubectl_
+      register: kubectl_tempdir
+
+    - name: Download artifact and sha256 file
+      ansible.builtin.get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_stable_release_version }}/bin/{{ ansible_facts.system | lower }}/{{ kubectl_arch }}/{{ item }}"
+        dest: "{{ kubectl_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      loop:
+        - kubectl
+        - kubectl.sha256
+
+    # - name: Validate the binary against the checksum file
+    #   ansible.builtin.shell: "set -o pipefail; cd {{ kubectl_tempdir.path }} && echo '$(cat kubectl.sha256) kubectl' | sha256sum --check"
+    #   changed_when: false
+
+    - name: Copy the binary
+      ansible.builtin.copy:
+        src: "{{ kubectl_tempdir.path }}/kubectl"
+        dest: "{{ kubectl_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ kubectl_tempdir.path }}"
+        state: absent

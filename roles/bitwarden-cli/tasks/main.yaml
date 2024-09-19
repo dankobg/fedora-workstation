@@ -1,50 +1,10 @@
 ---
 # tasks file for bitwarden-cli
 
-- name: Get the list of GitHub releases
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/bitwarden/clients/releases
-    return_content: true
-  register: bw_releases_data
+- name: Include tasks to install bitwarden cli
+  ansible.builtin.include_tasks: install-bw.yaml
+  when: bw_state == 'present'
 
-- name: Filter CLI releases list
-  ansible.builtin.set_fact:
-    bw_cli_releases: "{{ bw_releases_data.json | selectattr('tag_name', 'search', '^cli-v') | list }}"
-
-- name: Get the latest CLI release
-  ansible.builtin.set_fact:
-    bw_latest_release_data: "{{ bw_cli_releases | sort(attribute='tag_name', reverse=true) | first }}"
-
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    bw_latest_release_version: "{{ bw_latest_release_data.tag_name }}"
-
-- name: Set the release artifact
-  ansible.builtin.set_fact:
-    bw_release_artifact: "bw-{{ ansible_facts.system | lower }}-{{ bw_latest_release_version.split('v')[1] }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: bw_cli_
-  register: bw_cli_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/bitwarden/clients/releases/download/{{ bw_latest_release_version }}/{{ bw_release_artifact }}.zip"
-    dest: "{{ bw_cli_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ bw_cli_tempdir.path }}/bw"
-    dest: /usr/local/bin/
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ bw_cli_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove bitwarden cli
+  ansible.builtin.include_tasks: remove-bw.yaml
+  when: bw_state == 'absent'

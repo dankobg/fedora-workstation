@@ -1,0 +1,15 @@
+---
+- name: Ensure removed
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ kitty_path }}"
+    - "{{ kitten_path }}"
+    - "/home/{{ username }}/.config/kitty"
+    - /usr/local/share/terminfo
+    - /usr/local/lib/kitty
+    - /usr/local/lib/kitty-extensions
+    - /usr/local/share/applications/kitty.desktop
+    - /usr/local/share/applications/kitty-open.desktop
+    - /usr/local/share/icons/kitty

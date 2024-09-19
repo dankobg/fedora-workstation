@@ -1,2 +1,6 @@
 ---
 # defaults file for eza
+
+eza_state: present
+eza_version: latest
+eza_path: "{{ binaries_path }}/eza"

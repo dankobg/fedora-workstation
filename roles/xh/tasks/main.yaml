@@ -7,7 +7,7 @@
     return_content: true
   register: xh_latest_release_data
 
-- name: Set the latest release version
+- name: Set the release version
   ansible.builtin.set_fact:
     xh_latest_release_version: "{{ xh_latest_release_data.json.tag_name }}"
 

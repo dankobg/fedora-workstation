@@ -1,2 +1,6 @@
 ---
 # defaults file for kubens
+
+kubens_state: present
+kubens_version: latest
+kubens_path: "{{ binaries_path }}/kubens"

@@ -1,0 +1,82 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type hx
+  changed_when: false
+  register: helix_installed
+  failed_when: "not ('hx: not found' in helix_installed.stderr or 'hx is' in helix_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: hx --version
+  changed_when: false
+  register: helix_installed_version_data
+  failed_when: "'helix' not in helix_installed_version_data.stdout"
+  when: helix_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    helix_installed_version: "{{ helix_installed_version_data.stdout.split()[1] if helix_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/helix-editor/helix/releases/latest
+    return_content: true
+  register: helix_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    helix_release_version: "{{ helix_latest_release_data.json.tag_name if helix_version == 'latest' else helix_version }}"
+
+- set_fact:
+    parts: "{{ helix_installed_version.split('.') }}" # TEMP FIX
+
+- set_fact: # TEMP FIX
+    helix_installed_version: "{{ parts[0] + '.0' + parts[1] }}"
+  when: helix_installed_version.split('.')[1] | length == 1
+
+- name: Download and install
+  when: helix_installed_version != helix_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: x86_64
+          arm: aarch64
+      ansible.builtin.set_fact:
+        helix_release_artifact: "helix-{{ helix_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-{{ ansible_facts.system | lower }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: helix_
+      register: helix_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/helix-editor/helix/releases/download/{{ helix_release_version }}/{{ helix_release_artifact }}.tar.xz"
+        dest: "{{ helix_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ helix_tempdir.path }}/{{ helix_release_artifact }}/hx"
+        dest: "{{ helix_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Copy runtime
+      ansible.builtin.copy:
+        src: "{{ helix_tempdir.path }}/{{ helix_release_artifact }}/runtime"
+        dest: "/home/{{ username }}/.config/helix"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ helix_tempdir.path }}"
+        state: absent

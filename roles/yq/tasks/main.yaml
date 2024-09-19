@@ -7,7 +7,7 @@
     return_content: true
   register: yq_latest_release_data
 
-- name: Set the latest release version
+- name: Set the release version
   ansible.builtin.set_fact:
     yq_latest_release_version: "{{ yq_latest_release_data.json.tag_name }}"
 

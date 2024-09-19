@@ -7,7 +7,7 @@
     return_content: true
   register: onefetch_latest_release_data
 
-- name: Set the latest release version
+- name: Set the release version
   ansible.builtin.set_fact:
     onefetch_latest_release_version: "{{ onefetch_latest_release_data.json.tag_name }}"
 

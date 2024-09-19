@@ -3,3 +3,4 @@
 
 atlas_state: present
 atlas_version: latest
+atlas_path: "{{ binaries_path }}/atlas"

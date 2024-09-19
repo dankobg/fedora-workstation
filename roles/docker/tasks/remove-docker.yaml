@@ -1,0 +1,60 @@
+---
+- name: Ensure Docker is stopped and disabled at boot
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - docker
+    - containerd
+  when: ansible_facts.services[item] is defined
+
+- name: Ensure old packages don't exist
+  ansible.builtin.dnf:
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-selinux
+      - docker-engine-selinux
+      - docker-engine
+    state: absent
+
+- name: Remove Docker
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: absent
+
+- name: Ensure DNF config-manager plugin exists to manage repository
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: latest
+
+- name: Disable repo # noqa no-changed-when
+  ansible.builtin.command:
+    # cmd: dnf config-manager --set-disabled docker-ce
+    cmd: dnf config-manager --set-disabled docker-ce-stable docker-ce-stable-debuginfo docker-ce-stable-source docker-ce-test docker-ce-test-debuginfo docker-ce-test-source docker-ce-nightly docker-ce-nightly-debuginfo docker-ce-nightly-source
+
+- name: Remove docker group
+  ansible.builtin.group:
+    name: docker
+    state: absent
+
+- name: Remove docker related files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/yum.repos.d/docker-ce.repo
+    - /etc/docker
+    - /var/lib/docker
+    - /usr/libexec/docker

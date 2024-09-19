@@ -22,7 +22,7 @@ TODO: verify checksums for manuall downloads for apps:
 - [] goreleaser
 - [] hostctl
 - [] jq
-- [] justfile
+- [] just
 - [] k3d
 - [] k9s
 - [] kanata

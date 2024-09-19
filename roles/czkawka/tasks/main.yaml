@@ -4,4 +4,4 @@
 - name: Install czkawka
   community.general.flatpak:
     name: com.github.qarmin.czkawka
-    state: latest
+    state: "{{ czkawka_state }}"

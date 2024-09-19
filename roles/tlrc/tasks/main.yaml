@@ -7,7 +7,7 @@
     return_content: true
   register: tlrc_latest_release_data
 
-- name: Set the latest release version
+- name: Set the release version
   ansible.builtin.set_fact:
     tlrc_latest_release_version: "{{ tlrc_latest_release_data.json.tag_name }}"
 

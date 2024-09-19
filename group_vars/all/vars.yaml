@@ -11,6 +11,8 @@ git_user_name: "{{ vault_git_user_name }}"
 git_user_email: "{{ vault_git_user_email }}"
 git_core_editor: "hx" # or code --wait --new-window
 
+binaries_path: /usr/local/bin
+
 archs:
   arm: arm
   armv6l: arm
@@ -77,11 +79,10 @@ roles_selected:
   - helix
   - helm
   - hostctl
-  - httpie
   - hugo
   - iftop
   - jq
-  - justfile
+  - just
   - k3d
   - k9s
   - kanata

@@ -6,4 +6,4 @@
     name:
       - handbrake
       - handbrake-gui
-    state: latest
+    state: "{{ handbrake_state }}"

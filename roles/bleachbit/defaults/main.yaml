@@ -1,2 +1,4 @@
 ---
 # defaults file for bleachbit
+
+bleachbit_state: latest

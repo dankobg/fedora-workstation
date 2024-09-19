@@ -1,2 +1,6 @@
 ---
 # defaults file for k3d
+
+k3d_state: present
+k3d_version: latest
+k3d_path: "{{ binaries_path }}/k3d"

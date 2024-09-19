@@ -4,10 +4,16 @@
 - name: Install git
   ansible.builtin.dnf:
     name: git
-    state: latest
+    state: "{{ git_state }}"
 
 - name: Configure git config
+  when: git_state == 'latest'
   block:
+    - name: Ensure .gitconfig does not exist
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.gitconfig"
+        state: absent
+
     - name: Ensure git config directory exists
       ansible.builtin.file:
         path: "/home/{{ username }}/.config/git"
@@ -107,3 +113,12 @@
         scope: file
         value: true
         state: present
+
+- name: Remove configs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/home/{{ username }}/.config/git"
+    - "/home/{{ username }}/.gitconfig"
+  when: git_state == 'absent'

@@ -1,46 +1,10 @@
 ---
 # tasks file for kubens
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
-    return_content: true
-  register: kubens_latest_release_data
+- name: Include tasks to install kubens
+  ansible.builtin.include_tasks: install-kubens.yaml
+  when: kubens_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    kubens_latest_release_version: "{{ kubens_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: arm64
-  ansible.builtin.set_fact:
-    kubens_release_artifact: "kubens_{{ kubens_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: kubens_
-  register: kubens_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/ahmetb/kubectx/releases/download/{{ kubens_latest_release_version }}/{{ kubens_release_artifact }}.tar.gz"
-    dest: "{{ kubens_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ kubens_tempdir.path }}/kubens"
-    dest: /usr/local/bin/
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ kubens_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove kubens
+  ansible.builtin.include_tasks: remove-kubens.yaml
+  when: kubens_state == 'absent'

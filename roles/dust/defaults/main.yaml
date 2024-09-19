@@ -1,2 +1,6 @@
 ---
 # defaults file for dust
+
+dust_state: present
+dust_version: latest
+dust_path: "{{ binaries_path }}/dust"

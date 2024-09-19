@@ -1,0 +1,7 @@
+---
+# tasks file for just
+
+- name: Install just
+  ansible.builtin.dnf:
+    name: just
+    state: "{{ just_state }}"

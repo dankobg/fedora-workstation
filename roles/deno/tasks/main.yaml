@@ -1,44 +1,10 @@
 ---
 # tasks file for deno
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/denoland/deno/releases/latest
-    return_content: true
-  register: deno_latest_release_data
+- name: Include tasks to install deno
+  ansible.builtin.include_tasks: install-deno.yaml
+  when: deno_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    deno_latest_release_version: "{{ deno_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: aarch64
-  ansible.builtin.set_fact:
-    deno_release_artifact: "deno-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: deno_
-  register: deno_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/denoland/deno/releases/download/{{ deno_latest_release_version }}/{{ deno_release_artifact }}.zip"
-    dest: "{{ deno_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ deno_tempdir.path }}/deno"
-    dest: /usr/local/bin
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ deno_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove deno
+  ansible.builtin.include_tasks: remove-deno.yaml
+  when: deno_state == 'absent'

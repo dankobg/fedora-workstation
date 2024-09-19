@@ -1,54 +1,10 @@
 ---
 # tasks file for golangci-lint
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/golangci/golangci-lint/releases/latest
-    return_content: true
-  register: golangci_lint_latest_release_data
+- name: Include tasks to install golangci-lint
+  ansible.builtin.include_tasks: install-golangci-lint.yaml
+  when: golangci_lint_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    golangci_lint_latest_release_version: "{{ golangci_lint_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: amd64
-      arm: arm64
-  ansible.builtin.set_fact:
-    golangci_lint_release_artifact: "golangci-lint-{{ golangci_lint_latest_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: golangci_lint_
-  register: golangci_lint_tempdir
-
-- name: Download artifact
-  ansible.builtin.get_url:
-    url: "https://github.com/golangci/golangci-lint/releases/download/{{ golangci_lint_latest_release_version }}/{{ golangci_lint_release_artifact }}.tar.gz"
-    dest: "{{ golangci_lint_tempdir.path }}"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/golangci/golangci-lint/releases/download/{{ golangci_lint_latest_release_version }}/{{ golangci_lint_release_artifact }}.tar.gz"
-    dest: "{{ golangci_lint_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ golangci_lint_tempdir.path }}/{{ golangci_lint_release_artifact }}/golangci-lint"
-    dest: /usr/local/bin/
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ golangci_lint_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove golangci-lint
+  ansible.builtin.include_tasks: remove-golangci-lint.yaml
+  when: golangci_lint_state == 'absent'

@@ -1,55 +1,10 @@
 ---
 # tasks file for kubectl
 
-- name: Get the stable release data
-  ansible.builtin.uri:
-    url: https://dl.k8s.io/release/stable.txt
-    return_content: true
-  register: kubectl_stable_release_data
+- name: Include tasks to install kubectl
+  ansible.builtin.include_tasks: install-kubectl.yaml
+  when: kubectl_state == 'present'
 
-- name: Set the stable release version variable
-  ansible.builtin.set_fact:
-    kubectl_stable_release_version: "{{ kubectl_stable_release_data.content }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: amd64
-      arm: arm64
-  ansible.builtin.set_fact:
-    kubectl_arch: "{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: kubectl_
-  register: kubectl_tempdir
-
-- name: Download artifact and sha256 file
-  ansible.builtin.get_url:
-    url: "https://dl.k8s.io/release/{{ kubectl_stable_release_version }}/bin/{{ ansible_facts.system | lower }}/{{ kubectl_arch }}/{{ item }}"
-    dest: "{{ kubectl_tempdir.path }}"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: "0644"
-  loop:
-    - kubectl
-    - kubectl.sha256
-
-# - name: Validate the binary against the checksum file
-#   ansible.builtin.shell: "set -o pipefail; cd {{ kubectl_tempdir.path }} && echo '$(cat kubectl.sha256) kubectl' | sha256sum --check"
-#   changed_when: false
-
-- name: Copy the binary
-  ansible.builtin.copy:
-    src: "{{ kubectl_tempdir.path }}/kubectl"
-    dest: /usr/local/bin/
-    owner: root
-    group: root
-    mode: "0755"
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ kubectl_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove kubectl
+  ansible.builtin.include_tasks: remove-kubectl.yaml
+  when: kubectl_state == 'absent'

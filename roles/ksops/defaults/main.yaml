@@ -1,2 +1,6 @@
 ---
 # defaults file for ksops
+
+ksops_state: present
+ksops_version: latest
+ksops_path: "{{ binaries_path }}/ksops"

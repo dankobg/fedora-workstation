@@ -1,9 +1,12 @@
 ---
 # defaults file for extension-manager
 
+extension_manager_state: latest
+
 # NOTE: the local share dir is the one where Extension Manager flatpak install extensions
 # but my own folder does not get picked up even after flatpak update
-# If someone knows how to fix this pls help
+# Would be nice if someone knows how to fix this -
+# that i automate extension installs and that they are available inside Extension-Manager flatpak app
 gnome_extensions_dir: /usr/share/gnome-shell/extensions
 # gnome_extensions_dir: "/home/{{ username }}/.local/share/gnome-shell/extensions"
 

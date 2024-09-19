@@ -1,55 +1,10 @@
 ---
 # tasks file for helix
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/helix-editor/helix/releases/latest
-    return_content: true
-  register: helix_release_data
+- name: Include tasks to install helix
+  ansible.builtin.include_tasks: install-helix.yaml
+  when: helix_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    helix_latest_release_version: "{{ helix_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: aarch64
-  ansible.builtin.set_fact:
-    helix_release_artifact: "helix-{{ helix_latest_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-{{ ansible_facts.system | lower }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: helix_
-  register: helix_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/helix-editor/helix/releases/download/{{ helix_latest_release_version }}/{{ helix_release_artifact }}.tar.xz"
-    dest: "{{ helix_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ helix_tempdir.path }}/{{ helix_release_artifact }}/hx"
-    dest: "/usr/local/bin"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Copy runtime
-  ansible.builtin.copy:
-    src: "{{ helix_tempdir.path }}/{{ helix_release_artifact }}/runtime"
-    dest: "/home/danko/.config/helix"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: "0755"
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ helix_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove helix
+  ansible.builtin.include_tasks: remove-helix.yaml
+  when: helix_state == 'absent'

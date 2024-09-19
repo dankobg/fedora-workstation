@@ -1,2 +1,6 @@
 ---
 # defaults file for kanata
+
+kanata_state: present
+kanata_version: latest
+kanata_path: "{{ binaries_path }}/kanata"

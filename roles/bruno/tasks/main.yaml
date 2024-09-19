@@ -4,4 +4,4 @@
 - name: Install Bruno
   community.general.flatpak:
     name: com.usebruno.Bruno
-    state: latest
+    state: "{{ bruno_state }}"

@@ -1,46 +1,10 @@
 ---
 # tasks file for kubectx
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
-    return_content: true
-  register: kubectx_latest_release_data
+- name: Include tasks to install kubectx
+  ansible.builtin.include_tasks: install-kubectx.yaml
+  when: kubectx_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    kubectx_latest_release_version: "{{ kubectx_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: arm64
-  ansible.builtin.set_fact:
-    kubectx_release_artifact: "kubectx_{{ kubectx_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: kubectx_
-  register: kubectx_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/ahmetb/kubectx/releases/download/{{ kubectx_latest_release_version }}/{{ kubectx_release_artifact }}.tar.gz"
-    dest: "{{ kubectx_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ kubectx_tempdir.path }}/kubectx"
-    dest: /usr/local/bin/
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ kubectx_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove kubectx
+  ansible.builtin.include_tasks: remove-kubectx.yaml
+  when: kubectx_state == 'absent'

@@ -1,2 +1,6 @@
 ---
 # defaults file for go
+
+go_state: present
+go_version: latest
+go_dir: /usr/local/go

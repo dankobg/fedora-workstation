@@ -4,4 +4,4 @@
 - name: Install Discord
   ansible.builtin.dnf:
     name: discord
-    state: latest
+    state: "{{ discord_state }}"

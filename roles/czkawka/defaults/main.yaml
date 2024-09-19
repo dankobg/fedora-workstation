@@ -1,2 +1,4 @@
 ---
 # defaults file for czkawka
+
+czkawka_state: latest

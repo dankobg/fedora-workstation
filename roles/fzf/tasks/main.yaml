@@ -4,4 +4,4 @@
 - name: Install fzf
   ansible.builtin.dnf:
     name: fzf
-    state: latest
+    state: "{{ fzf_state }}"

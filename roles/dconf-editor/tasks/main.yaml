@@ -4,4 +4,4 @@
 - name: Install dconf-editor
   ansible.builtin.dnf:
     name: dconf-editor
-    state: latest
+    state: "{{ dconf_editor_state }}"

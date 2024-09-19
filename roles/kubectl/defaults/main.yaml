@@ -1,2 +1,6 @@
 ---
 # defaults file for kubectl
+
+kubectl_state: present
+kubectl_version: latest
+kubectl_path: "{{ binaries_path }}/kubectl"

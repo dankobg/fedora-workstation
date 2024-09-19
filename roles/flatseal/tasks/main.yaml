@@ -4,4 +4,4 @@
 - name: Install Flatseal
   ansible.builtin.dnf:
     name: flatseal
-    state: latest
+    state: "{{ flatseal_state }}"

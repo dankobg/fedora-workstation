@@ -1,8 +1,12 @@
 ---
 # defaults file for google-chrome
 
+google_chrome_state: latest
+
+google_chrome_managed_policies_dir: /etc/opt/chrome/policies/managed
+
 google_chrome_extensions:
-    # gnome shell integration (no needed, using extension manager flatpak)
+  # gnome shell integration (no needed, using extension manager flatpak)
   - id: gphhapmejobijbbhgpjhcjognlahblep
     state: absent
     # ublock origin
@@ -43,9 +47,7 @@ crx:
   lang: en
   installsource: ondemand
 
-
 google_chrome_extensions_path: /usr/share/google-chrome/extensions/
-
 # /opt/google/chrome/extensions/
 # /usr/share/google-chrome/extensions/
 # ~/.config/google-chrome/Default/Extensions

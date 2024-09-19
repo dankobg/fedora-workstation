@@ -1,2 +1,6 @@
 ---
 # defaults file for glow
+
+glow_state: present
+glow_version: latest
+glow_path: "{{ binaries_path }}/glow"

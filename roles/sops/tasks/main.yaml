@@ -7,7 +7,7 @@
     return_content: true
   register: sops_latest_release_data
 
-- name: Set the latest release version
+- name: Set the release version
   ansible.builtin.set_fact:
     sops_latest_release_version: "{{ sops_latest_release_data.json.tag_name }}"
 

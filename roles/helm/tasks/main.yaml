@@ -4,4 +4,4 @@
 - name: Install Helm
   ansible.builtin.dnf:
     name: helm
-    state: latest
+    state: "{{ helm_state }}"

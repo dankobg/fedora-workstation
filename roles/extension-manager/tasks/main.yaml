@@ -4,7 +4,7 @@
 - name: Install Extension Manager
   community.general.flatpak:
     name: com.mattjakeman.ExtensionManager
-    state: latest
+    state: "{{ extension_manager_state }}"
 
 - name: Get the gnome shell version
   ansible.builtin.command:

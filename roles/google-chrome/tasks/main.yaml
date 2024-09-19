@@ -4,11 +4,11 @@
 - name: Install Google Chrome
   ansible.builtin.dnf:
     name: google-chrome-stable
-    state: latest
+    state: "{{ google_chrome_state }}"
 
 - name: Ensure managed policies directory exists
   ansible.builtin.file:
-    path: /etc/opt/chrome/policies/managed
+    path: "{{ google_chrome_managed_policies_dir }}"
     state: directory
     owner: root
     group: root
@@ -17,7 +17,7 @@
 - name: Copy managed policies.json file
   ansible.builtin.copy:
     src: managed_policies.json
-    dest: /etc/opt/chrome/policies/managed
+    dest: "{{ google_chrome_managed_policies_dir }}/managed_policies.json"
     owner: root
     group: root
     mode: "0644"

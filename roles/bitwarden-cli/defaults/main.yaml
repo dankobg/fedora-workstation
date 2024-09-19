@@ -1,2 +1,6 @@
 ---
 # defaults file for bitwarden-cli
+
+bw_state: present
+bw_version: latest
+bw_path: "{{ binaries_path }}/bw"

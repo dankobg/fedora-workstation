@@ -4,4 +4,29 @@
 - name: Install foot
   ansible.builtin.dnf:
     name: foot
-    state: latest
+    state: "{{ foot_state }}"
+
+- name: Ensure foot config directory exists
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config/foot"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+  register: config_dir
+  when: foot_state == 'latest'
+
+- name: Copy foot config
+  ansible.builtin.copy:
+    src: foot.ini
+    dest: "{{ config_dir.path }}/foot.ini"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0644"
+  when: foot_state == 'latest'
+
+- name: Remove foot config directory
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config/foot"
+    state: absent
+  when: foot_state == 'absent'

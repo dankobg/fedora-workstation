@@ -1,2 +1,6 @@
 ---
 # defaults file for firefox
+
+firefox_state: latest
+firefox_install_dir: /usr/lib64/firefox
+firefox_policies_dir: /etc/firefox/policies

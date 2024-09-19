@@ -1,2 +1,6 @@
 ---
 # defaults file for helix
+
+helix_state: present
+helix_version: latest
+helix_path: "{{ binaries_path }}/helix"

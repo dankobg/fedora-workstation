@@ -1,0 +1,74 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type golangci-lint
+  changed_when: false
+  register: golangci_lint_installed
+  failed_when: "not ('golangci-lint: not found' in golangci_lint_installed.stderr or 'golangci-lint is' in golangci_lint_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: golangci-lint --version
+  changed_when: false
+  register: golangci_lint_installed_version_data
+  failed_when: "'golangci-lint' not in golangci_lint_installed_version_data.stdout"
+  when: golangci_lint_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    golangci_lint_installed_version: "{{ 'v' + golangci_lint_installed_version_data.stdout.split()[3] if golangci_lint_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/golangci/golangci-lint/releases/latest
+    return_content: true
+  register: golangci_lint_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    golangci_lint_release_version: "{{ golangci_lint_latest_release_data.json.tag_name if golangci_lint_version == 'latest' else golangci_lint_version }}"
+
+- name: Download and install
+  when: golangci_lint_installed_version != golangci_lint_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: amd64
+          arm: arm64
+      ansible.builtin.set_fact:
+        golangci_lint_release_artifact: "golangci-lint-{{ golangci_lint_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: golangci_lint_
+      register: golangci_lint_tempdir
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "https://github.com/golangci/golangci-lint/releases/download/{{ golangci_lint_release_version }}/{{ golangci_lint_release_artifact }}.tar.gz"
+        dest: "{{ golangci_lint_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/golangci/golangci-lint/releases/download/{{ golangci_lint_release_version }}/{{ golangci_lint_release_artifact }}.tar.gz"
+        dest: "{{ golangci_lint_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ golangci_lint_tempdir.path }}/{{ golangci_lint_release_artifact }}/golangci-lint"
+        dest: "{{ golangci_lint_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ golangci_lint_tempdir.path }}"
+        state: absent

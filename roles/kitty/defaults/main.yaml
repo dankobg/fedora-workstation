@@ -1,4 +1,8 @@
 ---
 # defaults file for kitty
 
+kitty_state: present
+kitty_version: latest
+kitty_path: "{{ binaries_path }}/kitty"
+kitten_path: "{{ binaries_path }}/kitten"
 kitty_icon: dark

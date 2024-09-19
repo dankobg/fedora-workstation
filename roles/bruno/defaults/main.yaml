@@ -1,2 +1,4 @@
 ---
 # defaults file for bruno
+
+bruno_state: latest

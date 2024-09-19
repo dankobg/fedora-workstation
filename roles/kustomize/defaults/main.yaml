@@ -1,2 +1,6 @@
 ---
 # defaults file for kustomize
+
+kustomize_state: present
+kustomize_version: latest
+kustomize_path: "{{ binaries_path }}/kustomize"

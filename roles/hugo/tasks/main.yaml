@@ -4,4 +4,4 @@
 - name: Install Hugo
   ansible.builtin.dnf:
     name: hugo
-    state: latest
+    state: "{{ hugo_state }}"

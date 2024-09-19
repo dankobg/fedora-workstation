@@ -1,2 +1,4 @@
 ---
 # defaults file for gearlever
+
+gearlever_state: latest

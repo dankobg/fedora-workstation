@@ -1,0 +1,71 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type bw
+  changed_when: false
+  register: bw_installed
+  failed_when: "not ('bw: not found' in bw_installed.stderr or 'bw is' in bw_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: bw --version
+  changed_when: false
+  register: bw_installed_version_data
+  failed_when: >
+    not (bw_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$')
+  when: bw_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    bw_installed_version: "{{ bw_installed_version_data.stdout if bw_installed.rc == 0 else '' }}"
+
+- name: Get the list of GitHub releases
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/bitwarden/clients/releases
+    return_content: true
+  register: bw_releases_data
+
+- name: Filter CLI releases list
+  ansible.builtin.set_fact:
+    bw_releases: "{{ bw_releases_data.json | selectattr('tag_name', 'search', '^cli-v') | list }}"
+
+- name: Get the latest CLI release
+  ansible.builtin.set_fact:
+    bw_latest_release_data: "{{ bw_releases | sort(attribute='tag_name', reverse=true) | first }}"
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    bw_release_version: "{{ bw_latest_release_data.tag_name if bw_version == 'latest' else bw_version }}"
+
+- name: Download and install
+  when: bw_installed_version != bw_release_version
+  block:
+    - name: Set the release artifact
+      ansible.builtin.set_fact:
+        bw_release_artifact: "bw-{{ ansible_facts.system | lower }}-{{ bw_release_version.split('v')[1] }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: bw_
+      register: bw_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/bitwarden/clients/releases/download/{{ bw_release_version }}/{{ bw_release_artifact }}.zip"
+        dest: "{{ bw_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ bw_tempdir.path }}/bw"
+        dest: /usr/local/bin/
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ bw_tempdir.path }}"
+        state: absent

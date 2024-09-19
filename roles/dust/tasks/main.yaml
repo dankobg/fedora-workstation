@@ -1,46 +1,10 @@
 ---
 # tasks file for dust
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/bootandy/dust/releases/latest
-    return_content: true
-  register: dust_latest_release_data
+- name: Include tasks to install dust
+  ansible.builtin.include_tasks: install-dust.yaml
+  when: dust_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    dust_latest_release_version: "{{ dust_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: aarch64
-  ansible.builtin.set_fact:
-    dust_release_artifact: "dust-{{ dust_latest_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: dust_
-  register: dust_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/bootandy/dust/releases/download/{{ dust_latest_release_version }}/{{ dust_release_artifact }}.tar.gz"
-    dest: "{{ dust_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ dust_tempdir.path }}/{{ dust_release_artifact }}/dust"
-    dest: /usr/local/bin/
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ dust_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove dust
+  ansible.builtin.include_tasks: remove-dust.yaml
+  when: dust_state == 'absent'

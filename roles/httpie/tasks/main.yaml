@@ -1,7 +1,0 @@
----
-# tasks file for httpie
-
-- name: Install httpie
-  ansible.builtin.dnf:
-    name: httpie
-    state: latest

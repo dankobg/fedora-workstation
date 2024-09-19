@@ -1,2 +1,6 @@
 ---
 # defaults file for kubectx
+
+kubectx_state: present
+kubectx_version: latest
+kubectx_path: "{{ binaries_path }}/kubectx"

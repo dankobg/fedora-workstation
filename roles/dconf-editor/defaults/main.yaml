@@ -1,2 +1,4 @@
 ---
 # defaults file for dconf-editor
+
+dconf_editor_state: latest

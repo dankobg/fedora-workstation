@@ -10,7 +10,7 @@
 #     return_content: true
 #   register: rust_latest_release_data
 
-# - name: Set the latest release version
+# - name: Set the release version
 #   ansible.builtin.set_fact:
 #     rust_latest_release_version: "{{ rust_latest_release_data.json.tag_name }}"
 

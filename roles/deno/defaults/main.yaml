@@ -1,2 +1,6 @@
 ---
 # defaults file for deno
+
+deno_state: present
+deno_version: latest
+deno_path: "{{ binaries_path }}/deno"

@@ -1,0 +1,67 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type kubectx
+  changed_when: false
+  register: kubectx_installed
+  failed_when: "not ('kubectx: not found' in kubectx_installed.stderr or 'kubectx is' in kubectx_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: kubectx --version
+  changed_when: false
+  register: kubectx_installed_version_data
+  failed_when: >
+    not (kubectx_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
+  when: kubectx_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    kubectx_installed_version: "{{ 'v' + kubectx_installed_version_data.stdout if kubectx_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
+    return_content: true
+  register: kubectx_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    kubectx_release_version: "{{ kubectx_latest_release_data.json.tag_name if kubectx_version == 'latest' else kubectx_version }}"
+
+- name: Download and install
+  when: kubectx_installed_version != kubectx_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: x86_64
+          arm: arm64
+      ansible.builtin.set_fact:
+        kubectx_release_artifact: "kubectx_{{ kubectx_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: kubectx_
+      register: kubectx_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/ahmetb/kubectx/releases/download/{{ kubectx_latest_release_version }}/{{ kubectx_release_artifact }}.tar.gz"
+        dest: "{{ kubectx_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ kubectx_tempdir.path }}/kubectx"
+        dest: "{{ kubectx_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ kubectx_tempdir.path }}"
+        state: absent

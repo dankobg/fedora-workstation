@@ -1,2 +1,6 @@
 ---
 # defaults file for devspace
+
+devspace_state: present
+devspace_version: latest
+devspace_path: "{{ binaries_path }}/devspace"

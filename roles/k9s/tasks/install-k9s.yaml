@@ -1,0 +1,66 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type k9s
+  changed_when: false
+  register: k9s_installed
+  failed_when: "not ('k9s: not found' in k9s_installed.stderr or 'k9s is' in k9s_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: k9s version
+  changed_when: false
+  register: k9s_installed_version_data
+  failed_when: "'Version' not in k9s_installed_version_data.stdout"
+  when: k9s_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    k9s_installed_version: "{{ 'v' + k9s_installed_version_data.stdout_lines[7].split(':')[1].split('v')[1] if k9s_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/derailed/k9s/releases/latest
+    return_content: true
+  register: k9s_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    k9s_release_version: "{{ k9s_latest_release_data.json.tag_name if k9s_version == 'latest' else k9s_version }}"
+
+- name: Download and install
+  when: k9s_installed_version != k9s_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: amd64
+          arm: arm64
+      ansible.builtin.set_fact:
+        k9s_release_artifact: "k9s_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: k9s_
+      register: k9s_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/derailed/k9s/releases/download/{{ k9s_release_version }}/{{ k9s_release_artifact }}.tar.gz"
+        dest: "{{ k9s_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ k9s_tempdir.path }}/k9s"
+        dest: "{{ k9s_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ k9s_tempdir.path }}"
+        state: absent

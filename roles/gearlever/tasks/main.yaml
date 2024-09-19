@@ -4,4 +4,4 @@
 - name: Install Gearlever
   community.general.flatpak:
     name: it.mijorus.gearlever
-    state: latest
+    state: "{{ gearlever_state }}"

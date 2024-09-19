@@ -1,46 +1,10 @@
 ---
 # tasks file for hostctl
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/guumaster/hostctl/releases/latest
-    return_content: true
-  register: hostctl_latest_release_data
+- name: Include tasks to install hostctl
+  ansible.builtin.include_tasks: install-hostctl.yaml
+  when: hostctl_state == 'present'
 
-- name: Set the latest release version
-  ansible.builtin.set_fact:
-    hostctl_latest_release_version: "{{ hostctl_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: 64-bit
-      arm: arm64
-  ansible.builtin.set_fact:
-    hostctl_release_artifact: "hostctl_{{ hostctl_latest_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: hostctl_
-  register: hostctl_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/guumaster/hostctl/releases/download/{{ hostctl_latest_release_version }}/{{ hostctl_release_artifact }}.tar.gz"
-    dest: "{{ hostctl_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ hostctl_tempdir.path }}/hostctl"
-    dest: /usr/local/bin
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ hostctl_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove hostctl
+  ansible.builtin.include_tasks: remove-hostctl.yaml
+  when: hostctl_state == 'absent'

@@ -1,2 +1,5 @@
----
 # defaults file for hostctl
+
+hostctl_state: present
+hostctl_version: latest
+hostctl_path: "{{ binaries_path }}/hostctl"

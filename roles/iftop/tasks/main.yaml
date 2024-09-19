@@ -4,4 +4,4 @@
 - name: Install iftop
   ansible.builtin.dnf:
     name: iftop
-    state: latest
+    state: "{{ iftop_state }}"

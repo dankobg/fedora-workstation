@@ -4,4 +4,4 @@
 - name: Install Bleachbit
   ansible.builtin.dnf:
     name: bleachbit
-    state: latest
+    state: "{{ bleachbit_state }}"
