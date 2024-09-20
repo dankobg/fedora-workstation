@@ -79,7 +79,6 @@
         group: "{{ username }}"
         mode: a+x
         state: link
-        remote_src: true
       loop:
         - src: "/usr/local/lib/node_modules/corepack/dist/corepack.js"
           dest: "{{ node_corepack_path }}"

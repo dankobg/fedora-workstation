@@ -5,7 +5,7 @@
     state: absent
   loop:
     - "{{ kitty_path }}"
-    - "{{ kitten_path }}"
+    - "{{ kitty_kitten_path }}"
     - "/home/{{ username }}/.config/kitty"
     - /usr/local/share/terminfo
     - /usr/local/lib/kitty
