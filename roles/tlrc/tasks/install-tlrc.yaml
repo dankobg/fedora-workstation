@@ -1,0 +1,66 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type tldr
+  changed_when: false
+  register: tlrc_installed
+  failed_when: "not ('tldr: not found' in tlrc_installed.stderr or 'tldr is' in tlrc_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: tldr --version
+  changed_when: false
+  register: tlrc_installed_version_data
+  failed_when: "'tlrc' not in tlrc_installed_version_data.stdout"
+  when: tlrc_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    tlrc_installed_version: "{{ tlrc_installed_version_data.stdout.split()[1] if tlrc_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/tldr-pages/tlrc/releases/latest
+    return_content: true
+  register: tlrc_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    tlrc_release_version: "{{ tlrc_latest_release_data.json.tag_name if tlrc_version == 'latest' else tlrc_version }}"
+
+- name: Download and install
+  when: tlrc_installed_version != tlrc_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: x86_64
+          arm: x86_64
+      ansible.builtin.set_fact:
+        tlrc_release_artifact: "tlrc-{{ tlrc_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-gnu"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: tlrc_
+      register: tlrc_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/tldr-pages/tlrc/releases/download/{{ tlrc_release_version }}/{{ tlrc_release_artifact }}.tar.gz"
+        dest: "{{ tlrc_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ tlrc_tempdir.path }}/tldr"
+        dest: "{{ tlrc_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ tlrc_tempdir.path }}"
+        state: absent

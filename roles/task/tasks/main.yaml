@@ -1,0 +1,10 @@
+---
+# tasks file for task
+
+- name: Include tasks to install task
+  ansible.builtin.include_tasks: install-task.yaml
+  when: task_state == 'present'
+
+- name: Include tasks to remove task
+  ansible.builtin.include_tasks: remove-task.yaml
+  when: task_state == 'absent'

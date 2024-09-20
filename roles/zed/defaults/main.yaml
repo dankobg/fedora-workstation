@@ -1,2 +1,6 @@
 ---
 # defaults file for zed
+
+zed_state: present
+zed_version: latest
+zed_path: "{{ binaries_path }}/zed"

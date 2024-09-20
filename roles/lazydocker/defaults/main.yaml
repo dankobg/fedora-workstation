@@ -1,2 +1,6 @@
 ---
 # defaults file for lazydocker
+
+lazydocker_state: present
+lazydocker_version: latest
+lazydocker_path: "{{ binaries_path }}/lazydocker"

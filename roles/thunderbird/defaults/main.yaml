@@ -1,2 +1,4 @@
 ---
 # defaults file for thunderbird
+
+thunderbird_state: latest

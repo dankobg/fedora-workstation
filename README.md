@@ -3,6 +3,7 @@
 TODO: roles
 
 - rust
+- zed
 
 roles that perform some changes:
 
@@ -10,6 +11,7 @@ roles that perform some changes:
 
 TODO: verify checksums for manuall downloads for apps:
 
+- [] syncthing
 - [] bw-cli
 - [] devspace
 - [] docker
@@ -39,7 +41,7 @@ TODO: verify checksums for manuall downloads for apps:
 - [] rclone
 - [] restic
 - [] sops
-- [] taskfile
+- [] task
 - [] yq
 - [] zellij
 

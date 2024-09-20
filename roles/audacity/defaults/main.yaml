@@ -1,2 +1,4 @@
 ---
 # defaults file for audacity
+
+audacity_state: latest

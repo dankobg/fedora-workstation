@@ -4,4 +4,4 @@
 - name: Install traceroute
   ansible.builtin.dnf:
     name: traceroute
-    state: latest
+    state: "{{ traceroute_state }}"

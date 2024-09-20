@@ -1,0 +1,7 @@
+---
+# tasks file for syncthing
+
+- name: Install syncthing
+  ansible.builtin.dnf:
+    name: syncthing
+    state: "{{ syncthing_state }}"

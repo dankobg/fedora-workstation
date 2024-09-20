@@ -54,7 +54,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ fastfetch_tempdir.path }}/{{ fastfetch_release_artifact }}/usr/bin/{{ item }}"
-        dest: /usr/local/bin/
+        dest: "{{ fastfetch_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

@@ -4,4 +4,4 @@
 - name: Install zoxide
   ansible.builtin.dnf:
     name: zoxide
-    state: latest
+    state: "{{ zoxide_state }}"

@@ -6,7 +6,7 @@
     name:
       - python3
       - python3-pip
-    state: latest
+    state: "{{ python_state }}"
 
 - name: Ensure python2 does not exist
   ansible.builtin.dnf:

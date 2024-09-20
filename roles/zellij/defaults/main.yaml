@@ -1,2 +1,6 @@
 ---
 # defaults file for zellij
+
+zellij_state: present
+zellij_version: latest
+zellij_path: "{{ binaries_path }}/zellij"

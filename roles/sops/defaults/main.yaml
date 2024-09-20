@@ -1,2 +1,6 @@
 ---
 # defaults file for sops
+
+sops_state: present
+sops_version: latest
+sops_path: "{{ binaries_path }}/sops"

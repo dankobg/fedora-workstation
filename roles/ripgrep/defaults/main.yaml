@@ -1,2 +1,4 @@
 ---
 # defaults file for ripgrep
+
+ripgrep_state: latest

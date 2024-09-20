@@ -54,7 +54,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ deno_tempdir.path }}/deno"
-        dest: /usr/local/bin
+        dest: "{{ deno_path }}"
         mode: a+x
         remote_src: true
 

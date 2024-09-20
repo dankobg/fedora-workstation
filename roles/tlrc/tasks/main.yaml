@@ -1,46 +1,10 @@
 ---
 # tasks file for tlrc
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/tldr-pages/tlrc/releases/latest
-    return_content: true
-  register: tlrc_latest_release_data
+- name: Include tasks to install tlrc
+  ansible.builtin.include_tasks: install-tlrc.yaml
+  when: tlrc_state == 'present'
 
-- name: Set the release version
-  ansible.builtin.set_fact:
-    tlrc_latest_release_version: "{{ tlrc_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: x86_64
-  ansible.builtin.set_fact:
-    tlrc_release_artifact: "tlrc-{{ tlrc_latest_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: tlrc_
-  register: tlrc_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/tldr-pages/tlrc/releases/download/{{ tlrc_latest_release_version }}/{{ tlrc_release_artifact }}.tar.gz"
-    dest: "{{ tlrc_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ tlrc_tempdir.path }}/tldr"
-    dest: /usr/local/bin
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ tlrc_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove tlrc
+  ansible.builtin.include_tasks: remove-tlrc.yaml
+  when: tlrc_state == 'absent'

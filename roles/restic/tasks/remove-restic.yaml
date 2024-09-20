@@ -1,0 +1,5 @@
+---
+- name: Ensure removed
+  ansible.builtin.file:
+    path: "{{ restic_path }}"
+    state: absent

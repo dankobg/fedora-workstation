@@ -1,2 +1,4 @@
 ---
 # defaults file for smartmontools
+
+smartmontools_state: latest

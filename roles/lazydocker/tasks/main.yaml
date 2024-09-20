@@ -1,46 +1,10 @@
 ---
 # tasks file for lazydocker
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/jesseduffield/lazydocker/releases/latest
-    return_content: true
-  register: lazydocker_latest_release_data
+- name: Include tasks to install lazydocker
+  ansible.builtin.include_tasks: install-lazydocker.yaml
+  when: lazydocker_state == 'present'
 
-- name: Set the release version
-  ansible.builtin.set_fact:
-    lazydocker_latest_release_version: "{{ lazydocker_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x86_64
-      arm: arm64
-  ansible.builtin.set_fact:
-    lazydocker_release_artifact: "lazydocker_{{ lazydocker_latest_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create download temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    prefix: lazydocker_
-  register: lazydocker_tempdir
-
-- name: Unarchive artifact
-  ansible.builtin.unarchive:
-    src: "https://github.com/jesseduffield/lazydocker/releases/download/{{ lazydocker_latest_release_version }}/{{ lazydocker_release_artifact }}.tar.gz"
-    dest: "{{ lazydocker_tempdir.path }}"
-    remote_src: true
-
-- name: Copy binary
-  ansible.builtin.copy:
-    src: "{{ lazydocker_tempdir.path }}/lazydocker"
-    dest: /usr/local/bin/
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: a+x
-    remote_src: true
-
-- name: Cleanup temp files
-  ansible.builtin.file:
-    path: "{{ lazydocker_tempdir.path }}"
-    state: absent
+- name: Include tasks to remove lazydocker
+  ansible.builtin.include_tasks: remove-lazydocker.yaml
+  when: lazydocker_state == 'absent'

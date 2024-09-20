@@ -4,4 +4,4 @@
 - name: Install Krita
   ansible.builtin.dnf:
     name: krita
-    state: latest
+    state: "{{ krita_state }}"

@@ -1,0 +1,66 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type protoc
+  changed_when: false
+  register: protoc_installed
+  failed_when: "not ('protoc: not found' in protoc_installed.stderr or 'protoc is' in protoc_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: protoc --version
+  changed_when: false
+  register: protoc_installed_version_data
+  failed_when: "'libprotoc' not in protoc_installed_version_data.stdout"
+  when: protoc_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    protoc_installed_version: "{{ 'v' + protoc_installed_version_data.stdout.split()[1] if protoc_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/protocolbuffers/protobuf/releases/latest
+    return_content: true
+  register: protoc_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    protoc_release_version: "{{ protoc_latest_release_data.json.tag_name if protoc_version == 'latest' else protoc_version }}"
+
+- name: Download and install
+  when: protoc_installed_version != protoc_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: x86_64
+          arm: aarch64
+      ansible.builtin.set_fact:
+        protoc_release_artifact: "protoc-{{ protoc_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: protoc_
+      register: protoc_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/protocolbuffers/protobuf/releases/download/{{ protoc_release_version }}/{{ protoc_release_artifact }}.zip"
+        dest: "{{ protoc_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ protoc_tempdir.path }}/bin/protoc"
+        dest: "{{ protoc_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ protoc_tempdir.path }}"
+        state: absent

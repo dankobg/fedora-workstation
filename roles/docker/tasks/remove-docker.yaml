@@ -41,7 +41,6 @@
 
 - name: Disable repo # noqa no-changed-when
   ansible.builtin.command:
-    # cmd: dnf config-manager --set-disabled docker-ce
     cmd: dnf config-manager --set-disabled docker-ce-stable docker-ce-stable-debuginfo docker-ce-stable-source docker-ce-test docker-ce-test-debuginfo docker-ce-test-source docker-ce-nightly docker-ce-nightly-debuginfo docker-ce-nightly-source
 
 - name: Remove docker group

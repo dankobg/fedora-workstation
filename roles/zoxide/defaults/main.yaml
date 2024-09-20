@@ -1,2 +1,4 @@
 ---
 # defaults file for zoxide
+
+zoxide_state: latest

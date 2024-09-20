@@ -1,0 +1,6 @@
+---
+# defaults file for task
+
+task_state: present
+task_version: latest
+task_path: "{{ binaries_path }}/task"

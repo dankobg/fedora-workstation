@@ -1,2 +1,6 @@
 ---
 # defaults file for onefetch
+
+onefetch_state: present
+onefetch_version: latest
+onefetch_path: "{{ binaries_path }}/onefetch"

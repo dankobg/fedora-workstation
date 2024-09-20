@@ -1,2 +1,6 @@
 ---
 # defaults file for lazygit
+
+lazygit_state: present
+lazygit_version: latest
+lazygit_path: "{{ binaries_path }}/lazygit"

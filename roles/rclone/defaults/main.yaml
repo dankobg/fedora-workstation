@@ -1,2 +1,6 @@
 ---
 # defaults file for rclone
+
+rclone_state: present
+rclone_version: latest
+rclone_path: "{{ binaries_path }}/rclone"

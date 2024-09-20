@@ -4,4 +4,4 @@
 - name: Install obs
   ansible.builtin.dnf:
     name: obs-studio
-    state: latest
+    state: "{{ obs_state }}"

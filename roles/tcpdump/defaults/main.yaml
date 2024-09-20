@@ -1,2 +1,4 @@
 ---
 # defaults file for tcpdump
+
+tcpdump_state: latest

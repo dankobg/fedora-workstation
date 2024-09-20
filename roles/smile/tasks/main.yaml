@@ -4,4 +4,4 @@
 - name: Install Smile
   community.general.flatpak:
     name: it.mijorus.smile
-    state: latest
+    state: "{{ smile_state }}"

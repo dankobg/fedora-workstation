@@ -1,2 +1,6 @@
 ---
 # defaults file for tlrc
+
+tlrc_state: present
+tlrc_version: latest
+tlrc_path: "{{ binaries_path }}/tldr"

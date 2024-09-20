@@ -4,4 +4,4 @@
 - name: Install Pika Backup
   community.general.flatpak:
     name: org.gnome.World.PikaBackup
-    state: latest
+    state: "{{ pika_backup_state }}"

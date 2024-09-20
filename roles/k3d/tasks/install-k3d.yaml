@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ k3d_tempdir.path }}/{{ k3d_release_artifact }}"
-        dest: /usr/local/bin/k3d
+        dest: "{{ k3d_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

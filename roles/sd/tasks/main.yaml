@@ -4,4 +4,4 @@
 - name: Install sd
   ansible.builtin.dnf:
     name: sd
-    state: latest
+    state: "{{ sd_state }}"

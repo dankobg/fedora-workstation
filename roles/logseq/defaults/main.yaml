@@ -1,2 +1,4 @@
 ---
 # defaults file for logseq
+
+logseq_state: latest

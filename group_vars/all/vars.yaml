@@ -118,7 +118,8 @@ roles_selected:
   - solanum
   - sops
   - stacer
-  - taskfile
+  - syncthing
+  - task
   - tcpdump
   - thunderbird
   - timeshift

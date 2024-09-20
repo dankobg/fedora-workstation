@@ -1,0 +1,35 @@
+---
+- name: Remove binaries
+  ansible.builtin.file:
+    path: "/usr/local/bin/{{ item }}"
+    state: absent
+  loop:
+    - node
+    - corepack
+    - npm
+    - npx
+
+- name: Remove lib
+  ansible.builtin.file:
+    path: /usr/local/lib/node_modules
+    state: absent
+
+- name: Remove include
+  ansible.builtin.file:
+    path: /usr/local/include/node
+    state: absent
+
+- name: Remove doc
+  ansible.builtin.file:
+    path: "/usr/local/share/doc/node"
+    state: absent
+
+- name: Remove man
+  ansible.builtin.file:
+    path: /usr/local/share/man/man1/node.1
+    state: absent
+
+- name: Remove NPM global directory
+  ansible.builtin.file:
+    path: /usr/local/lib/npm-global
+    state: absent

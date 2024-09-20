@@ -4,4 +4,4 @@
 - name: Install rsync
   ansible.builtin.dnf:
     name: rsync
-    state: latest
+    state: "{{ rsync_state }}"

@@ -4,4 +4,4 @@
 - name: Install Solanum
   community.general.flatpak:
     name: org.gnome.Solanum
-    state: latest
+    state: "{{ solanum_state }}"

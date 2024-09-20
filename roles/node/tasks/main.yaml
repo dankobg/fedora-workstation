@@ -1,44 +1,10 @@
 ---
 # tasks file for node
 
-- name: Get the latest GitHub release data
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/nodejs/node/releases/latest
-    return_content: true
-  register: node_latest_release_data
+- name: Include tasks to install node
+  ansible.builtin.include_tasks: install-node.yaml
+  when: node_state == 'present'
 
-- name: Set the release version
-  ansible.builtin.set_fact:
-    node_latest_release_version: "{{ node_latest_release_data.json.tag_name }}"
-
-- name: Set the release artifact
-  vars:
-    arch_name:
-      amd: x64
-      arm: arm64
-  ansible.builtin.set_fact:
-    node_release_artifact: "node-{{ node_latest_release_version }}-{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
-- name: Create NPM global directory
-  ansible.builtin.file:
-    path: /usr/local/lib/npm
-    state: directory
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: "0755"
-
-- name: Add nodesource repository
-  ansible.builtin.yum_repository:
-    name: "nodesource-nodejs"
-    description: "Node.js Nodesource repository"
-    baseurl: "https://rpm.nodesource.com/pub_{{ node_latest_release_version[1:] }}/nodistro/nodejs/{{ ansible_facts.architecture }}"
-    gpgcheck: true
-    enabled: true
-    gpgkey: "gpgkey=https://rpm.nodesource.com/gpgkey/ns-operations-public.key"
-    priority: "9"
-    module_hotfixes: true
-
-- name: Install Node
-  ansible.builtin.dnf:
-    name: nodejs
-    state: present
+- name: Include tasks to remove node
+  ansible.builtin.include_tasks: remove-node.yaml
+  when: node_state == 'absent'

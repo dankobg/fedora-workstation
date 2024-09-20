@@ -1,2 +1,4 @@
 ---
 # defaults file for timeshift
+
+timeshift_state: latest

@@ -4,4 +4,4 @@
 - name: Install ripgrep
   ansible.builtin.dnf:
     name: ripgrep
-    state: latest
+    state: "{{ ripgrep_state }}"

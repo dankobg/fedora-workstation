@@ -1,0 +1,66 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type zellij
+  changed_when: false
+  register: zellij_installed
+  failed_when: "not ('zellij: not found' in zellij_installed.stderr or 'zellij is' in zellij_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: zellij --version
+  changed_when: false
+  register: zellij_installed_version_data
+  failed_when: "'zellij' not in zellij_installed_version_data.stdout"
+  when: zellij_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    zellij_installed_version: "{{ 'v' + zellij_installed_version_data.stdout.split()[1] if zellij_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/zellij-org/zellij/releases/latest
+    return_content: true
+  register: zellij_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    zellij_release_version: "{{ zellij_latest_release_data.json.tag_name if zellij_version == 'latest' else zellij_version }}"
+
+- name: Download and install
+  when: zellij_installed_version != zellij_release_version
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: x86_64
+          arm: aarch64
+      ansible.builtin.set_fact:
+        zellij_release_artifact: "zellij-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-musl"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: zellij_
+      register: zellij_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/zellij-org/zellij/releases/download/{{ zellij_release_version }}/{{ zellij_release_artifact }}.tar.gz"
+        dest: "{{ zellij_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ zellij_tempdir.path }}/zellij"
+        dest: "{{ zellij_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ zellij_tempdir.path }}"
+        state: absent

@@ -1,2 +1,4 @@
 ---
 # defaults file for rsync
+
+rsync_state: latest

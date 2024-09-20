@@ -4,4 +4,4 @@
 - name: Install whois
   ansible.builtin.dnf:
     name: whois
-    state: latest
+    state: "{{ whois_state }}"

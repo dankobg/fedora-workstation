@@ -1,0 +1,5 @@
+---
+- name: Ensure removed
+  ansible.builtin.file:
+    path: "{{ zed_path }}"
+    state: absent

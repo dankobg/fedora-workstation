@@ -4,4 +4,4 @@
 - name: Install Logseq
   community.general.flatpak:
     name: com.logseq.Logseq
-    state: latest
+    state: "{{ logseq_state }}"

@@ -1,2 +1,9 @@
 ---
 # defaults file for node
+
+node_state: present
+node_version: latest
+node_path: "{{ binaries_path }}/node"
+node_corepack_path: "{{ binaries_path }}/corepack"
+node_npm_path: "{{ binaries_path }}/npm"
+node_npx_path: "{{ binaries_path }}/npx"

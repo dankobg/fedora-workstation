@@ -55,7 +55,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ ksops_tempdir.path }}/ksops"
-        dest: /usr/local/bin/
+        dest: "{{ ksops_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

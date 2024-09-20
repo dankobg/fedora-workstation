@@ -4,4 +4,4 @@
 - name: Install net-tools
   ansible.builtin.dnf:
     name: net-tools
-    state: latest
+    state: "{{ net_tools_state }}"

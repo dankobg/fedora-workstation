@@ -1,4 +1,5 @@
 ---
 # defaults file for tlp
 
+tlp_state: latest
 tlp_enabled: false

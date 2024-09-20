@@ -4,4 +4,4 @@
 - name: Install Stacer
   ansible.builtin.dnf:
     name: stacer
-    state: latest
+    state: "{{ stacer_state }}"

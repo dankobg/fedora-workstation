@@ -4,4 +4,4 @@
 - name: Install Inkscape
   ansible.builtin.dnf:
     name: inkscape
-    state: latest
+    state: "{{ inkscape_state }}"

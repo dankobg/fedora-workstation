@@ -4,4 +4,4 @@
 - name: Install kdenlive
   ansible.builtin.dnf:
     name: kdenlive
-    state: latest
+    state: "{{ kdenlive_state }}"

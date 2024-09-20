@@ -4,4 +4,4 @@
 - name: Install Thunderbird
   ansible.builtin.dnf:
     name: thunderbird
-    state: latest
+    state: "{{ thunderbird_state }}"

@@ -1,2 +1,6 @@
 ---
 # defaults file for protoc
+
+protoc_state: present
+protoc_version: latest
+protoc_path: "{{ binaries_path }}/protoc"

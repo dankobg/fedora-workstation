@@ -1,2 +1,4 @@
 ---
 # defaults file for krita
+
+krita_state: latest

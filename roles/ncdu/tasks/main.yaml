@@ -4,4 +4,4 @@
 - name: Install ncdu
   ansible.builtin.dnf:
     name: ncdu
-    state: latest
+    state: "{{ ncdu_state }}"

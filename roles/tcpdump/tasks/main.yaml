@@ -4,4 +4,4 @@
 - name: Install tcpdump
   ansible.builtin.dnf:
     name: tcpdump
-    state: latest
+    state: "{{ tcpdump_state }}"

@@ -1,2 +1,6 @@
 ---
 # defaults file for yq
+
+yq_state: present
+yq_version: latest
+yq_path: "{{ binaries_path }}/yq"

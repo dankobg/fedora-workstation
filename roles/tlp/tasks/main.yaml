@@ -9,7 +9,7 @@
         name:
           - tlp
           - tlp-rdw
-        state: latest
+        state: "{{ tlp_state }}"
 
     - name: Remove conflicting power profile daemon
       ansible.builtin.dnf:

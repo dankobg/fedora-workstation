@@ -4,4 +4,4 @@
 - name: Install Timeshift
   ansible.builtin.dnf:
     name: timeshift
-    state: latest
+    state: "{{ timeshift_state }}"

@@ -1,2 +1,4 @@
 ---
 # defaults file for stacer
+
+stacer_state: latest

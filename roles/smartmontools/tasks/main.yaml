@@ -4,4 +4,4 @@
 - name: Install smartmontools
   ansible.builtin.dnf:
     name: smartmontools
-    state: latest
+    state: "{{ smartmontools_state }}"

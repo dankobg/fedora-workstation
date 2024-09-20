@@ -1,0 +1,4 @@
+---
+# defaults file for syncthing
+
+syncthing_state: latest

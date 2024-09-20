@@ -4,4 +4,4 @@
 - name: Install qBittorrent
   ansible.builtin.dnf:
     name: qbittorrent
-    state: latest
+    state: "{{ qbittorrent_state }}"

@@ -4,4 +4,4 @@
 - name: Install Audacity
   ansible.builtin.dnf:
     name: audacity
-    state: latest
+    state: "{{ audacity_state }}"

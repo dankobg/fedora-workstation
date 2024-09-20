@@ -1,7 +1,7 @@
 ---
 # tasks file for vscode
 
-- name: Add repository
+- name: Add yum repository
   ansible.builtin.yum_repository:
     name: vscode
     description: VSCode yum repository
@@ -10,8 +10,20 @@
     gpgcheck: true
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
     state: present
+  when: vscode_state == 'present'
 
 - name: Install VSCode
   ansible.builtin.dnf:
     name: code
-    state: latest
+    state: "{{ vscode_state }}"
+
+- name: Disable repo # noqa no-changed-when
+  ansible.builtin.command:
+    cmd: dnf config-manager --set-disabled code
+  when: vscode_state == 'absent'
+
+- name: Remove yum repository
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/vscode.repo
+    state: absent
+  when: vscode_state == 'absent'

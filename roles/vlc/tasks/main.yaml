@@ -4,4 +4,4 @@
 - name: Install VLC
   ansible.builtin.dnf:
     name: vlc
-    state: latest
+    state: "{{ vlc_state }}"

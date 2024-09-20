@@ -1,0 +1,62 @@
+---
+- name: Check if installed
+  ansible.builtin.command:
+    cmd: type onefetch
+  changed_when: false
+  register: onefetch_installed
+  failed_when: "not ('onefetch: not found' in onefetch_installed.stderr or 'onefetch is' in onefetch_installed.stdout)"
+
+- name: Get installed version data
+  ansible.builtin.command:
+    cmd: onefetch --version
+  changed_when: false
+  register: onefetch_installed_version_data
+  failed_when: "'onefetch' not in onefetch_installed_version_data.stdout"
+  when: onefetch_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    onefetch_installed_version: "{{ onefetch_installed_version_data.stdout.split()[1] if onefetch_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/o2sh/onefetch/releases/latest
+    return_content: true
+  register: onefetch_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    onefetch_release_version: "{{ onefetch_latest_release_data.json.tag_name if onefetch_version == 'latest' else onefetch_version }}"
+
+- name: Download and install
+  when: onefetch_installed_version != onefetch_release_version
+  block:
+    - name: Set the release artifact
+      ansible.builtin.set_fact:
+        onefetch_release_artifact: "onefetch-{{ 'win' if ansible_facts.system == 'Windows' else 'mac' if ansible_facts.system == 'Darwin' else 'linux' }}"
+
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: onefetch_
+      register: onefetch_tempdir
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "https://github.com/o2sh/onefetch/releases/download/{{ onefetch_release_version }}/{{ onefetch_release_artifact }}.tar.gz"
+        dest: "{{ onefetch_tempdir.path }}"
+        remote_src: true
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ onefetch_tempdir.path }}/onefetch"
+        dest: "{{ onefetch_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ onefetch_tempdir.path }}"
+        state: absent

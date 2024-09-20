@@ -1,2 +1,6 @@
 ---
 # defaults file for mkcert
+
+mkcert_state: present
+mkcert_version: latest
+mkcert_path: "{{ binaries_path }}/mkcert"
