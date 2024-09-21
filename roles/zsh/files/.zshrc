@@ -9,6 +9,9 @@ fi
 [ -f "$ZDOTDIR/.optionrc" ] && source "$ZDOTDIR/.optionrc"
 [ -f "$ZDOTDIR/.pluginrc" ] && source "$ZDOTDIR/.pluginrc"
 
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always --line-range=:500 {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
 HISTFILE="$ZDOTDIR/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=10000
@@ -36,10 +39,13 @@ bindkey '^[[F' end-of-line
 
 zstyle :compinstall filename '$ZDOTDIR/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:*' switch-group '<' '>'
 
 autoload -Uz compinit; compinit
 
