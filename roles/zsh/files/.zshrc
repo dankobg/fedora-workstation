@@ -9,16 +9,6 @@ fi
 [ -f "$ZDOTDIR/.optionrc" ] && source "$ZDOTDIR/.optionrc"
 [ -f "$ZDOTDIR/.pluginrc" ] && source "$ZDOTDIR/.pluginrc"
 
-export PATH="/usr/lib64/ccache"
-export PATH="$PATH:/usr/sbin"
-export PATH="$PATH:/usr/bin"
-export PATH="$PATH:/usr/local/sbin"
-export PATH="$PATH:/usr/local/bin"
-export PATH="$PATH:$HOME/bin"
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:/usr/local/lib/npm-global"
-
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always --line-range=:500 {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
