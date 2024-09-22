@@ -76,6 +76,22 @@
         mode: "0755"
         remote_src: true
 
+    - name: Copy config
+      ansible.builtin.copy:
+        src: config.toml
+        dest: "/home/{{ username }}/.config/helix/config.toml"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+
+    - name: Copy languages file
+      ansible.builtin.copy:
+        src: languages.toml
+        dest: "/home/{{ username }}/.config/helix/languages.toml"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+
     - name: Cleanup temp files
       ansible.builtin.file:
         path: "{{ helix_tempdir.path }}"

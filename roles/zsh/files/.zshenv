@@ -9,6 +9,9 @@ export XDG_DESKTOP_DIR="$HOME/Desktop"
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export EDITOR="/usr/local/bin/hx"
+export NPM_CONFIG_PREFIX="/usr/local/lib/npm-global"
+export GOPATH="/usr/local/go"
 
 export PATH="/usr/lib64/ccache"
 export PATH="$PATH:/sbin"
@@ -22,6 +25,5 @@ export PATH="$PATH:/usr/local/games"
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:/usr/local/lib/npm-global"
-
-export EDITOR="/usr/local/bin/hx"
+export PATH="$PATH:$NPM_CONFIG_PREFIX/bin"
+export PATH="$PATH:$GOPATH/bin"

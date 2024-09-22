@@ -71,3 +71,11 @@
         group: "{{ username }}"
         mode: a+x
         recurse: true
+
+    - name: Ensure gopath directory exists
+      ansible.builtin.file:
+        path: "/usr/local/lib/go"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
