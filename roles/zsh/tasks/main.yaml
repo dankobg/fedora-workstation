@@ -22,8 +22,8 @@
 
     - name: Copy .zshenv
       ansible.builtin.copy:
-        src: .zshenv
-        dest: "/home/{{ username }}/"
+        src: zshenv
+        dest: "/etc/zshenv"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0644"

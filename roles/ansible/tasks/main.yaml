@@ -5,3 +5,11 @@
   ansible.builtin.dnf:
     name: ansible
     state: "{{ ansible_state }}"
+
+- name: Ensure ansible config directory exists
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config/ansible"
+    state: "{{ 'directory' if ansible_state == 'latest' else 'absent' }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"

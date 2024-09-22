@@ -9,3 +9,5 @@ alias lg="lazygit"
 alias z="zoxide"
 alias zj="zellij"
 alias wtr="curl wttr.in"
+
+alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"

@@ -131,6 +131,14 @@
         group: "{{ username }}"
         mode: "0755"
 
+    - name: Copy global npmrc
+      ansible.builtin.copy:
+        src: npmrc
+        dest: /etc/npmrc
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+
     - name: Cleanup temp files
       ansible.builtin.file:
         path: "{{ node_tempdir.path }}"
