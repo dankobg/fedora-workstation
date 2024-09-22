@@ -1,22 +1,22 @@
 ---
 - name: Check if installed
   ansible.builtin.command:
-    cmd: type eza
+    cmd: type zed
   changed_when: false
-  register: eza_installed
-  failed_when: "not ('eza: not found' in eza_installed.stderr or 'eza is' in eza_installed.stdout)"
+  register: zed_installed
+  failed_when: "not ('zed: not found' in zed_installed.stderr or 'zed is' in zed_installed.stdout)"
 
 - name: Get installed version data
   ansible.builtin.command:
-    cmd: eza --version
+    cmd: zed --version
   changed_when: false
-  register: eza_installed_version_data
-  failed_when: "'eza' not in eza_installed_version_data.stdout"
-  when: eza_installed.rc == 0
+  register: zed_installed_version_data
+  failed_when: "'zed' not in zed_installed_version_data.stdout"
+  when: zed_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    eza_installed_version: "{{ eza_installed_version_data.stdout_lines[1].split()[0] if eza_installed.rc == 0 else '' }}"
+    zed_installed_version: "{{ zed_installed_version_data.stdout_lines[1].split()[0] if zed_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:
@@ -26,10 +26,10 @@
 
 - name: Set the release version
   ansible.builtin.set_fact:
-    eza_release_version: "{{ eza_latest_release_data.json.tag_name if eza_version == 'latest' else eza_version }}"
+    zed_release_version: "{{ zed_latest_release_data.json.tag_name if zed_version == 'latest' else zed_version }}"
 
 - name: Download and install
-  when: eza_installed_version != eza_release_version
+  when: zed_installed_version != zed_release_version
   block:
     - name: Set the release artifact
       vars:
@@ -59,6 +59,57 @@
         group: "{{ username }}"
         mode: a+x
         remote_src: true
+
+    - name: Copy .so files if they don't exist
+      ansible.builtin.copy:
+        src: "{{ zed_tempdir.path }}/zed.app/lib/"
+        dest: "/usr/lib64"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+        remote_src: true
+        force: false
+
+    - name: Copy libexec
+      ansible.builtin.copy:
+        src: "{{ zed_tempdir.path }}/zed.app/libexec/zed-editor"
+        dest: /usr/local/libexec
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Copy desktop file
+      ansible.builtin.copy:
+        src: "{{ zed_tempdir.path }}/zed.app/share/applications/zed.desktop"
+        dest: /usr/local/share/applications/zed.desktop
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+        remote_src: true
+
+    - name: Ensure icons directories exist
+      ansible.builtin.file:
+        path: "/usr/local/share/icons/hicolor/{{ item }}/apps"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      loop:
+        - "512x512"
+        - "1024x1024"
+
+    - name: Copy icons
+      ansible.builtin.copy:
+        src: "{{ zed_tempdir.path }}/zed.app/share/icons/hicolor/{{ item }}/apps/zed.png"
+        dest: /usr/local/share/icons/hicolor/{{ item }}/apps/zed.png
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+        remote_src: true
+      loop:
+        - "512x512"
+        - "1024x1024"
 
     - name: Cleanup temp files
       ansible.builtin.file:

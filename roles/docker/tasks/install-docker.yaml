@@ -12,7 +12,6 @@
 - name: Ensure old packages don't exist
   ansible.builtin.dnf:
     name:
-      - docker
       - docker-client
       - docker-client-latest
       - docker-common
