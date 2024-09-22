@@ -28,10 +28,12 @@
   ansible.builtin.set_fact:
     helix_release_version: "{{ helix_latest_release_data.json.tag_name if helix_version == 'latest' else helix_version }}"
 
-- set_fact:
-    parts: "{{ helix_installed_version.split('.') }}" # TEMP FIX
+- name: Temp fix 1
+  ansible.builtin.set_fact:
+    parts: "{{ helix_installed_version.split('.') }}"
 
-- set_fact: # TEMP FIX
+- name: Temp fix 2
+  ansible.builtin.set_fact:
     helix_installed_version: "{{ parts[0] + '.0' + parts[1] }}"
   when: helix_installed_version.split('.')[1] | length == 1
 
