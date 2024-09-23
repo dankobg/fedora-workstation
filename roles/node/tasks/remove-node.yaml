@@ -1,13 +1,4 @@
 ---
-- name: Remove global packages
-  community.general.npm:
-    name: "{{ item.name | default(item) }}"
-    global: true
-    state: absent
-  environment:
-    NPM_CONFIG_PREFIX: "{{ node_npm_global_dir }}"
-  loop: "{{ node_global_packages }}"
-
 - name: Remove binaries
   ansible.builtin.file:
     path: "/usr/local/bin/{{ item }}"
@@ -41,4 +32,9 @@
 - name: Remove NPM global directory
   ansible.builtin.file:
     path: /usr/local/lib/npm-global
+    state: absent
+
+- name: Remove global npmrc
+  ansible.builtin.file:
+    path: /etc/npmrc
     state: absent

@@ -140,6 +140,8 @@
         mode: "0644"
 
     - name: Install global packages
+      become: true
+      become_user: "{{ username }}"
       community.general.npm:
         name: "{{ item.name | default(item) }}"
         version: "{{ item.version | default(omit) }}"
