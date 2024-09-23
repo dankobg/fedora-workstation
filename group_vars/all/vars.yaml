@@ -49,7 +49,7 @@ roles_selected:
   - bitwarden
   - bitwarden-cli
   - bleachbit
-  - bruno
+  # - bruno # there is a bug with flatpak, i installed appimage currently which works fine...
   - btop
   - czkawka
   - dconf-editor
