@@ -7,6 +7,13 @@
   become: true
   gather_facts: true
 
+  pre_tasks:
+    - name: Install and upgrade requirements
+      ansible.builtin.command:
+        cmd: ansible-galaxy collection install --upgrade -r requirements.yaml
+      register: install_reqs
+      changed_when: "'is already installed, skipping' not in install_reqs.stdout"
+
   tasks:
     - name: Include selected roles
       ansible.builtin.include_role:
