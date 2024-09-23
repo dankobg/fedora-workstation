@@ -7,3 +7,15 @@ node_path: "{{ binaries_path }}/node"
 node_corepack_path: "{{ binaries_path }}/corepack"
 node_npm_path: "{{ binaries_path }}/npm"
 node_npx_path: "{{ binaries_path }}/npx"
+node_npm_global_dir: /usr/local/lib/npm-global
+
+node_global_packages:
+  - name: "vscode-langservers-extracted"
+  - name: "dockerfile-language-server-nodejs"
+  - name: "@microsoft/compose-language-service"
+  - name: "typescript"
+  - name: "typescript-language-server"
+  - name: "svelte-language-server"
+  - name: "typescript-svelte-plugin"
+  - name: "yaml-language-server"
+    version: "next"

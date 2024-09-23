@@ -61,8 +61,10 @@
       ansible.builtin.unarchive:
         src: "https://go.dev/dl/{{ go_release_artifact }}.tar.gz"
         dest: "/usr/local"
-        remote_src: true
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: "0755"
+        remote_src: true
 
     - name: Give executable permissions to binary
       ansible.builtin.file:

@@ -29,3 +29,8 @@ auto-format = true
 name = "yaml"
 formatter = { command = 'prettier', args = ["--parser", "yaml"] }
 auto-format = true
+
+[[language]]
+name = "go"
+auto-format = true
+formatter = { command = "goimports" }

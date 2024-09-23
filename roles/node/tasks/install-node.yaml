@@ -125,19 +125,29 @@
 
     - name: Create NPM global directory
       ansible.builtin.file:
-        path: /usr/local/lib/npm-global
+        path: "{{ node_npm_global_dir }}"
         state: directory
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0755"
 
     - name: Copy global npmrc
-      ansible.builtin.copy:
-        src: npmrc
+      ansible.builtin.template:
+        src: npmrc.j2
         dest: /etc/npmrc
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0644"
+
+    - name: Install global packages
+      community.general.npm:
+        name: "{{ item.name | default(item) }}"
+        version: "{{ item.version | default(omit) }}"
+        global: true
+        state: "{{ item.state | default('present') }}"
+      environment:
+        NPM_CONFIG_PREFIX: "{{ node_npm_global_dir }}"
+      loop: "{{ node_global_packages }}"
 
     - name: Cleanup temp files
       ansible.builtin.file:

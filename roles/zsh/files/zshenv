@@ -10,10 +10,10 @@ export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export EDITOR="/usr/local/bin/hx"
-export NPM_CONFIG_PREFIX="/usr/local/lib/npm-global"
-export GOPATH="/usr/local/go"
 export ANSIBLE_HOME="$XDG_DATA_HOME/ansible"
+export GOPATH="/usr/local/lib/go"
 export PYTHON_HISTORY="$XDG_STATE_HOME=/python"
+export NPM_CONFIG_PREFIX="/usr/local/lib/npm-global"
 
 export PATH="/usr/lib64/ccache"
 export PATH="$PATH:/sbin"
