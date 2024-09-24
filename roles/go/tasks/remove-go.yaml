@@ -5,4 +5,4 @@
     state: absent
   loop:
     - "{{ go_dir }}"
-    - "{{ gopath_dir }}"
+    - "{{ go_gopath_dir }}"

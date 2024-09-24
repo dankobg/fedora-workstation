@@ -4,7 +4,7 @@
 go_state: present
 go_version: latest
 go_dir: /usr/local/go
-gopath_dir: /usr/local/lib/go
+go_gopath_dir: /usr/local/lib/go
 
 go_tools:
   - golang.org/x/tools/gopls@latest

@@ -80,7 +80,7 @@
 
     - name: Ensure gopath directory exists
       ansible.builtin.file:
-        path: "{{ gopath_dir }}"
+        path: "{{ go_gopath_dir }}"
         state: directory
         owner: "{{ username }}"
         group: "{{ username }}"
