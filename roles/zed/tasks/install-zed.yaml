@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type zed
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('zed: not found' in zed_installed.stderr or 'zed is' in zed_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: zed --version
   changed_when: false

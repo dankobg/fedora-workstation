@@ -4,3 +4,17 @@
 go_state: present
 go_version: latest
 go_dir: /usr/local/go
+gopath_dir: /usr/local/lib/go
+
+go_tools:
+  - golang.org/x/tools/gopls@latest
+  - github.com/go-delve/delve/cmd/dlv@latest
+  - golang.org/x/tools/cmd/goimports@latest
+  - github.com/fatih/gomodifytags@latest
+  - github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+  - github.com/nametake/golangci-lint-langserver@latest
+  - github.com/goreleaser/goreleaser/v2@latest
+  - github.com/kisielk/errcheck@latest
+  - github.com/josharian/impl@latest
+  - honnef.co/go/tools/cmd/staticcheck@latest
+  - honnef.co/go/tools/cmd/structlayout@latest

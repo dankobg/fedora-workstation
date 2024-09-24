@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type lazydocker
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('lazydocker: not found' in lazydocker_installed.stderr or 'lazydocker is' in lazydocker_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: lazydocker --version
   changed_when: false

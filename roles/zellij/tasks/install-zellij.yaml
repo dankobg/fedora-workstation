@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type zellij
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('zellij: not found' in zellij_installed.stderr or 'zellij is' in zellij_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: zellij --version
   changed_when: false

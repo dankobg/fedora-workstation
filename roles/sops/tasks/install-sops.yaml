@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type sops
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('sops: not found' in sops_installed.stderr or 'sops is' in sops_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: sops --version
   changed_when: false

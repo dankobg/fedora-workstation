@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type kubectl
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('kubectl: not found' in kubectl_installed.stderr or 'kubectl is' in kubectl_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: kubectl version
   changed_when: false

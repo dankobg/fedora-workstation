@@ -13,6 +13,8 @@
     state: absent
 
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type go
   changed_when: false
@@ -20,6 +22,8 @@
   failed_when: "not ('go: not found' in go_installed.stderr or 'go is' in go_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: go version
   changed_when: false
@@ -76,8 +80,15 @@
 
     - name: Ensure gopath directory exists
       ansible.builtin.file:
-        path: "/usr/local/lib/go"
+        path: "{{ gopath_dir }}"
         state: directory
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0755"
+
+- name: Install go tools # noqa no-changed-when
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: "go install {{ item }}"
+  loop: "{{ go_tools }}"

@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type jq
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('jq: not found' in jq_installed.stderr or 'jq is' in jq_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: jq --version
   changed_when: false

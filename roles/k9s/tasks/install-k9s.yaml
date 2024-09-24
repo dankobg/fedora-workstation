@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type k9s
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('k9s: not found' in k9s_installed.stderr or 'k9s is' in k9s_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: k9s version
   changed_when: false

@@ -1,5 +1,8 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ go_dir }}"
+    path: "{{ item }}"
     state: absent
+  loop:
+    - "{{ go_dir }}"
+    - "{{ gopath_dir }}"

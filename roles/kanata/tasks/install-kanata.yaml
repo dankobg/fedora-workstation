@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type kanata
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('kanata: not found' in kanata_installed.stderr or 'kanata is' in kanata_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: kanata --version
   changed_when: false

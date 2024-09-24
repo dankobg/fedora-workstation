@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type fastfetch
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('fastfetch: not found' in fastfetch_installed.stderr or 'fastfetch is' in fastfetch_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: fastfetch --version
   changed_when: false

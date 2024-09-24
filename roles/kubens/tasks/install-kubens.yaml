@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type kubens
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('kubens: not found' in kubens_installed.stderr or 'kubens is' in kubens_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: kubens --version
   changed_when: false

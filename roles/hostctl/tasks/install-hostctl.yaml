@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type hostctl
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('hostctl: not found' in hostctl_installed.stderr or 'hostctl is' in hostctl_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: hostctl --version
   changed_when: false

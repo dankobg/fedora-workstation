@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type k3d
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('k3d: not found' in k3d_installed.stderr or 'k3d is' in k3d_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: k3d --version
   changed_when: false

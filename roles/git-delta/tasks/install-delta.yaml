@@ -2,6 +2,8 @@
 # tasks file for git-delta
 
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type delta
   changed_when: false
@@ -9,6 +11,8 @@
   failed_when: "not ('delta: not found' in delta_installed.stderr or 'delta is' in delta_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: delta --version
   changed_when: false

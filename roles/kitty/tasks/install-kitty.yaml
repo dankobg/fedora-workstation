@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type kitty
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('kitty: not found' in kitty_installed.stderr or 'kitty is' in kitty_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: kitty --version
   changed_when: false

@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type kustomize
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('kustomize: not found' in kustomize_installed.stderr or 'kustomize is' in kustomize_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: kustomize version
   changed_when: false

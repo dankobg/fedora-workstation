@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type mkcert
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('mkcert: not found' in mkcert_installed.stderr or 'mkcert is' in mkcert_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: mkcert --version
   changed_when: false

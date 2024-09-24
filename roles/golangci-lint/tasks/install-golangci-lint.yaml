@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type golangci-lint
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('golangci-lint: not found' in golangci_lint_installed.stderr or 'golangci-lint is' in golangci_lint_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: golangci-lint --version
   changed_when: false

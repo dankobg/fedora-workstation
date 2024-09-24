@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type node
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('node: not found' in node_installed.stderr or 'node is' in node_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: node --version
   changed_when: false

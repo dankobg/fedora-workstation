@@ -1,5 +1,7 @@
 ---
 - name: Check if installed
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type deno
   changed_when: false
@@ -7,6 +9,8 @@
   failed_when: "not ('deno: not found' in deno_installed.stderr or 'deno is' in deno_installed.stdout)"
 
 - name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: deno --version
   changed_when: false

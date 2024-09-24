@@ -19,7 +19,9 @@ tasks file for google-chrome
     src: managed_policies.json
     dest: /etc/opt/chrome/policies/managed
 
-- name: Get installed version
+- name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.shell: $(which google-chrome) --version
   changed_when: false
   register: chrome_version
