@@ -4,7 +4,11 @@
 - name: Install Nvidia GPU drivers
   ansible.builtin.dnf:
     name:
+      - mesa-vulkan-drivers
+      - vulkan
+      - vulkan-tools
       - akmod-nvidia
+      - xorg-x11-drv-nvidia
       - xorg-x11-drv-nvidia-cuda
       - intel-media-driver
     state: latest

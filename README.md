@@ -1,5 +1,10 @@
 {{ ansible_managed | comment }} adds managed by ansible haders to start of document
 
+TODO: improvements
+maybe some smoke tests
+e.g. get_uri: with retries, delay and until 'xxx' in result.content
+retries until for nvidia drivers...
+
 TODO: roles
 
 - rust
