@@ -1,0 +1,103 @@
+---
+- name: Check if rustup is installed
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: type rustup
+  changed_when: false
+  register: rustup_installed
+  failed_when: "not ('rustup: not found' in rustup_installed.stderr or 'rustup is' in rustup_installed.stdout)"
+
+- name: Get installed rustup version data
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: rustup --version
+  changed_when: false
+  register: rustup_installed_version_data
+  failed_when: "'rustup' not in rustup_installed_version_data.stdout"
+  when: rustup_installed.rc == 0
+
+- name: Set installed rustup version
+  ansible.builtin.set_fact:
+    rustup_installed_version: "{{ rustup_installed_version_data.stdout_lines[0].split()[1] if rustup_installed.rc == 0 else '' }}"
+
+- name: Get the latest GitHub release data
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/rust-lang/rustup/tags
+    return_content: true
+  register: rustup_latest_release_data
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    rustup_release_version: "{{ rustup_latest_release_data.json[0].name if rust_rustup_version == 'latest' else rust_rustup_version }}"
+
+- name: Download and install
+  when: rustup_installed.rc == 1
+  block:
+    - name: Set the release artifact
+      vars:
+        arch_name:
+          amd: x86_64
+          arm: aarch64
+      ansible.builtin.set_fact:
+        rustup_release_artifact: "{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-gnu/rustup-init"
+
+    - name: Create download temporary directory
+      become: true
+      become_user: "{{ username }}"
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: rustup_
+      register: rustup_tempdir
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "https://static.rust-lang.org/rustup/dist/{{ rustup_release_artifact }}"
+        dest: "{{ rustup_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+
+    - name: Ensure rustup and cargo directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      loop:
+        - "{{ rust_rustup_dir }}"
+        - "{{ rust_cargo_dir }}"
+
+    - name: Run rustup-init
+      become: true
+      become_user: "{{ username }}"
+      ansible.builtin.command:
+        cmd: "{{ rustup_tempdir.path }}/rustup-init -y --quiet --default-toolchain=stable --profile=default --no-modify-path"
+        creates:
+          - "{{ rust_rustup_dir }}"
+          - "{{ rust_cargo_dir }}"
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ rustup_tempdir.path }}"
+        state: absent
+
+- name: Update toolchain
+  become: true
+  become_user: "{{ username }}"
+  when: rustup_installed.rc == 0
+  block:
+    - name: Check for updates
+      ansible.builtin.command:
+        cmd: rustup check
+      changed_when: rustup_check.stdout_lines | select('search', 'Up to date') | list | length != rustup_check.stdout_lines | length
+      register: rustup_check
+
+    - name: Update toolchain
+      ansible.builtin.command:
+        cmd: rustup update
+      changed_when: "'unchanged' not in rustup_update.stdout"
+      register: rustup_update
+      when: rustup_check.changed

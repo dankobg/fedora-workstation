@@ -1,56 +1,10 @@
 ---
 # tasks file for rust
 
-- name: UNIMPLEMENTED
-  debug:
-    msg: "TODO LATER"
-# - name: Get the latest GitHub release data
-#   ansible.builtin.uri:
-#     url: https://api.github.com/repos/rust-lang/rust/releases/latest
-#     return_content: true
-#   register: rust_latest_release_data
+- name: Include tasks to install rust
+  ansible.builtin.include_tasks: install-rust.yaml
+  when: rust_state == 'present'
 
-# - name: Set the release version
-#   ansible.builtin.set_fact:
-#     rust_latest_release_version: "{{ rust_latest_release_data.json.tag_name }}"
-
-# - name: Set the release artifact
-#   vars:
-#     arch_name:
-#       amd: x86_64
-#       arm: aarch64
-#   ansible.builtin.set_fact:
-#     rust_release_artifact: "rust-{{ rust_latest_release_version }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-#     rustup_init_release_artifact: "{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}-unknown-{{ ansible_facts.system | lower}}-gnu/rustup-init"
-
-# - name: Create download temporary directory
-#   ansible.builtin.tempfile:
-#     state: directory
-#     prefix: rust_
-#   register: rust_tempdir
-
-# - name: Download rustup-init binary
-#   ansible.builtin.get_url:
-#     url: "https://static.rust-lang.org/rustup/dist/{{ rustup_init_release_artifact }}"
-#     dest: "{{ rust_tempdir.path }}"
-#     mode: a+x
-
-# - name: Download stable standalone binary
-#   ansible.builtin.get_url:
-#     url: "https://static.rust-lang.org/dist/{{ rust_release_artifact }}.tar.xz"
-#     dest: "{{ rust_tempdir.path }}"
-#     mode: a+x
-
-# - name: Copy binary
-#   ansible.builtin.copy:
-#     src: "{{ rust_tempdir.path }}/{{ rust_release_artifact }}/rust"
-#     dest: /usr/local/bin
-#     owner: "{{ username }}"
-#     group: "{{ username }}"
-#     mode: a+x
-#     remote_src: true
-
-# - name: Cleanup temp files
-#   ansible.builtin.file:
-#     path: "{{ rust_tempdir.path }}"
-#     state: absent
+- name: Include tasks to remove rust
+  ansible.builtin.include_tasks: remove-rust.yaml
+  when: rust_state == 'absent'

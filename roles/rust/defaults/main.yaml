@@ -2,3 +2,11 @@
 # defaults file for rust
 
 rust_installation_method: rustup
+
+rust_state: present
+rust_version: latest
+
+rust_rustup_state: present
+rust_rustup_version: latest
+rust_rustup_dir: "/usr/local/lib/rustup"
+rust_cargo_dir: "/usr/local/lib/cargo"

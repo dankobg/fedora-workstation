@@ -72,9 +72,9 @@ roles_selected:
   - git-delta
   - glow
   - go
-  - golangci-lint
+  # - golangci-lint
   - google-chrome
-  - goreleaser
+  # - goreleaser
   - handbrake
   - helix
   - helm

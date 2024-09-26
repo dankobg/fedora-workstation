@@ -1,7 +1,7 @@
 GRUB_TIMEOUT=3
 GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
 {% if grub_dual_boot %}
-GRUB_DEFAULT="{{ grub_entries.stdout }}"
+GRUB_DEFAULT="{{ grub_default_entry }}"
 {% else %}
 GRUB_DEFAULT=saved
 {% endif %}

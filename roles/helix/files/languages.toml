@@ -34,3 +34,6 @@ auto-format = true
 name = "go"
 auto-format = true
 formatter = { command = "goimports" }
+
+[language-server.rust-analyzer.config.check]
+command = "clippy"

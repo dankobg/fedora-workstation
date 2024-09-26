@@ -1,0 +1,8 @@
+---
+- name: Ensure removed
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ rust_rustup_dir }}"
+    - "{{ rust_cargo_dir }}"

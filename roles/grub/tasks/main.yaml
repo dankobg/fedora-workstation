@@ -1,11 +1,21 @@
 ---
 # tasks file for grub
 
-- name: Get grub menu entries
-  ansible.builtin.shell: set -o pipefail; grep -P "^menuentry" /boot/grub2/grub.cfg | cut -d "'" -f2
-  changed_when: "'Windows Boot Manager' not in grub_entries.stdout"
-  register: grub_entries
+- name: Get the default menuentry for dual-boot setup
   when: grub_dual_boot
+  block:
+    - name: Get grub file content
+      ansible.builtin.slurp:
+        src: /boot/grub2/grub.cfg
+      register: grub_data
+
+    - name: Decode the base64 encoded grub file content
+      ansible.builtin.set_fact:
+        grub_content: "{{ grub_data.content | b64decode }}"
+
+    - name: Find the default grub entry
+      ansible.builtin.set_fact:
+        grub_default_entry: "{{ grub_content | regex_search(\"menuentry '(.*?)'\", '\\1') | first }}"
 
 - name: Copy grub configuration file
   ansible.builtin.template:
