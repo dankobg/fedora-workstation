@@ -8,10 +8,10 @@
 
 - name: Configure zsh
   when: zsh_state == 'latest'
-  block:
-    - name: Check if installed
   become: true
   become_user: "{{ username }}"
+  block:
+    - name: Check if installed
       ansible.builtin.command:
         cmd: type zsh
       changed_when: false

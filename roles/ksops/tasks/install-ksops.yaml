@@ -9,8 +9,8 @@
   failed_when: "not ('ksops: not found' in ksops_installed.stderr or 'ksops is' in ksops_installed.stdout)"
 
 # - name: Get installed version data
-  become: true
-  become_user: "{{ username }}"
+#   become: true
+#   become_user: "{{ username }}"
 #   ansible.builtin.command:
 #     cmd: ksops --version
 #   changed_when: false

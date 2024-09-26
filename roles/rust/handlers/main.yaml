@@ -1,2 +1,8 @@
 ---
 # handlers file for rust
+
+- name: Update rust toolchain
+  ansible.builtin.command:
+    cmd: rustup update
+  changed_when: "'unchanged' not in rustup_update.stdout"
+  register: rustup_update

@@ -94,10 +94,4 @@
         cmd: rustup check
       changed_when: rustup_check.stdout_lines | select('search', 'Up to date') | list | length != rustup_check.stdout_lines | length
       register: rustup_check
-
-    - name: Update toolchain
-      ansible.builtin.command:
-        cmd: rustup update
-      changed_when: "'unchanged' not in rustup_update.stdout"
-      register: rustup_update
-      when: rustup_check.changed
+      notify: Update rust toolchain
