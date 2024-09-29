@@ -41,7 +41,7 @@
           amd: x86_64
           arm: arm64
       ansible.builtin.set_fact:
-        glow_release_artifact: "glow_{{ glow_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        glow_release_artifact: "glow_{{ glow_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

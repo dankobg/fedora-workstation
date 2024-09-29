@@ -42,7 +42,7 @@
           amd: x64
           arm: arm64
       ansible.builtin.set_fact:
-        node_release_artifact: node-{{ node_release_version }}-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}
+        node_release_artifact: node-{{ node_release_version }}-{{ ansible_facts.system | lower }}-{{ arch }}
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

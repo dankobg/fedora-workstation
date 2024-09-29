@@ -25,6 +25,13 @@ archs:
   x86-64: amd
   amd64: amd
 
+# this is overriden per task that downloads specific binary
+arch_name:
+  amd: amd64
+  arm: arm64
+
+arch: "{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+
 roles_selected:
   - system
   - nvidia

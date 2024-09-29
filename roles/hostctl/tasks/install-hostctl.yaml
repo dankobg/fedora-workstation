@@ -41,7 +41,7 @@
           amd: 64-bit
           arm: arm64
       ansible.builtin.set_fact:
-        hostctl_release_artifact: "hostctl_{{ hostctl_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        hostctl_release_artifact: "hostctl_{{ hostctl_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

@@ -2,4 +2,3 @@ skip_list:
 
 - package-latest
 - meta-incorrect
-- yaml[line-length]

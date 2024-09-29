@@ -37,6 +37,6 @@
 
 - name: Enable extensions
   ansible.builtin.command:
-    cmd: "gnome-shell-extension-tool {{ '-e' if (gnome_extensions | selectattr('id', '==', item.json.pk) | first).state == 'present' else '-d' }} {{ item.json.uuid }}"
+    cmd: "gnome-shell-extension-tool {{ '-e' if (gnome_extensions | selectattr('id', '==', item.json.pk) | first).state == 'present' else '-d' }} {{ item.json.uuid }}" # noqa yaml[line-length]
   changed_when: false
   loop: "{{ gnome_extensions_info.results }}"

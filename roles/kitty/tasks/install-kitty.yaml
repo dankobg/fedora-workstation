@@ -41,7 +41,7 @@
           amd: x86_64
           arm: arm64
       ansible.builtin.set_fact:
-        kitty_release_artifact: "kitty-{{ kitty_release_version[1:] }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        kitty_release_artifact: "kitty-{{ kitty_release_version[1:] }}-{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

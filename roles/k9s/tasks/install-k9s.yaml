@@ -41,7 +41,7 @@
           amd: amd64
           arm: arm64
       ansible.builtin.set_fact:
-        k9s_release_artifact: "k9s_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        k9s_release_artifact: "k9s_{{ ansible_facts.system }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

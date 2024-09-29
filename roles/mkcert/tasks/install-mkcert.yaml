@@ -42,7 +42,7 @@
           amd: amd64
           arm: arm64
       ansible.builtin.set_fact:
-        mkcert_release_artifact: "mkcert-{{ mkcert_release_version }}-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        mkcert_release_artifact: "mkcert-{{ mkcert_release_version }}-{{ ansible_facts.system | lower }}-{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

@@ -41,7 +41,7 @@
           amd: x86_64
           arm: arm64
       ansible.builtin.set_fact:
-        lazygit_release_artifact: "lazygit_{{ lazygit_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        lazygit_release_artifact: "lazygit_{{ lazygit_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

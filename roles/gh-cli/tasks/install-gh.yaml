@@ -41,7 +41,7 @@
           amd: amd64
           arm: arm64
       ansible.builtin.set_fact:
-        gh_release_artifact: "gh_{{ gh_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        gh_release_artifact: "gh_{{ gh_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

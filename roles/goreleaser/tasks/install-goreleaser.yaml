@@ -45,7 +45,7 @@
           amd: x86_64
           arm: arm64
       ansible.builtin.set_fact:
-        goreleaser_release_artifact: "goreleaser_{{ ansible_facts.system }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        goreleaser_release_artifact: "goreleaser_{{ ansible_facts.system }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

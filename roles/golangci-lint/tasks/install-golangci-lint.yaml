@@ -41,7 +41,7 @@
           amd: amd64
           arm: arm64
       ansible.builtin.set_fact:
-        golangci_lint_release_artifact: "golangci-lint-{{ golangci_lint_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        golangci_lint_release_artifact: "golangci-lint-{{ golangci_lint_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:

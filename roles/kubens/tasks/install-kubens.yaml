@@ -42,7 +42,7 @@
           amd: x86_64
           arm: arm64
       ansible.builtin.set_fact:
-        kubens_release_artifact: "kubens_{{ kubens_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
+        kubens_release_artifact: "kubens_{{ kubens_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch }}"
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:
