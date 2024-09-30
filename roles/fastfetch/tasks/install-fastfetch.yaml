@@ -57,15 +57,17 @@
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ fastfetch_tempdir.path }}/{{ fastfetch_release_artifact }}/usr/bin/{{ item }}"
-        dest: "{{ fastfetch_path }}"
+        src: "{{ fastfetch_tempdir.path }}/{{ fastfetch_release_artifact }}/usr/bin/{{ item.name }}"
+        dest: "{{ item.dest }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
         remote_src: true
       loop:
-        - fastfetch
-        - flashfetch
+        - name: "{{ fastfetch_binary_name }}"
+          dest: "{{ fastfetch_path }}"
+        - name: "{{ fastfetch_flashfetch_binary_name }}"
+          dest: "{{ fastfetch_flashfetch_path }}"
 
     - name: Cleanup temp files
       ansible.builtin.file:
