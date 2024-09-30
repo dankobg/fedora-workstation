@@ -84,7 +84,6 @@ roles_selected:
   - helm
   - hostctl
   - hugo
-  - iftop
   - jq
   - just
   - k3d
@@ -102,8 +101,7 @@ roles_selected:
   - logseq
   - mkcert
   - ncdu
-  - net-tools
-  - nmap
+  - network-tools
   - node
   - onefetch
   - pika-backup
@@ -124,14 +122,11 @@ roles_selected:
   - stacer
   - syncthing
   - task
-  - tcpdump
   - thunderbird
   - timeshift
   - tlrc
-  - traceroute
   - vlc
   - vscode
-  - whois
   - xh
   - yq
   - zed

@@ -1,7 +1,0 @@
----
-# tasks file for iftop
-
-- name: Install iftop
-  ansible.builtin.dnf:
-    name: iftop
-    state: "{{ iftop_state }}"

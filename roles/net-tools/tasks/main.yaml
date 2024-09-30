@@ -1,7 +1,0 @@
----
-# tasks file for net-tools
-
-- name: Install net-tools
-  ansible.builtin.dnf:
-    name: net-tools
-    state: "{{ net_tools_state }}"

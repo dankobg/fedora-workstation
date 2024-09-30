@@ -1,7 +1,0 @@
----
-# tasks file for tcpdump
-
-- name: Install tcpdump
-  ansible.builtin.dnf:
-    name: tcpdump
-    state: "{{ tcpdump_state }}"
