@@ -3,4 +3,5 @@
 
 protoc_state: present
 protoc_version: latest
-protoc_path: "{{ binaries_path }}/protoc"
+protoc_binary_name: protoc
+protoc_path: "{{ binaries_path }}/{{ protoc_binary_name }}"

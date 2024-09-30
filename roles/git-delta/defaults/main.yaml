@@ -1,6 +1,0 @@
----
-# defaults file for git-delta
-
-delta_state: present
-delta_version: latest
-delta_path: "{{ binaries_path }}/delta"

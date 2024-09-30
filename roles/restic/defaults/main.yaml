@@ -3,4 +3,5 @@
 
 restic_state: present
 restic_version: latest
-restic_path: "{{ binaries_path }}/restic"
+restic_binary_name: restic
+restic_path: "{{ binaries_path }}/{{ restic_binary_name }}"

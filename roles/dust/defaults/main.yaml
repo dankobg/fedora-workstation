@@ -3,4 +3,5 @@
 
 dust_state: present
 dust_version: latest
-dust_path: "{{ binaries_path }}/dust"
+dust_binary_name: dust
+dust_path: "{{ binaries_path }}/{{ dust_binary_name }}"

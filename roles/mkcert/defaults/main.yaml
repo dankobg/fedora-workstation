@@ -3,4 +3,5 @@
 
 mkcert_state: present
 mkcert_version: latest
-mkcert_path: "{{ binaries_path }}/mkcert"
+mkcert_binary_name: mkcert
+mkcert_path: "{{ binaries_path }}/{{ mkcert_binary_name }}"

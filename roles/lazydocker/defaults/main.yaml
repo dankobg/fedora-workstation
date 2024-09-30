@@ -3,4 +3,5 @@
 
 lazydocker_state: present
 lazydocker_version: latest
-lazydocker_path: "{{ binaries_path }}/lazydocker"
+lazydocker_binary_name: lazydocker
+lazydocker_path: "{{ binaries_path }}/{{ lazydocker_binary_name }}"

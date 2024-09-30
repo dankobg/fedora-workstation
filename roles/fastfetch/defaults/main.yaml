@@ -3,4 +3,5 @@
 
 fastfetch_state: present
 fastfetch_version: latest
-fastfetch_path: "{{ binaries_path }}/fastfetch"
+fastfetch_binary_name: fastfetch
+fastfetch_path: "{{ binaries_path }}/{{ fastfetch_binary_name }}"

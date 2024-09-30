@@ -1,0 +1,10 @@
+---
+# tasks file for gh
+
+- name: Include tasks to install gh
+  ansible.builtin.include_tasks: install-gh.yaml
+  when: gh_state == 'present'
+
+- name: Include tasks to remove gh
+  ansible.builtin.include_tasks: remove-gh.yaml
+  when: gh_state == 'absent'

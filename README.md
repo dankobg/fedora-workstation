@@ -5,11 +5,6 @@ maybe some smoke tests
 e.g. get_uri: with retries, delay and until 'xxx' in result.content
 retries until for nvidia drivers...
 
-TODO: roles
-
-- rust
-- zed
-
 roles that perform some changes:
 
 - gnome
@@ -22,11 +17,9 @@ TODO: verify checksums for manuall downloads for apps:
 - [] docker
 - [] eza
 - [] fastfetch
-- [] gh-cli
+- [] gh
 - [] glow
 - [] go
-- [] golangci-lint
-- [] goreleaser
 - [] hostctl
 - [] jq
 - [] just

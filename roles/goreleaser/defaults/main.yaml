@@ -1,6 +1,0 @@
----
-# defaults file for goreleaser
-
-goreleaser_state: present
-goreleaser_version: latest
-goreleaser_path: "{{ binaries_path }}/goreleaser"

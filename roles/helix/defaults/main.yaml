@@ -3,4 +3,5 @@
 
 helix_state: present
 helix_version: latest
-helix_path: "{{ binaries_path }}/helix"
+helix_binary_name: helix
+helix_path: "{{ binaries_path }}/{{ helix_binary_name }}"

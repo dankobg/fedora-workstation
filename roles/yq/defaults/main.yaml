@@ -3,4 +3,5 @@
 
 yq_state: present
 yq_version: latest
-yq_path: "{{ binaries_path }}/yq"
+yq_binary_name: yq
+yq_path: "{{ binaries_path }}/{{ yq_binary_name }}"

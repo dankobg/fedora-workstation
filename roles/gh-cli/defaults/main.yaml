@@ -1,6 +1,0 @@
----
-# defaults file for gh
-
-gh_state: present
-gh_version: latest
-gh_path: "{{ binaries_path }}/gh"

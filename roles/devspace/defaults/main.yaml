@@ -3,4 +3,5 @@
 
 devspace_state: present
 devspace_version: latest
-devspace_path: "{{ binaries_path }}/devspace"
+devspace_binary_name: devspace
+devspace_path: "{{ binaries_path }}/{{ devspace_binary_name }}"

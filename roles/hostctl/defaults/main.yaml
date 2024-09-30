@@ -2,4 +2,5 @@
 
 hostctl_state: present
 hostctl_version: latest
-hostctl_path: "{{ binaries_path }}/hostctl"
+hostctl_binary_name: hostctl
+hostctl_path: "{{ binaries_path }}/{{ hostctl_binary_name }}"

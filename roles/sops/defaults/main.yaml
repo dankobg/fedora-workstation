@@ -3,4 +3,5 @@
 
 sops_state: present
 sops_version: latest
-sops_path: "{{ binaries_path }}/sops"
+sops_binary_name: sops
+sops_path: "{{ binaries_path }}/{{ sops_binary_name }}"

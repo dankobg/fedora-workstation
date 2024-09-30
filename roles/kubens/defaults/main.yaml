@@ -3,4 +3,5 @@
 
 kubens_state: present
 kubens_version: latest
-kubens_path: "{{ binaries_path }}/kubens"
+kubens_binary_name: kubens
+kubens_path: "{{ binaries_path }}/{{ kubens_binary_name }}"

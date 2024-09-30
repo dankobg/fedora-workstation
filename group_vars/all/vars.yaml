@@ -54,7 +54,7 @@ roles_selected:
   - bat
   - beekeeper-studio
   - bitwarden
-  - bitwarden-cli
+  - bw
   - bleachbit
   # - bruno # there is a bug with flatpak, i installed appimage currently which works fine...
   - btop
@@ -74,14 +74,12 @@ roles_selected:
   - foot
   - fzf
   - gearlever
-  - gh-cli
+  - gh
   - git
-  - git-delta
+  - delta
   - glow
   - go
-  # - golangci-lint
   - google-chrome
-  # - goreleaser
   - handbrake
   - helix
   - helm

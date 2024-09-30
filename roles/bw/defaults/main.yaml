@@ -1,0 +1,7 @@
+---
+# defaults file for bw
+
+bw_state: present
+bw_version: latest
+bw_binary_name: bw
+bw_path: "{{ binaries_path }}/{{ bw_binary_name }}"

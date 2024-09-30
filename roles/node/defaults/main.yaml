@@ -3,10 +3,14 @@
 
 node_state: present
 node_version: latest
-node_path: "{{ binaries_path }}/node"
-node_corepack_path: "{{ binaries_path }}/corepack"
-node_npm_path: "{{ binaries_path }}/npm"
-node_npx_path: "{{ binaries_path }}/npx"
+node_binary_name: node
+node_path: "{{ binaries_path }}/{{ node_binary_name }}"
+node_corepack_binary_name: corepack
+node_corepack_path: "{{ binaries_path }}/{{ node_corepack_binary_name }}"
+node_npm_binary_name: npm
+node_npm_path: "{{ binaries_path }}/{{ node_npm_binary_name }}"
+node_npx_binary_name: npx
+node_npx_path: "{{ binaries_path }}/{{ node_npx_binary_name }}"
 node_npm_global_dir: /usr/local/lib/npm-global
 
 node_global_packages:

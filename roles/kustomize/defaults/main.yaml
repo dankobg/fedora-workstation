@@ -3,4 +3,5 @@
 
 kustomize_state: present
 kustomize_version: latest
-kustomize_path: "{{ binaries_path }}/kustomize"
+kustomize_binary_name: kustomize
+kustomize_path: "{{ binaries_path }}/{{ kustomize_binary_name }}"

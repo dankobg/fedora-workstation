@@ -1,5 +1,0 @@
----
-- name: Ensure removed
-  ansible.builtin.file:
-    path: "{{ goreleaser_path }}"
-    state: absent

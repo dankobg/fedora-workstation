@@ -3,4 +3,5 @@
 
 kanata_state: present
 kanata_version: latest
-kanata_path: "{{ binaries_path }}/kanata"
+kanata_binary_name: kanata
+kanata_path: "{{ binaries_path }}/{{ kanata_binary_name }}"

@@ -3,4 +3,5 @@
 
 onefetch_state: present
 onefetch_version: latest
-onefetch_path: "{{ binaries_path }}/onefetch"
+onefetch_binary_name: onefetch
+onefetch_path: "{{ binaries_path }}/{{ onefetch_binary_name }}"

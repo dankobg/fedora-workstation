@@ -3,4 +3,5 @@
 
 lazygit_state: present
 lazygit_version: latest
-lazygit_path: "{{ binaries_path }}/lazygit"
+lazygit_binary_name: lazygit
+lazygit_path: "{{ binaries_path }}/{{ lazygit_binary_name }}"

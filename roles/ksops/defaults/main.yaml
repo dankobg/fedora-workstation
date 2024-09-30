@@ -3,4 +3,5 @@
 
 ksops_state: present
 ksops_version: latest
-ksops_path: "{{ binaries_path }}/ksops"
+ksops_binary_name: ksops
+ksops_path: "{{ binaries_path }}/{{ ksops_binary_name }}"

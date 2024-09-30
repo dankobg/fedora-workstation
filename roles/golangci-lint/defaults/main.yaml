@@ -1,6 +1,0 @@
----
-# defaults file for golangci-lint
-
-golangci_lint_state: present
-golangci_lint_version: latest
-golangci_lint_path: "{{ binaries_path }}/golangci-lint"

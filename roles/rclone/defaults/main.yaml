@@ -3,4 +3,5 @@
 
 rclone_state: present
 rclone_version: latest
-rclone_path: "{{ binaries_path }}/rclone"
+rclone_binary_name: rclone
+rclone_path: "{{ binaries_path }}/{{ rclone_binary_name }}"

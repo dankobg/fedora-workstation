@@ -1,0 +1,10 @@
+---
+# tasks file for delta
+
+- name: Include tasks to install delta
+  ansible.builtin.include_tasks: install-delta.yaml
+  when: delta_state == 'present'
+
+- name: Include tasks to remove delta
+  ansible.builtin.include_tasks: remove-delta.yaml
+  when: delta_state == 'absent'

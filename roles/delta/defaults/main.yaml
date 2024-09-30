@@ -1,0 +1,7 @@
+---
+# defaults file for delta
+
+delta_state: present
+delta_version: latest
+delta_binary_name: delta
+delta_path: "{{ binaries_path }}/{{ delta_binary_name }}"
