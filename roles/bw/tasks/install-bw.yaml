@@ -21,7 +21,7 @@
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    bw_installed_version: "{{ bw_installed_version_data.stdout if not bw_installed_version_data.failed else '' }}"
+    bw_installed_version: "{{ 'cli-v' + bw_installed_version_data.stdout if not bw_installed_version_data.failed else '' }}"
 
 - name: Get the list of GitHub releases
   ansible.builtin.uri:

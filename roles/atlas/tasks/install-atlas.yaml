@@ -20,7 +20,7 @@
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if atlas_installed_version_data.failed else '' }}"
+    atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if not atlas_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release
   ansible.builtin.uri:

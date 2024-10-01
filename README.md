@@ -5,9 +5,12 @@ maybe some smoke tests
 e.g. get_uri: with retries, delay and until 'xxx' in result.content
 retries until for nvidia drivers...
 
-roles that perform some changes:
+not fully idempotent yet, they make small changes:
 
-- gnome
+- gnome (always loads my dconf settings file...)
+- docker
+- go (go install go tools apps, maybe i can use go mod checksum somehow)
+- ksops (too lazy, it doesn't expose --version flag or similar)
 
 TODO: verify checksums for manuall downloads for apps:
 
