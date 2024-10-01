@@ -57,15 +57,17 @@
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ kitty_tempdir.path }}/bin/{{ item }}"
-        dest: "{{ kitty_path }}"
+        src: "{{ kitty_tempdir.path }}/bin/{{ item.name }}"
+        dest: "{{ item.dest }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
         remote_src: true
       loop:
-        - kitty
-        - kitten
+        - name: "{{ kitty_binary_name }}"
+          dest: "{{ kitty_path }}"
+        - name: "{{ kitty_kitten_binary_name }}"
+          dest: "{{ kitty_kitten_path }}"
 
     - name: Copy terminfo
       ansible.builtin.copy:
