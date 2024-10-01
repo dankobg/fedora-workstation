@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type hostctl
+    cmd: "command -v {{ hostctl_binary_name }}"
   changed_when: false
   register: hostctl_installed
-  failed_when: "not ('hostctl: not found' in hostctl_installed.stderr or 'hostctl is' in hostctl_installed.stdout)"
+  failed_when: hostctl_installed.rc != 0 and hostctl_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: hostctl --version
-  changed_when: false
+    cmd: "{{ hostctl_binary_name }} --version"
   register: hostctl_installed_version_data
-  failed_when: "'hostctl' not in hostctl_installed_version_data.stdout"
-  when: hostctl_installed.rc == 0
+  changed_when: false
+  failed_when: "hostctl_installed_version_data.rc != 0 or (hostctl_installed_version_data.rc == 0 and 'hostctl' not in hostctl_installed_version_data.stdout)"
+  when: not hostctl_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    hostctl_installed_version: "{{ 'v' + hostctl_installed_version_data.stdout.split()[2] if hostctl_installed.rc == 0 else '' }}"
+    hostctl_installed_version: "{{ 'v' + hostctl_installed_version_data.stdout.split()[2] if not hostctl_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

@@ -3,25 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type kubectx
+    cmd: "command -v {{ kubectx_binary_name }}"
   changed_when: false
   register: kubectx_installed
-  failed_when: "not ('kubectx: not found' in kubectx_installed.stderr or 'kubectx is' in kubectx_installed.stdout)"
+  failed_when: kubectx_installed.rc != 0 and kubectx_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: kubectx --version
-  changed_when: false
+    cmd: "{{ kubectx_binary_name }} --version"
   register: kubectx_installed_version_data
+  changed_when: false
   failed_when: >
-    not (kubectx_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
-  when: kubectx_installed.rc == 0
+    kubectx_installed_version_data.rc != 0 or not (kubectx_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
+  when: not kubectx_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kubectx_installed_version: "{{ 'v' + kubectx_installed_version_data.stdout if kubectx_installed.rc == 0 else '' }}"
+    kubectx_installed_version: "{{ 'v' + kubectx_installed_version_data.stdout if not kubectx_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

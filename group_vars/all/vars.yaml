@@ -5,7 +5,6 @@ user_hashed_password: "{{ vault_user_hashed_password }}"
 laptop: false
 dual_boot: true
 sudo_password: "{{ vault_sudo_password }}"
-fedora_ssh_private_key: "{{ vault_fedora_ssh_private_key }}"
 
 git_user_name: "{{ vault_git_user_name }}"
 git_user_email: "{{ vault_git_user_email }}"

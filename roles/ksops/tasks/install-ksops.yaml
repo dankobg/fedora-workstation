@@ -3,20 +3,18 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type ksops
+    cmd: "command -v {{ ksops_binary_name }}"
   changed_when: false
   register: ksops_installed
-  failed_when: "not ('ksops: not found' in ksops_installed.stderr or 'ksops is' in ksops_installed.stdout)"
+  failed_when: ksops_installed.rc != 0 and ksops_installed.stderr != ""
 
 # - name: Get installed version data
-#   become: true
-#   become_user: "{{ username }}"
 #   ansible.builtin.command:
-#     cmd: ksops --version
-#   changed_when: false
+#     cmd: "{{ ksops_binary_name }} --version"
 #   register: ksops_installed_version_data
-#   failed_when: "'ksops' not in ksops_installed_version_data.stdout"
-#   when: ksops_installed.rc == 0
+#   changed_when: false
+#   failed_when: "ksops_installed_version_data.rc != 0 or (ksops_installed_version_data.rc == 0 and 'ksops' not in ksops_installed_version_data.stdout)"
+#   when: not ksops_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:

@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type task
+    cmd: "command -v {{ task_binary_name }}"
   changed_when: false
   register: task_installed
-  failed_when: "not ('task: not found' in task_installed.stderr or 'task is' in task_installed.stdout)"
+  failed_when: task_installed.rc != 0 and task_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: task --version
-  changed_when: false
+    cmd: "{{ task_binary_name }} --version"
   register: task_installed_version_data
-  failed_when: "'version' not in task_installed_version_data.stdout"
-  when: task_installed.rc == 0
+  changed_when: false
+  failed_when: "task_installed_version_data.rc != 0 or (task_installed_version_data.rc == 0 and 'version' not in task_installed_version_data.stdout)"
+  when: not task_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    task_installed_version: "{{ task_installed_version_data.stdout.split()[2] if task_installed.rc == 0 else '' }}"
+    task_installed_version: "{{ task_installed_version_data.stdout.split()[2] if not task_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

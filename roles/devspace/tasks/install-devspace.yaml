@@ -3,24 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type devspace
+    cmd: "command -v {{ devspace_binary_name }}"
   changed_when: false
   register: devspace_installed
-  failed_when: "not ('devspace: not found' in devspace_installed.stderr or 'devspace is' in devspace_installed.stdout)"
+  failed_when: devspace_installed.rc != 0 and devspace_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: devspace --version
-  changed_when: false
+    cmd: "{{ devspace_binary_name }} --version"
   register: devspace_installed_version_data
-  failed_when: "'devspace version' not in devspace_installed_version_data.stdout"
-  when: devspace_installed.rc == 0
+  changed_when: false
+  failed_when: >
+    devspace_installed_version_data.rc != 0 or (devspace_installed_version_data.rc == 0 and 'devspace version' not in devspace_installed_version_data.stdout)
+  when: not devspace_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    devspace_installed_version: "{{ 'v' + devspace_installed_version_data.stdout.split()[2] if devspace_installed.rc == 0 else '' }}"
+    devspace_installed_version: "{{ 'v' + devspace_installed_version_data.stdout.split()[2] if not devspace_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

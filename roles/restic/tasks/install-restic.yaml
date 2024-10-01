@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type restic
+    cmd: "command -v {{ restic_binary_name }}"
   changed_when: false
   register: restic_installed
-  failed_when: "not ('restic: not found' in restic_installed.stderr or 'restic is' in restic_installed.stdout)"
+  failed_when: restic_installed.rc != 0 and restic_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: restic version
-  changed_when: false
+    cmd: "{{ restic_binary_name }} version"
   register: restic_installed_version_data
-  failed_when: "'restic' not in restic_installed_version_data.stdout"
-  when: restic_installed.rc == 0
+  changed_when: false
+  failed_when: "restic_installed_version_data.rc != 0 or (restic_installed_version_data.rc == 0 and 'restic' not in restic_installed_version_data.stdout)"
+  when: not restic_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    restic_installed_version: "{{ 'v' + restic_installed_version_data.stdout.split()[1] if restic_installed.rc == 0 else '' }}"
+    restic_installed_version: "{{ 'v' + restic_installed_version_data.stdout.split()[1] if not restic_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

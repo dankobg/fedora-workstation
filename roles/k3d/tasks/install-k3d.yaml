@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type k3d
+    cmd: "command -v {{ k3d_binary_name }}"
   changed_when: false
   register: k3d_installed
-  failed_when: "not ('k3d: not found' in k3d_installed.stderr or 'k3d is' in k3d_installed.stdout)"
+  failed_when: k3d_installed.rc != 0 and k3d_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: k3d --version
-  changed_when: false
+    cmd: "{{ k3d_binary_name }} --version"
   register: k3d_installed_version_data
-  failed_when: "'k3d' not in k3d_installed_version_data.stdout"
-  when: k3d_installed.rc == 0
+  changed_when: false
+  failed_when: "k3d_installed_version_data.rc != 0 or (k3d_installed_version_data.rc == 0 and 'k3d' not in k3d_installed_version_data.stdout)"
+  when: not k3d_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    k3d_installed_version: "{{ k3d_installed_version_data.stdout_lines[0].split()[2] if k3d_installed.rc == 0 else '' }}"
+    k3d_installed_version: "{{ k3d_installed_version_data.stdout_lines[0].split()[2] if not k3d_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

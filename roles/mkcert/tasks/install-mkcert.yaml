@@ -3,25 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type mkcert
+    cmd: "command -v {{ mkcert_binary_name }}"
   changed_when: false
   register: mkcert_installed
-  failed_when: "not ('mkcert: not found' in mkcert_installed.stderr or 'mkcert is' in mkcert_installed.stdout)"
+  failed_when: mkcert_installed.rc != 0 and mkcert_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: mkcert --version
-  changed_when: false
+    cmd: "{{ mkcert_binary_name }} --version"
   register: mkcert_installed_version_data
+  changed_when: false
   failed_when: >
-    not (mkcert_installed_version_data.stdout | regex_search('^v\d+\.\d+\.\d+$'))
-  when: mkcert_installed.rc == 0
+    mkcert_installed_version_data.rc != 0 or not (mkcert_installed_version_data.stdout | regex_search('^v\d+\.\d+\.\d+$'))
+  when: not mkcert_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    mkcert_installed_version: "{{ mkcert_installed_version_data.stdout if mkcert_installed.rc == 0 else '' }}"
+    mkcert_installed_version: "{{ mkcert_installed_version_data.stdout if not mkcert_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

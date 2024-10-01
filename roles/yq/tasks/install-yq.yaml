@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type yq
+    cmd: "command -v {{ yq_binary_name }}"
   changed_when: false
   register: yq_installed
-  failed_when: "not ('yq: not found' in yq_installed.stderr or 'yq is' in yq_installed.stdout)"
+  failed_when: yq_installed.rc != 0 and yq_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: yq --version
-  changed_when: false
+    cmd: "{{ yq_binary_name }} --version"
   register: yq_installed_version_data
-  failed_when: "'yq' not in yq_installed_version_data.stdout"
-  when: yq_installed.rc == 0
+  changed_when: false
+  failed_when: "yq_installed_version_data.rc != 0 or (yq_installed_version_data.rc == 0 and 'yq' not in yq_installed_version_data.stdout)"
+  when: not yq_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    yq_installed_version: "{{ yq_installed_version_data.stdout.split()[3] if yq_installed.rc == 0 else '' }}"
+    yq_installed_version: "{{ yq_installed_version_data.stdout.split()[3] if not yq_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

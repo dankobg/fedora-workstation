@@ -3,24 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type onefetch
+    cmd: "command -v {{ onefetch_binary_name }}"
   changed_when: false
   register: onefetch_installed
-  failed_when: "not ('onefetch: not found' in onefetch_installed.stderr or 'onefetch is' in onefetch_installed.stdout)"
+  failed_when: onefetch_installed.rc != 0 and onefetch_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: onefetch --version
-  changed_when: false
+    cmd: "{{ onefetch_binary_name }} --version"
   register: onefetch_installed_version_data
-  failed_when: "'onefetch' not in onefetch_installed_version_data.stdout"
-  when: onefetch_installed.rc == 0
+  changed_when: false
+  failed_when: >
+    onefetch_installed_version_data.rc != 0 or (onefetch_installed_version_data.rc == 0 and 'onefetch' not in onefetch_installed_version_data.stdout)
+  when: not onefetch_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    onefetch_installed_version: "{{ onefetch_installed_version_data.stdout.split()[1] if onefetch_installed.rc == 0 else '' }}"
+    onefetch_installed_version: "{{ onefetch_installed_version_data.stdout.split()[1] if not onefetch_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type atlas
+    cmd: "command -v {{ atlas_binary_name }}"
   changed_when: false
   register: atlas_installed
-  failed_when: "not ('atlas: not found' in atlas_installed.stderr or 'atlas is' in atlas_installed.stdout)"
+  failed_when: atlas_installed.rc != 0 and atlas_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: atlas version
-  changed_when: false
+    cmd: "{{ atlas_binary_name }} version"
   register: atlas_installed_version_data
-  failed_when: "'atlas version' not in atlas_installed_version_data.stdout"
-  when: atlas_installed.rc == 0
+  changed_when: false
+  failed_when: "atlas_installed_version_data.rc != 0 or (atlas_installed_version_data.rc == 0 and 'atlas version' not in atlas_installed_version_data.stdout)"
+  when: not atlas_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if atlas_installed.rc == 0 else '' }}"
+    atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if atlas_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release
   ansible.builtin.uri:

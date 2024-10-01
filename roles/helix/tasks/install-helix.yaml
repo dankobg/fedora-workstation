@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type hx
+    cmd: "command -v {{ helix_binary_name }}"
   changed_when: false
   register: helix_installed
-  failed_when: "not ('hx: not found' in helix_installed.stderr or 'hx is' in helix_installed.stdout)"
+  failed_when: helix_installed.rc != 0 and helix_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: hx --version
-  changed_when: false
+    cmd: "{{ helix_binary_name }} --version"
   register: helix_installed_version_data
-  failed_when: "'helix' not in helix_installed_version_data.stdout"
-  when: helix_installed.rc == 0
+  changed_when: false
+  failed_when: "helix_installed_version_data.rc != 0 or (helix_installed_version_data.rc == 0 and 'helix' not in helix_installed_version_data.stdout)"
+  when: not helix_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    helix_installed_version: "{{ helix_installed_version_data.stdout.split()[1] if helix_installed.rc == 0 else '' }}"
+    helix_installed_version: "{{ helix_installed_version_data.stdout.split()[1] if not helix_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

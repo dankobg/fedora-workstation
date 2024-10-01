@@ -16,24 +16,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type go
+    cmd: "command -v {{ go_binary_name }}"
   changed_when: false
   register: go_installed
-  failed_when: "not ('go: not found' in go_installed.stderr or 'go is' in go_installed.stdout)"
+  failed_when: go_installed.rc != 0 and go_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: go version
-  changed_when: false
+    cmd: "{{ go_binary_name }} version"
   register: go_installed_version_data
-  failed_when: "'go' not in go_installed_version_data.stdout"
-  when: go_installed.rc == 0
+  changed_when: false
+  failed_when: "go_installed_version_data.rc != 0 or (go_installed_version_data.rc == 0 and 'go version' not in go_installed_version_data.stdout)"
+  when: not go_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    go_installed_version: "{{ go_installed_version_data.stdout.split()[2] if go_installed.rc == 0 else '' }}"
+    go_installed_version: "{{ go_installed_version_data.stdout.split()[2] if not go_installed_version_data.failed else '' }}"
 
 - name: Get the latest release data
   ansible.builtin.uri:

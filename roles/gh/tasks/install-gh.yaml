@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type gh
+    cmd: "command -v {{ gh_binary_name }}"
   changed_when: false
   register: gh_installed
-  failed_when: "not ('gh: not found' in gh_installed.stderr or 'gh is' in gh_installed.stdout)"
+  failed_when: gh_installed.rc != 0 and gh_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: gh --version
-  changed_when: false
+    cmd: "{{ gh_binary_name }} --version"
   register: gh_installed_version_data
-  failed_when: "'gh version' not in gh_installed_version_data.stdout"
-  when: gh_installed.rc == 0
+  changed_when: false
+  failed_when: "gh_installed_version_data.rc != 0 or (gh_installed_version_data.rc == 0 and 'gh version' not in gh_installed_version_data.stdout)"
+  when: not gh_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    gh_installed_version: "{{ 'v' + gh_installed_version_data.stdout_lines[0].split()[2] if gh_installed.rc == 0 else '' }}"
+    gh_installed_version: "{{ 'v' + gh_installed_version_data.stdout_lines[0].split()[2] if not gh_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

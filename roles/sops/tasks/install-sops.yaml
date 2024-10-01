@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type sops
+    cmd: "command -v {{ sops_binary_name }}"
   changed_when: false
   register: sops_installed
-  failed_when: "not ('sops: not found' in sops_installed.stderr or 'sops is' in sops_installed.stdout)"
+  failed_when: sops_installed.rc != 0 and sops_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: sops --version
-  changed_when: false
+    cmd: "{{ sops_binary_name }} --version"
   register: sops_installed_version_data
-  failed_when: "'sops' not in sops_installed_version_data.stdout"
-  when: sops_installed.rc == 0
+  changed_when: false
+  failed_when: "sops_installed_version_data.rc != 0 or (sops_installed_version_data.rc == 0 and 'sops' not in sops_installed_version_data.stdout)"
+  when: not sops_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    sops_installed_version: "{{ 'v' + sops_installed_version_data.stdout.split()[1] if sops_installed.rc == 0 else '' }}"
+    sops_installed_version: "{{ 'v' + sops_installed_version_data.stdout.split()[1] if not sops_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type xh
+    cmd: "command -v {{ xh_binary_name }}"
   changed_when: false
   register: xh_installed
-  failed_when: "not ('xh: not found' in xh_installed.stderr or 'xh is' in xh_installed.stdout)"
+  failed_when: xh_installed.rc != 0 and xh_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: xh --version
-  changed_when: false
+    cmd: "{{ xh_binary_name }} --version"
   register: xh_installed_version_data
-  failed_when: "'xh' not in xh_installed_version_data.stdout"
-  when: xh_installed.rc == 0
+  changed_when: false
+  failed_when: "xh_installed_version_data.rc != 0 or (xh_installed_version_data.rc == 0 and 'xh' not in xh_installed_version_data.stdout)"
+  when: not xh_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    xh_installed_version: "{{ 'v' + xh_installed_version_data.stdout_lines[0].split()[1] if xh_installed.rc == 0 else '' }}"
+    xh_installed_version: "{{ 'v' + xh_installed_version_data.stdout_lines[0].split()[1] if not xh_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

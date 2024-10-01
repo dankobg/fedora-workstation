@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type zellij
+    cmd: "command -v {{ zellij_binary_name }}"
   changed_when: false
   register: zellij_installed
-  failed_when: "not ('zellij: not found' in zellij_installed.stderr or 'zellij is' in zellij_installed.stdout)"
+  failed_when: zellij_installed.rc != 0 and zellij_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: zellij --version
-  changed_when: false
+    cmd: "{{ zellij_binary_name }} --version"
   register: zellij_installed_version_data
-  failed_when: "'zellij' not in zellij_installed_version_data.stdout"
-  when: zellij_installed.rc == 0
+  changed_when: false
+  failed_when: "zellij_installed_version_data.rc != 0 or (zellij_installed_version_data.rc == 0 and 'zellij' not in zellij_installed_version_data.stdout)"
+  when: not zellij_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    zellij_installed_version: "{{ 'v' + zellij_installed_version_data.stdout.split()[1] if zellij_installed.rc == 0 else '' }}"
+    zellij_installed_version: "{{ 'v' + zellij_installed_version_data.stdout.split()[1] if not zellij_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

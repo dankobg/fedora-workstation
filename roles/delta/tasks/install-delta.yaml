@@ -5,24 +5,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type delta
+    cmd: "command -v {{ delta_binary_name }}"
   changed_when: false
   register: delta_installed
-  failed_when: "not ('delta: not found' in delta_installed.stderr or 'delta is' in delta_installed.stdout)"
+  failed_when: delta_installed.rc != 0 and delta_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: delta --version
-  changed_when: false
+    cmd: "{{ delta_binary_name }} --version"
   register: delta_installed_version_data
-  failed_when: "'delta' not in delta_installed_version_data.stdout"
-  when: delta_installed.rc == 0
+  changed_when: false
+  failed_when: "delta_installed_version_data.rc != 0 or (delta_installed_version_data.rc == 0 and 'delta' not in delta_installed_version_data.stdout)"
+  when: not delta_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    delta_installed_version: "{{ delta_installed_version_data.stdout.split()[1] if delta_installed.rc == 0 else '' }}"
+    delta_installed_version: "{{ delta_installed_version_data.stdout.split()[1] if not delta_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

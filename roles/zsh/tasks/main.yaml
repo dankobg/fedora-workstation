@@ -13,14 +13,14 @@
       become: true
       become_user: "{{ username }}"
       ansible.builtin.command:
-        cmd: type zsh
+        cmd: command -v zsh
       changed_when: false
       register: zsh_installed
-      failed_when: "'zsh is' not in zsh_installed.stdout"
+      failed_when: zsh_installed.rc != 0 and zsh_installed.stderr != ""
 
     - name: Set zsh installed path
       ansible.builtin.set_fact:
-        zsh_path: "{{ zsh_installed.stdout.split()[2] }}"
+        zsh_path: "{{ zsh_installed.stdout }}"
 
     - name: Copy .zshenv
       ansible.builtin.copy:

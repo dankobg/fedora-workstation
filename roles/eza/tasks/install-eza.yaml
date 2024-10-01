@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type eza
+    cmd: "command -v {{ eza_binary_name }}"
   changed_when: false
   register: eza_installed
-  failed_when: "not ('eza: not found' in eza_installed.stderr or 'eza is' in eza_installed.stdout)"
+  failed_when: eza_installed.rc != 0 and eza_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: eza --version
-  changed_when: false
+    cmd: "{{ eza_binary_name }} --version"
   register: eza_installed_version_data
-  failed_when: "'eza' not in eza_installed_version_data.stdout"
-  when: eza_installed.rc == 0
+  changed_when: false
+  failed_when: "eza_installed_version_data.rc != 0 or (eza_installed_version_data.rc == 0 and 'eza' not in eza_installed_version_data.stdout)"
+  when: not eza_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    eza_installed_version: "{{ eza_installed_version_data.stdout_lines[1].split()[0] if eza_installed.rc == 0 else '' }}"
+    eza_installed_version: "{{ eza_installed_version_data.stdout_lines[1].split()[0] if not eza_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

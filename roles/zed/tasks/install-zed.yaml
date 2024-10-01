@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type zed
+    cmd: "command -v {{ zed_binary_name }}"
   changed_when: false
   register: zed_installed
-  failed_when: "not ('zed: not found' in zed_installed.stderr or 'zed is' in zed_installed.stdout)"
+  failed_when: zed_installed.rc != 0 and zed_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: zed --version
-  changed_when: false
+    cmd: "{{ zed_binary_name }} --version"
   register: zed_installed_version_data
-  failed_when: "'zed' not in zed_installed_version_data.stdout"
-  when: zed_installed.rc == 0
+  changed_when: false
+  failed_when: "zed_installed_version_data.rc != 0 or (zed_installed_version_data.rc == 0 and 'zed' not in zed_installed_version_data.stdout)"
+  when: not zed_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    zed_installed_version: "{{ zed_installed_version_data.stdout.split()[1] if zed_installed.rc == 0 else '' }}"
+    zed_installed_version: "{{ zed_installed_version_data.stdout.split()[1] if not zed_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

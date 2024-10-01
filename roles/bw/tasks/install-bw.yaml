@@ -3,25 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type bw
+    cmd: "command -v {{ bw_binary_name }}"
   changed_when: false
   register: bw_installed
-  failed_when: "not ('bw: not found' in bw_installed.stderr or 'bw is' in bw_installed.stdout)"
+  failed_when: bw_installed.rc != 0 and bw_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: bw --version
-  changed_when: false
+    cmd: "{{ bw_binary_name }} --version"
   register: bw_installed_version_data
+  changed_when: false
   failed_when: >
-    not (bw_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
-  when: bw_installed.rc == 0
+    bw_installed_version_data.rc != 0 or not (bw_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
+  when: not bw_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    bw_installed_version: "{{ bw_installed_version_data.stdout if bw_installed.rc == 0 else '' }}"
+    bw_installed_version: "{{ bw_installed_version_data.stdout if not bw_installed_version_data.failed else '' }}"
 
 - name: Get the list of GitHub releases
   ansible.builtin.uri:

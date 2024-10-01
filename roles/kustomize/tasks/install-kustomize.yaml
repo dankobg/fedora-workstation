@@ -3,25 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type kustomize
+    cmd: "command -v {{ kustomize_binary_name }}"
   changed_when: false
   register: kustomize_installed
-  failed_when: "not ('kustomize: not found' in kustomize_installed.stderr or 'kustomize is' in kustomize_installed.stdout)"
+  failed_when: kustomize_installed.rc != 0 and kustomize_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: kustomize version
-  changed_when: false
+    cmd: "{{ kustomize_binary_name }} version"
   register: kustomize_installed_version_data
+  changed_when: false
   failed_when: >
-    not (kustomize_installed_version_data.stdout | regex_search('^v\d+\.\d+\.\d+$'))
-  when: kustomize_installed.rc == 0
+    kustomize_installed_version_data.rc != 0 or not (kustomize_installed_version_data.stdout | regex_search('^v\d+\.\d+\.\d+$'))
+  when: not kustomize_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kustomize_installed_version: "{{ kustomize_installed_version_data.stdout if kustomize_installed.rc == 0 else '' }}"
+    kustomize_installed_version: "{{ kustomize_installed_version_data.stdout if not kustomize_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

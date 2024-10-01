@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type deno
+    cmd: "command -v {{ deno_binary_name }}"
   changed_when: false
   register: deno_installed
-  failed_when: "not ('deno: not found' in deno_installed.stderr or 'deno is' in deno_installed.stdout)"
+  failed_when: deno_installed.rc != 0 and deno_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: deno --version
-  changed_when: false
+    cmd: "{{ deno_binary_name }} --version"
   register: deno_installed_version_data
-  failed_when: "'deno' not in deno_installed_version_data.stdout"
-  when: deno_installed.rc == 0
+  changed_when: false
+  failed_when: "deno_installed_version_data.rc != 0 or (deno_installed_version_data.rc == 0 and 'deno' not in deno_installed_version_data.stdout)"
+  when: not deno_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    deno_installed_version: "{{ 'v' + deno_installed_version_data.stdout_lines[0].split()[1] if deno_installed.rc == 0 else '' }}"
+    deno_installed_version: "{{ 'v' + deno_installed_version_data.stdout_lines[0].split()[1] if not deno_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:
@@ -59,6 +59,8 @@
       ansible.builtin.copy:
         src: "{{ deno_tempdir.path }}/deno"
         dest: "{{ deno_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: a+x
         remote_src: true
 

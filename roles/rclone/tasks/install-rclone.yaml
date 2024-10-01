@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type rclone
+    cmd: "command -v {{ rclone_binary_name }}"
   changed_when: false
   register: rclone_installed
-  failed_when: "not ('rclone: not found' in rclone_installed.stderr or 'rclone is' in rclone_installed.stdout)"
+  failed_when: rclone_installed.rc != 0 and rclone_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: rclone --version
-  changed_when: false
+    cmd: "{{ rclone_binary_name }} --version"
   register: rclone_installed_version_data
-  failed_when: "'rclone' not in rclone_installed_version_data.stdout"
-  when: rclone_installed.rc == 0
+  changed_when: false
+  failed_when: "rclone_installed_version_data.rc != 0 or (rclone_installed_version_data.rc == 0 and 'rclone' not in rclone_installed_version_data.stdout)"
+  when: not rclone_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    rclone_installed_version: "{{ rclone_installed_version_data.stdout_lines[0].split()[1] if rclone_installed.rc == 0 else '' }}"
+    rclone_installed_version: "{{ rclone_installed_version_data.stdout_lines[0].split()[1] if not rclone_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

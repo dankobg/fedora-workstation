@@ -3,24 +3,28 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type dust
+    cmd: "command -v {{ dust_binary_name }}"
   changed_when: false
   register: dust_installed
-  failed_when: "not ('dust: not found' in dust_installed.stderr or 'dust is' in dust_installed.stdout)"
+  failed_when: dust_installed.rc != 0 and dust_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: dust --version
-  changed_when: false
+    cmd: "{{ dust_binary_name }} --version"
   register: dust_installed_version_data
-  failed_when: "'Dust' not in dust_installed_version_data.stdout"
-  when: dust_installed.rc == 0
+  changed_when: false
+  failed_when: "dust_installed_version_data.rc != 0 or (dust_installed_version_data.rc == 0 and 'Dust' not in dust_installed_version_data.stdout)"
+  when: not dust_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if dust_installed.rc == 0 else '' }}"
+    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if not dust_installed_version_data.failed else '' }}"
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if not dust_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

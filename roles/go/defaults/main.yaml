@@ -5,6 +5,8 @@ go_state: present
 go_version: latest
 go_dir: /usr/local/go
 go_gopath_dir: /usr/local/lib/go
+go_binary_name: go
+go_path: "{{ go_gopath_dir }}/{{ go_binary_name }}"
 
 go_tools:
   - golang.org/x/tools/gopls@latest

@@ -3,24 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type lazydocker
+    cmd: "command -v {{ lazydocker_binary_name }}"
   changed_when: false
   register: lazydocker_installed
-  failed_when: "not ('lazydocker: not found' in lazydocker_installed.stderr or 'lazydocker is' in lazydocker_installed.stdout)"
+  failed_when: lazydocker_installed.rc != 0 and lazydocker_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: lazydocker --version
-  changed_when: false
+    cmd: "{{ lazydocker_binary_name }} --version"
   register: lazydocker_installed_version_data
-  failed_when: "'Version' not in lazydocker_installed_version_data.stdout"
-  when: lazydocker_installed.rc == 0
+  changed_when: false
+  failed_when: >
+    lazydocker_installed_version_data.rc != 0 or (lazydocker_installed_version_data.rc == 0 and 'Version' not in lazydocker_installed_version_data.stdout)
+  when: not lazydocker_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    lazydocker_installed_version: "{{ 'v' + lazydocker_installed_version_data.stdout_lines[0].split()[1] if lazydocker_installed.rc == 0 else '' }}"
+    lazydocker_installed_version: "{{ 'v' + lazydocker_installed_version_data.stdout_lines[0].split()[1] if not lazydocker_installed_version_data.failed else '' }}" # noqa yaml[line-length]
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

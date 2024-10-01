@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type kanata
+    cmd: "command -v {{ kanata_binary_name }}"
   changed_when: false
   register: kanata_installed
-  failed_when: "not ('kanata: not found' in kanata_installed.stderr or 'kanata is' in kanata_installed.stdout)"
+  failed_when: kanata_installed.rc != 0 and kanata_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: kanata --version
-  changed_when: false
+    cmd: "{{ kanata_binary_name }} --version"
   register: kanata_installed_version_data
-  failed_when: "'kanata' not in kanata_installed_version_data.stdout"
-  when: kanata_installed.rc == 0
+  changed_when: false
+  failed_when: "kanata_installed_version_data.rc != 0 or (kanata_installed_version_data.rc == 0 and 'kanata' not in kanata_installed_version_data.stdout)"
+  when: not kanata_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kanata_installed_version: "{{ 'v' + kanata_installed_version_data.stdout.split()[1] if kanata_installed.rc == 0 else '' }}"
+    kanata_installed_version: "{{ 'v' + kanata_installed_version_data.stdout.split()[1] if not kanata_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

@@ -3,25 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type kubens
+    cmd: "command -v {{ kubens_binary_name }}"
   changed_when: false
   register: kubens_installed
-  failed_when: "not ('kubens: not found' in kubens_installed.stderr or 'kubens is' in kubens_installed.stdout)"
+  failed_when: kubens_installed.rc != 0 and kubens_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: kubens --version
-  changed_when: false
+    cmd: "{{ kubens_binary_name }} --version"
   register: kubens_installed_version_data
+  changed_when: false
   failed_when: >
-    not (kubens_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
-  when: kubens_installed.rc == 0
+    kubens_installed_version_data.rc != 0 or not (kubens_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
+  when: not kubens_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kubens_installed_version: "{{ 'v' + kubens_installed_version_data.stdout if kubens_installed.rc == 0 else '' }}"
+    kubens_installed_version: "{{ 'v' + kubens_installed_version_data.stdout if not kubens_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

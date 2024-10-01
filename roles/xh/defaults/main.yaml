@@ -3,4 +3,5 @@
 
 xh_state: present
 xh_version: latest
-xh_path: "{{ binaries_path }}/xh"
+xh_binary_name: xh
+xh_path: "{{ binaries_path }}/{{ xh_binary_name }}"

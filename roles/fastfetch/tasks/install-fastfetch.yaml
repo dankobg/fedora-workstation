@@ -3,24 +3,25 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type fastfetch
+    cmd: "command -v {{ fastfetch_binary_name }}"
   changed_when: false
   register: fastfetch_installed
-  failed_when: "not ('fastfetch: not found' in fastfetch_installed.stderr or 'fastfetch is' in fastfetch_installed.stdout)"
+  failed_when: fastfetch_installed.rc != 0 and fastfetch_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: fastfetch --version
-  changed_when: false
+    cmd: "{{ fastfetch_binary_name }} --version"
   register: fastfetch_installed_version_data
-  failed_when: "'fastfetch' not in fastfetch_installed_version_data.stdout"
-  when: fastfetch_installed.rc == 0
+  changed_when: false
+  failed_when: >
+    fastfetch_installed_version_data.rc != 0 or (fastfetch_installed_version_data.rc == 0 and 'fastfetch' not in fastfetch_installed_version_data.stdout)
+  when: not fastfetch_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    fastfetch_installed_version: "{{ fastfetch_installed_version_data.stdout.split()[1] if fastfetch_installed.rc == 0 else '' }}"
+    fastfetch_installed_version: "{{ fastfetch_installed_version_data.stdout.split()[1] if not fastfetch_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

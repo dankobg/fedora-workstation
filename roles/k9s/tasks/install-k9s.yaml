@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type k9s
+    cmd: "command -v {{ k9s_binary_name }}"
   changed_when: false
   register: k9s_installed
-  failed_when: "not ('k9s: not found' in k9s_installed.stderr or 'k9s is' in k9s_installed.stdout)"
+  failed_when: k9s_installed.rc != 0 and k9s_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: k9s version
-  changed_when: false
+    cmd: "{{ k9s_binary_name }} version"
   register: k9s_installed_version_data
-  failed_when: "'Version' not in k9s_installed_version_data.stdout"
-  when: k9s_installed.rc == 0
+  changed_when: false
+  failed_when: "k9s_installed_version_data.rc != 0 or (k9s_installed_version_data.rc == 0 and 'Version' not in k9s_installed_version_data.stdout)"
+  when: not k9s_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    k9s_installed_version: "{{ 'v' + k9s_installed_version_data.stdout_lines[7].split(':')[1].split('v')[1] if k9s_installed.rc == 0 else '' }}"
+    k9s_installed_version: "{{ 'v' + k9s_installed_version_data.stdout_lines[7].split(':')[1].split('v')[1] if not k9s_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

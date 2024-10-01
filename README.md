@@ -11,8 +11,7 @@ roles that perform some changes:
 
 TODO: verify checksums for manuall downloads for apps:
 
-- [] syncthing
-- [] bw-cli
+- [] bw
 - [] devspace
 - [] docker
 - [] eza
@@ -39,6 +38,7 @@ TODO: verify checksums for manuall downloads for apps:
 - [] rclone
 - [] restic
 - [] sops
+- [] syncthing
 - [] task
 - [] yq
 - [] zellij

@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type protoc
+    cmd: "command -v {{ protoc_binary_name }}"
   changed_when: false
   register: protoc_installed
-  failed_when: "not ('protoc: not found' in protoc_installed.stderr or 'protoc is' in protoc_installed.stdout)"
+  failed_when: protoc_installed.rc != 0 and protoc_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: protoc --version
-  changed_when: false
+    cmd: "{{ protoc_binary_name }} --version"
   register: protoc_installed_version_data
-  failed_when: "'libprotoc' not in protoc_installed_version_data.stdout"
-  when: protoc_installed.rc == 0
+  changed_when: false
+  failed_when: "protoc_installed_version_data.rc != 0 or (protoc_installed_version_data.rc == 0 and 'libprotoc' not in protoc_installed_version_data.stdout)"
+  when: not protoc_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    protoc_installed_version: "{{ 'v' + protoc_installed_version_data.stdout.split()[1] if protoc_installed.rc == 0 else '' }}"
+    protoc_installed_version: "{{ 'v' + protoc_installed_version_data.stdout.split()[1] if not protoc_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

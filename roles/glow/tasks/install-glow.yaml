@@ -3,24 +3,24 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: type glow
+    cmd: "command -v {{ glow_binary_name }}"
   changed_when: false
   register: glow_installed
-  failed_when: "not ('glow: not found' in glow_installed.stderr or 'glow is' in glow_installed.stdout)"
+  failed_when: glow_installed.rc != 0 and glow_installed.stderr != ""
 
 - name: Get installed version data
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: glow --version
-  changed_when: false
+    cmd: "{{ glow_binary_name }} --version"
   register: glow_installed_version_data
-  failed_when: "'glow' not in glow_installed_version_data.stdout"
-  when: glow_installed.rc == 0
+  changed_when: false
+  failed_when: "glow_installed_version_data.rc != 0 or (glow_installed_version_data.rc == 0 and 'glow' not in glow_installed_version_data.stdout)"
+  when: not glow_installed.failed
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    glow_installed_version: "{{ 'v' + glow_installed_version_data.stdout.split()[2] if glow_installed.rc == 0 else '' }}"
+    glow_installed_version: "{{ 'v' + glow_installed_version_data.stdout.split()[2] if not glow_installed_version_data.failed else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:
