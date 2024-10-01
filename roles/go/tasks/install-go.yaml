@@ -39,6 +39,8 @@
   ansible.builtin.uri:
     url: https://go.dev/dl/?mode=json
     return_content: true
+    headers:
+      Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: go_latest_release_data
 
 - name: Set the release version

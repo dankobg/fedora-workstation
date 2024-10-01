@@ -30,6 +30,8 @@
   ansible.builtin.uri:
     url: https://api.github.com/repos/bootandy/dust/releases/latest
     return_content: true
+    headers:
+      Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: dust_latest_release_data
 
 - name: Set the release version

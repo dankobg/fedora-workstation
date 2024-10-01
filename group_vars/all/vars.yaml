@@ -10,6 +10,8 @@ git_user_name: "{{ vault_git_user_name }}"
 git_user_email: "{{ vault_git_user_email }}"
 git_core_editor: "hx" # or code --wait --new-window
 
+github_pat: "{{ vault_github_pat }}"
+
 binaries_path: /usr/local/bin
 
 archs:

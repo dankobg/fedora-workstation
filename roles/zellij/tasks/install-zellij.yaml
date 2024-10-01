@@ -26,6 +26,8 @@
   ansible.builtin.uri:
     url: https://api.github.com/repos/zellij-org/zellij/releases/latest
     return_content: true
+    headers:
+      Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: zellij_latest_release_data
 
 - name: Set the release version

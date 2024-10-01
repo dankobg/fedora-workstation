@@ -17,6 +17,8 @@
   ansible.builtin.uri:
     url: https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest
     return_content: true
+    headers:
+      Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: fonts_nerd_fonts_latest_release_data
 
 - name: Set the latest Nerd Fonts version
