@@ -1,0 +1,6 @@
+---
+- name: Test python
+  hosts: localhost
+  remote_user: root
+  roles:
+    - python

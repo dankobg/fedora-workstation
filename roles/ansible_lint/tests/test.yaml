@@ -1,0 +1,6 @@
+---
+- name: Test ansible_lint
+  hosts: localhost
+  remote_user: root
+  roles:
+    - ansible_lint

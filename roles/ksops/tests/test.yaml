@@ -1,0 +1,6 @@
+---
+- name: Test ksops
+  hosts: localhost
+  remote_user: root
+  roles:
+    - ksops

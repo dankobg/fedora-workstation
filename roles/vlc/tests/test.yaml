@@ -1,0 +1,6 @@
+---
+- name: Test vlc
+  hosts: localhost
+  remote_user: root
+  roles:
+    - vlc

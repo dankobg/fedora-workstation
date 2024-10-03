@@ -1,0 +1,6 @@
+---
+- name: Test nautilus
+  hosts: localhost
+  remote_user: root
+  roles:
+    - nautilus

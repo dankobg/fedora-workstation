@@ -1,0 +1,6 @@
+---
+- name: Test kanata
+  hosts: localhost
+  remote_user: root
+  roles:
+    - kanata

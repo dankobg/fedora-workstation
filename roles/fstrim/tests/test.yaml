@@ -1,0 +1,6 @@
+---
+- name: Test fstrim
+  hosts: localhost
+  remote_user: root
+  roles:
+    - fstrim

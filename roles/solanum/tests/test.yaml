@@ -1,0 +1,6 @@
+---
+- name: Test solanum
+  hosts: localhost
+  remote_user: root
+  roles:
+    - solanum

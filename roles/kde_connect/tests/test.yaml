@@ -1,0 +1,6 @@
+---
+- name: Test kde_connect
+  hosts: localhost
+  remote_user: root
+  roles:
+    - kde_connect

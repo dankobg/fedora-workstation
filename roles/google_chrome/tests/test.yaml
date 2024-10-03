@@ -1,0 +1,6 @@
+---
+- name: Test google_chrome
+  hosts: localhost
+  remote_user: root
+  roles:
+    - google_chrome

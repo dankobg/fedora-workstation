@@ -1,0 +1,6 @@
+---
+- name: Test ripgrep
+  hosts: localhost
+  remote_user: root
+  roles:
+    - ripgrep

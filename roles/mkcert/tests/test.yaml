@@ -1,0 +1,6 @@
+---
+- name: Test mkcert
+  hosts: localhost
+  remote_user: root
+  roles:
+    - mkcert

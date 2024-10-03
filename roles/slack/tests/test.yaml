@@ -1,0 +1,6 @@
+---
+- name: Test slack
+  hosts: localhost
+  remote_user: root
+  roles:
+    - slack

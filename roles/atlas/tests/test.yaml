@@ -1,0 +1,6 @@
+---
+- name: Test atlas
+  hosts: localhost
+  remote_user: root
+  roles:
+    - atlas

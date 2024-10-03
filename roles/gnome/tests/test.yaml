@@ -1,0 +1,6 @@
+---
+- name: Test gnome
+  hosts: localhost
+  remote_user: root
+  roles:
+    - gnome

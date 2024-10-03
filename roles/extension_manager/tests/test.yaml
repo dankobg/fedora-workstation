@@ -1,0 +1,6 @@
+---
+- name: Test extension_manager
+  hosts: localhost
+  remote_user: root
+  roles:
+    - extension_manager

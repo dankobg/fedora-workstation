@@ -1,0 +1,6 @@
+---
+- name: Test sops
+  hosts: localhost
+  remote_user: root
+  roles:
+    - sops

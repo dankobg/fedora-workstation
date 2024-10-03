@@ -1,0 +1,6 @@
+---
+- name: Test dconf_editor
+  hosts: localhost
+  remote_user: root
+  roles:
+    - dconf_editor

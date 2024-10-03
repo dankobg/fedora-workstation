@@ -1,0 +1,6 @@
+---
+- name: Test libreoffice
+  hosts: localhost
+  remote_user: root
+  roles:
+    - libreoffice

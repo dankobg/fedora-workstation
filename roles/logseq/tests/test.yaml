@@ -1,0 +1,6 @@
+---
+- name: Test logseq
+  hosts: localhost
+  remote_user: root
+  roles:
+    - logseq

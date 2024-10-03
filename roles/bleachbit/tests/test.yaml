@@ -1,0 +1,6 @@
+---
+- name: Test bleachbit
+  hosts: localhost
+  remote_user: root
+  roles:
+    - bleachbit

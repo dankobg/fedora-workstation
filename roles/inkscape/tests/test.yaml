@@ -1,0 +1,6 @@
+---
+- name: Test inkscape
+  hosts: localhost
+  remote_user: root
+  roles:
+    - inkscape

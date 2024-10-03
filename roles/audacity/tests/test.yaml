@@ -1,0 +1,6 @@
+---
+- name: Test audacity
+  hosts: localhost
+  remote_user: root
+  roles:
+    - audacity

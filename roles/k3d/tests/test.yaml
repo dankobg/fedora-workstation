@@ -1,0 +1,6 @@
+---
+- name: Test k3d
+  hosts: localhost
+  remote_user: root
+  roles:
+    - k3d

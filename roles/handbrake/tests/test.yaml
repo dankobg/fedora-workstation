@@ -1,0 +1,6 @@
+---
+- name: Test handbrake
+  hosts: localhost
+  remote_user: root
+  roles:
+    - handbrake

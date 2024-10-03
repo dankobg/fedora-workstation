@@ -1,0 +1,6 @@
+---
+- name: Test multimedia
+  hosts: localhost
+  remote_user: root
+  roles:
+    - multimedia

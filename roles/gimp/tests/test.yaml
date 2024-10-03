@@ -1,0 +1,6 @@
+---
+- name: Test gimp
+  hosts: localhost
+  remote_user: root
+  roles:
+    - gimp

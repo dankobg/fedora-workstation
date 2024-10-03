@@ -1,0 +1,6 @@
+---
+- name: Test zoxide
+  hosts: localhost
+  remote_user: root
+  roles:
+    - zoxide

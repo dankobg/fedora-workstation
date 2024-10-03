@@ -1,0 +1,6 @@
+---
+- name: Test rclone
+  hosts: localhost
+  remote_user: root
+  roles:
+    - rclone

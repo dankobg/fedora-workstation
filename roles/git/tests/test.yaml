@@ -1,0 +1,6 @@
+---
+- name: Test git
+  hosts: localhost
+  remote_user: root
+  roles:
+    - git

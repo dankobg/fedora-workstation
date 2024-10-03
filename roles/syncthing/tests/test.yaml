@@ -1,0 +1,6 @@
+---
+- name: Test syncthing
+  hosts: localhost
+  remote_user: root
+  roles:
+    - syncthing

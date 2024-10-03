@@ -1,0 +1,6 @@
+---
+- name: Test krita
+  hosts: localhost
+  remote_user: root
+  roles:
+    - krita

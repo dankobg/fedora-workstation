@@ -1,0 +1,6 @@
+---
+- name: Test pika_backup
+  hosts: localhost
+  remote_user: root
+  roles:
+    - pika_backup

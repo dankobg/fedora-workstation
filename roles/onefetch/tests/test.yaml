@@ -1,0 +1,6 @@
+---
+- name: Test onefetch
+  hosts: localhost
+  remote_user: root
+  roles:
+    - onefetch
