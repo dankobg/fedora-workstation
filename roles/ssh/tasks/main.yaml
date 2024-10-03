@@ -2,9 +2,12 @@
 # tasks file for ssh
 
 - name: Copy SSH keys
-  ansible.builtin.copy:
-    src: keys/
-    dest: "/home/{{ username }}/.ssh"
+  ansible.builtin.template:
+    src: "keys/{{ item }}.j2"
+    dest: "/home/{{ username }}/.ssh/{{ item }}"
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: "0600"
+  loop:
+    - id_ed25519
+    - id_ed25519.pub
