@@ -1,0 +1,7 @@
+---
+# tasks file for dconf_editor
+
+- name: Install dconf_editor
+  ansible.builtin.dnf:
+    name: dconf-editor
+    state: "{{ dconf_editor_state }}"

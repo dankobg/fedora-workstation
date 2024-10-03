@@ -1,0 +1,4 @@
+---
+# defaults file for pika_backup
+
+pika_backup_state: latest

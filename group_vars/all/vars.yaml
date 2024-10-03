@@ -50,23 +50,23 @@ roles_selected:
   - libreoffice
   - age
   - ansible
-  - ansible-lint
+  - ansible_lint
   - atlas
   - bat
-  - beekeeper-studio
+  - beekeeper_studio
   - bitwarden
   - bw
   - bleachbit
   # - bruno # there is a bug with flatpak, i installed appimage currently which works fine...
   - btop
   - czkawka
-  - dconf-editor
+  - dconf_editor
   - deno
   - devspace
   - discord
   - docker
   - dust
-  - extension-manager
+  - extension_manager
   - eza
   - fastfetch
   - fd
@@ -79,7 +79,7 @@ roles_selected:
   - delta
   - glow
   - go
-  - google-chrome
+  - google_chrome
   - handbrake
   - helix
   - helm
@@ -90,7 +90,7 @@ roles_selected:
   - k3d
   - k9s
   - kanata
-  - kde-connect
+  - kde_connect
   - kitty
   - ksops
   - kubectl
@@ -102,10 +102,10 @@ roles_selected:
   - logseq
   - mkcert
   - ncdu
-  - network-tools
+  - network_tools
   - node
   - onefetch
-  - pika-backup
+  - pika_backup
   - protoc
   - python
   - qbittorrent

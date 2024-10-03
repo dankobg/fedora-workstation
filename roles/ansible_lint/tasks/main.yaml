@@ -1,0 +1,7 @@
+---
+# tasks file for ansible_lint
+
+- name: Install ansible-lint
+  ansible.builtin.dnf:
+    name: ansible-lint
+    state: "{{ ansible_lint_state }}"

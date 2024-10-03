@@ -1,0 +1,8 @@
+---
+# tasks file for network_tools
+
+- name: Install network tools
+  ansible.builtin.dnf:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  loop: "{{ network_tools_apps }}"

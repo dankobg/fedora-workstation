@@ -1,0 +1,72 @@
+---
+tasks file for google_chrome
+
+- name: Install Google Chrome
+  ansible.builtin.dnf:
+    name: google-chrome-stable
+    state: latest
+
+- name: Ensure managed policies directory exists
+  ansible.builtin.file:
+    path: /etc/opt/chrome/policies/managed
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy managed policies.json file
+  ansible.builtin.copy:
+    src: managed_policies.json
+    dest: /etc/opt/chrome/policies/managed
+
+- name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: $(which google-chrome) --version
+  changed_when: false
+  register: chrome_version
+
+- name: Set prodversion
+  ansible.builtin.set_fact:
+    prodversion: "{{ chrome_version.stdout.split()[2] }}"
+
+- name: Ensure individual extension directories exist
+  ansible.builtin.file:
+    path: "/tmp/wtf/{{ item.id }}"
+    state: directory
+  loop: "{{ google_chrome_extensions }}"
+
+- name: Download extension .crx file
+  ansible.builtin.uri:
+    url: "{{ crx.base_url }}?response={{ crx.response }}&os={{ crx.os }}&arch={{ crx.arch }}&os_arch={{ crx.os_arch }}&nacl_arch={{ crx.nacl_arch }}&prod={{ crx.prod }}&prodversion={{ prodversion | default(crx.prodversion) }}&acceptformat={{ crx.acceptformat }}&lang={{ crx.lang }}&x=id%3D{{ item.id }}%26installsource%3D{{ crx.installsource }}%26uc"
+    follow_redirects: all
+    # dest: "/usr/share/google-chrome/extensions/{{ item.id }}"
+    # dest: "/opt/google/chrome/extensions/{{ item.id }}"
+    dest: "/tmp/wtf/{{ item.id }}"
+  register: rez
+  loop: "{{ google_chrome_extensions }}"
+
+- name: Rename downloaded .crx to .zip
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ item.path[0:-3] }}zip"
+  loop: "{{ rez.results }}"
+  register: renamed_crx
+
+- name: Unzip manually # (because google uses dumb format .crx which is not standard, and has ~400 more bytes and throws errors even though unzip works, stupid company)
+  ansible.builtin.shell: "unzip {{ item.path | regex_replace('\\.crx$', '.zip')}} -d /tmp/wtf/{{ item.item.id }}"
+  failed_when: false
+  ignore_errors: true
+  loop: "{{ rez.results }}"
+
+- name: Remove downloaded .crx file
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ rez.results }}"
+
+- name: Remove renamed .zip file
+  ansible.builtin.file:
+    path: "{{ item.path | regex_replace('\\.crx$', '.zip')}}"
+    state: absent
+  loop: "{{ rez.results }}"

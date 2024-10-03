@@ -7,10 +7,10 @@ retries until for nvidia drivers...
 
 not fully idempotent yet, they make small changes:
 
-- gnome (always loads my dconf settings file...)
-- docker
+- gnome (always loads my dconf settings file... i might use just dconf module to set each thing up)
+- docker (hm need to see what is going on)
 - go (go install go tools apps, maybe i can use go mod checksum somehow)
-- ksops (too lazy, it doesn't expose --version flag or similar)
+- ksops (too lazy, it doesn't expose --version flag or similar, maybe i can track version separately)
 
 TODO: verify checksums for manuall downloads for apps:
 

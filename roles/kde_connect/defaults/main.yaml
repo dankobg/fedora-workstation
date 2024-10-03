@@ -1,0 +1,4 @@
+---
+# defaults file for kde_connect
+
+kde_connect_state: latest

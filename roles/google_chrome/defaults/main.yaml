@@ -1,0 +1,53 @@
+---
+# defaults file for google_chrome
+
+google_chrome_state: latest
+
+google_chrome_managed_policies_dir: /etc/opt/chrome/policies/managed
+
+google_chrome_extensions:
+  # gnome shell integration (no needed, using extension manager flatpak)
+  - id: gphhapmejobijbbhgpjhcjognlahblep
+    state: absent
+  # ublock origin
+  - id: epcnnfbjfcgphgdmggkamkmgojdagdnn
+    state: present
+  # dark reader
+  - id: eimadpbcbfnmbkopoojfekhnkhdbieeh
+    state: present
+  # bitwarden
+  - id: nngceckbapebfimnlniiiahkandclblb
+    state: present
+  # privacy badger
+  - id: pkehgijcmpdhfbdbbnkijodmdjhbjlgp
+    state: present
+  # i still don't care about cookies
+  - id: edibdbjcniadpccecjdfdjjppcpchdlm
+    state: present
+  # return yt dislikes
+  - id: gebbhagfogifgggkldgodflihgfeippi
+    state: present
+  # redirect yt shorts
+  - id: lncinpfgcgmphkebnbfpogkgiaadphpi
+    state: present
+  # autoscroll
+  - id: occjjkgifpmdgodlplnacmkejpdionan
+    state: present
+
+google_chrome_crx:
+  base_url: https://clients2.google.com/service/update2/crx
+  response: redirect
+  os: linux
+  arch: x86_64
+  os_arch: x86_64
+  nacl_arch: x86-64
+  prod: chromecrx
+  prodversion: 128.0.6613.119
+  acceptformat: crx2,crx3
+  lang: en
+  installsource: ondemand
+
+google_chrome_extensions_path: /usr/share/google-chrome/extensions/
+# /opt/google/chrome/extensions/
+# /usr/share/google-chrome/extensions/
+# ~/.config/google-chrome/Default/Extensions

@@ -1,0 +1,7 @@
+---
+# tasks file for pika_backup
+
+- name: Install Pika Backup
+  community.general.flatpak:
+    name: org.gnome.World.PikaBackup
+    state: "{{ pika_backup_state }}"

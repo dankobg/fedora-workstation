@@ -1,7 +1,0 @@
----
-# tasks file for beekeeper-studio
-
-- name: Install Beekeeper Studio
-  community.general.flatpak:
-    name: io.beekeeperstudio.Studio
-    state: "{{ beekeeper_studio_state }}"

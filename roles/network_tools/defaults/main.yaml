@@ -1,0 +1,16 @@
+---
+# defaults file for network_tools
+
+network_tools_apps:
+  - name: net-tools
+    state: latest
+  - name: nmap
+    state: latest
+  - name: iftop
+    state: latest
+  - name: tcpdump
+    state: latest
+  - name: traceroute
+    state: latest
+  - name: whois
+    state: latest
