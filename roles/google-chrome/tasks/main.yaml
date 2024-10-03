@@ -6,18 +6,27 @@
     name: google-chrome-stable
     state: "{{ google_chrome_state }}"
 
-- name: Ensure managed policies directory exists
+- name: Configure Google Chrome
+  when: google_chrome_state == 'latest'
+  block:
+    - name: Ensure managed policies directory exists
+      ansible.builtin.file:
+        path: "{{ google_chrome_managed_policies_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Copy managed policies.json file
+      ansible.builtin.copy:
+        src: managed_policies.json
+        dest: "{{ google_chrome_managed_policies_dir }}/managed_policies.json"
+        owner: root
+        group: root
+        mode: "0644"
+
+- name: Ensure removed
   ansible.builtin.file:
     path: "{{ google_chrome_managed_policies_dir }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-
-- name: Copy managed policies.json file
-  ansible.builtin.copy:
-    src: managed_policies.json
-    dest: "{{ google_chrome_managed_policies_dir }}/managed_policies.json"
-    owner: root
-    group: root
-    mode: "0644"
+    state: absent
+  when: google_chrome_state == 'absent'

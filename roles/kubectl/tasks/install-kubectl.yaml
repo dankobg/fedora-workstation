@@ -16,7 +16,7 @@
   register: kubectl_installed_version_data
   changed_when: false
   failed_when: >
-    (kubectl_installed_version_data.rc != 0 and 'was refused' not in kubectl_installed_version_data.stderr) or 
+    (kubectl_installed_version_data.rc != 0 and 'was refused' not in kubectl_installed_version_data.stderr) or
     (kubectl_installed_version_data.rc == 0 and 'Client Version' not in kubectl_installed_version_data.stdout)
   when: not kubectl_installed.failed
 

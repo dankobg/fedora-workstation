@@ -9,31 +9,30 @@ google_chrome_extensions:
   # gnome shell integration (no needed, using extension manager flatpak)
   - id: gphhapmejobijbbhgpjhcjognlahblep
     state: absent
-    # ublock origin
+  # ublock origin
   - id: epcnnfbjfcgphgdmggkamkmgojdagdnn
     state: present
-    # dark reader
+  # dark reader
   - id: eimadpbcbfnmbkopoojfekhnkhdbieeh
     state: present
-    # bitwarden
+  # bitwarden
   - id: nngceckbapebfimnlniiiahkandclblb
     state: present
-    # privacy badger
+  # privacy badger
   - id: pkehgijcmpdhfbdbbnkijodmdjhbjlgp
     state: present
-    # i still don't care about cookies
+  # i still don't care about cookies
   - id: edibdbjcniadpccecjdfdjjppcpchdlm
     state: present
-    # return yt dislikes
+  # return yt dislikes
   - id: gebbhagfogifgggkldgodflihgfeippi
     state: present
-    # redirect yt shorts
+  # redirect yt shorts
   - id: lncinpfgcgmphkebnbfpogkgiaadphpi
     state: present
-    # autoscroll
+  # autoscroll
   - id: occjjkgifpmdgodlplnacmkejpdionan
     state: present
-
 crx:
   base_url: https://clients2.google.com/service/update2/crx
   response: redirect

@@ -6,34 +6,45 @@
     name: firefox
     state: "{{ firefox_state }}"
 
-- name: Ensure policies directory exists
+- name: Configure Firefox
+  when: firefox_state == 'latest'
+  block:
+    - name: Ensure policies directory exists
+      ansible.builtin.file:
+        path: "{{ firefox_policies_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Copy policies.json
+      ansible.builtin.copy:
+        src: policies.json
+        dest: "{{ firefox_policies_dir }}/policies.json"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy autoconfig.js
+      ansible.builtin.copy:
+        src: autoconfig.js
+        dest: "{{ firefox_install_dir }}/defaults/pref/autoconfig.js"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy firefox.cfg
+      ansible.builtin.copy:
+        src: firefox.cfg
+        dest: "{{ firefox_install_dir }}/firefox.cfg"
+        owner: root
+        group: root
+        mode: "0644"
+
+- name: Ensure removed
   ansible.builtin.file:
-    path: "{{ firefox_policies_dir }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-
-- name: Copy policies.json
-  ansible.builtin.copy:
-    src: policies.json
-    dest: "{{ firefox_policies_dir }}/policies.json"
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Copy autoconfig.js
-  ansible.builtin.copy:
-    src: autoconfig.js
-    dest: "{{ firefox_install_dir }}/defaults/pref/autoconfig.js"
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Copy firefox.cfg
-  ansible.builtin.copy:
-    src: firefox.cfg
-    dest: "{{ firefox_install_dir }}/firefox.cfg"
-    owner: root
-    group: root
-    mode: "0644"
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ firefox_install_dir }}"
+    - "{{ firefox_policies_dir }}"

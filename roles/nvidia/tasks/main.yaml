@@ -21,16 +21,30 @@
   changed_when: false
   failed_when: >
     not (kernel_module_status.stdout | regex_search('^\d+\.\d+\.\d+$') or 'Module nvidia not found' in kernel_module_status.stdout)
+  retries: 10
+  delay: 30
+  until: >
+    kernel_module_status.stdout | regex_search('^\d+\.\d+\.\d+$')
+
+- name: Check that nvidia-smi works
+  ansible.builtin.command:
+    cmd: nvidia-smi
+  register: nvidia_smi_status
+  changed_when: false
+  failed_when: >
+    'NVIDIA-SMI' not in nvidia_smi_status.stdout or
+    'Driver Version' not in nvidia_smi_status.stdout or
+    'CUDA Version' not in nvidia_smi_status.stdout
+  retries: 6
+  delay: 10
+  until: >
+    'NVIDIA-SMI' in nvidia_smi_status.stdout and
+    'Driver Version' in nvidia_smi_status.stdout and
+    'CUDA Version' in nvidia_smi_status.stdout
 
 - name: Display the kernel module status
   ansible.builtin.debug:
     msg: "{{ kernel_module_status.stdout }}"
-  failed_when: false
-
-- name: Wait for the kernel module to be built
-  ansible.builtin.pause:
-    seconds: 30
-  when: "'Module nvidia not found' in kernel_module_status.stdout"
   failed_when: false
 
 - name: Check if a reboot is required
