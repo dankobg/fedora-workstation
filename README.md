@@ -4,6 +4,24 @@ TODO: improvements
 maybe some smoke tests
 e.g. get_uri: with retries, delay and until 'xxx' in result.content
 retries until for nvidia drivers...
+make better default vars...
+
+maybe use community.general.ssh_config:
+
+x86_64
+amd64
+x86
+i386
+i686
+aarch64
+arm64
+armv9l
+armv8l
+armv7l
+armv6l
+aarch32
+ppc64le
+s390x
 
 not fully idempotent yet, they make small changes:
 
@@ -45,6 +63,3 @@ TODO: verify checksums for manuall downloads for apps:
 - [] task
 - [] yq
 - [] zellij
-
-- Template replace all danko hardcoded...
-- Make better default vars...

@@ -1,7 +1,5 @@
 # ZSH aliases
 
-alias ls="ls --color"
-
 alias dc="docker compose"
 alias k="kubectl"
 alias ld="lazydocker"
@@ -11,16 +9,20 @@ alias zj="zellij"
 alias wtr="curl wttr.in"
 
 if command -v eza &>/dev/null; then
-	alias ls='eza'
-	alias ll='eza -lhg'
-	alias lla='eza -alhg'
-	alias tree='eza --tree'
+  alias ls='eza --color=auto --icons=auto --group-directories-first'
+	alias la='eza --color=auto --icons=auto --group-directories-first -a'
+	alias ll='eza --color=auto --icons=auto --group-directories-first -lhgo --git'
+	alias lla='eza --color=auto --icons=auto --group-directories-first -alhgo --git'
+	alias tree='eza --color=auto --icons=auto --tree'
+else
+  alias ls='ls --color=auto'
+  alias la='ls --color=auto -a'
+  alias ll='ls --color=auto -lh'
+  alias lla='ls --color=auto -lha'
 fi
 
 if command -v bat &>/dev/null; then
-	alias cat='bat --paging=never --style=plain'
-	alias catt='bat'
-	alias cata='bat --show-all --paging=never'
+	alias cat='bat --color=auto --style=auto'
 fi
 
 alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"
