@@ -16,9 +16,25 @@
 #   failed_when: "ksops_installed_version_data.rc != 0 or (ksops_installed_version_data.rc == 0 and 'ksops' not in ksops_installed_version_data.stdout)"
 #   when: not ksops_installed.failed
 
+# ksops does not expose version flag lol
+- name: Ensure ksops version file exists
+  ansible.builtin.file:
+    path: /usr/local/etc/ksops_version.txt
+    state: touch
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0644"
+    modification_time: preserve
+    access_time: preserve
+
+- name: Get installed version data
+  ansible.builtin.slurp:
+    src: /usr/local/etc/ksops_version.txt
+  register: ksops_installed_version_data
+
 - name: Set installed version
   ansible.builtin.set_fact:
-    ksops_installed_version: "" # ksops does not expose version lol
+    ksops_installed_version: "{{ ksops_installed_version_data.content | b64decode | trim }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:
@@ -33,8 +49,7 @@
     ksops_release_version: "{{ ksops_latest_release_data.json.tag_name if ksops_version == 'latest' else ksops_version }}"
 
 - name: Download and install
-  # when: ksops_installed_version != ksops_release_version
-  when: true # ksops does not expose version lol
+  when: ksops_installed_version != ksops_release_version
   block:
     - name: Set the release artifact
       vars:
@@ -64,6 +79,13 @@
         group: "{{ username }}"
         mode: a+x
         remote_src: true
+
+    - name: Write the version to a file
+      ansible.builtin.lineinfile:
+        path: /usr/local/etc/ksops_version.txt
+        line: "{{ ksops_release_version }}"
+        insertbefore: BOF
+        state: present
 
     - name: Cleanup temp files
       ansible.builtin.file:

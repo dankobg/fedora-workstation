@@ -26,9 +26,8 @@ s390x
 not fully idempotent yet, they make small changes:
 
 - gnome (always loads my dconf settings file... i might use just dconf module to set each thing up)
-- docker (hm need to see what is going on)
-- go (go install go tools apps, maybe i can use go mod checksum somehow)
-- ksops (too lazy, it doesn't expose --version flag or similar, maybe i can track version separately)
+- docker (hmm need to see what is going on, takes a bit of time. Should be idempotent because it's only dnf module)
+- go (go install go tools apps, maybe i can use sumb.db checksum somehow)
 
 TODO: verify checksums for manuall downloads for apps:
 

@@ -1,5 +1,8 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ ksops_path }}"
+    path: "{{ item }}"
     state: absent
+  loop:
+    - "{{ ksops_path }}"
+    - /usr/local/etc/ksops_version.txt
