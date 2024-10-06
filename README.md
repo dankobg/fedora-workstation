@@ -26,8 +26,8 @@ s390x
 not fully idempotent yet, they make small changes:
 
 - gnome (always loads my dconf settings file... i might use just dconf module to set each thing up)
-- docker (hmm need to see what is going on, takes a bit of time. Should be idempotent because it's only dnf module)
-- go (go install go tools apps, maybe i can use sumb.db checksum somehow)
+- docker (hmm need to see what is going on, takes a bit of time. Should be idempotent because it's only dnf module. Ensure old deleted - says changed even though they dont exist)
+- go (go install go tools like gopls,dlv,goimports etc. Don't know how to make it idempotent)
 
 TODO: verify checksums for manuall downloads for apps:
 

@@ -88,9 +88,10 @@
         group: "{{ username }}"
         mode: "0755"
 
-- name: Install go tools # noqa no-changed-when
+- name: Install go tools
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "go install {{ item }}"
   loop: "{{ go_tools }}"
+  changed_when: true
