@@ -1,6 +1,6 @@
 [ca/desrt/dconf-editor]
-saved-pathbar-path='/org/gnome/desktop/input-sources/xkb-options/'
-saved-view='/org/gnome/desktop/input-sources/'
+saved-pathbar-path='/org/gnome/desktop/interface/toolkit-accessibility'
+saved-view='/org/gnome/desktop/interface/toolkit-accessibility'
 show-warning=false
 window-height=500
 window-is-maximized=false
@@ -55,7 +55,7 @@ source-units='degree'
 target-currency='RSD'
 target-units='degree'
 window-maximized=false
-window-size=(360, 666)
+window-size=(360, 615)
 word-size=64
 
 [org/gnome/clocks/state/window]
@@ -64,8 +64,8 @@ panel-id='world'
 size=(870, 690)
 
 [org/gnome/control-center]
-last-panel='applications'
-window-state=(980, 640, true)
+last-panel='network'
+window-state=(980, 640, false)
 
 [org/gnome/desktop/app-folders]
 folder-children=['Utilities', 'YaST', 'Pardus', '4999c2ff-841b-41a1-8870-3ef9c4058011']
@@ -111,10 +111,13 @@ gtk-enable-primary-paste=false
 toolkit-accessibility=false
 
 [org/gnome/desktop/notifications]
-application-children=['org-gnome-software', 'gnome-power-panel', 'org-gnome-texteditor', 'org-gnome-nautilus', 'org-mozilla-firefox', 'org-gnome-terminal', 'org-freedesktop-problems-applet', 'code', 'it-mijorus-smile']
+application-children=['org-gnome-software', 'gnome-power-panel', 'org-gnome-texteditor', 'org-gnome-nautilus', 'org-mozilla-firefox', 'org-gnome-terminal', 'org-freedesktop-problems-applet', 'code', 'it-mijorus-smile', 'discord', 'org-gnome-solanum']
 
 [org/gnome/desktop/notifications/application/code]
 application-id='code.desktop'
+
+[org/gnome/desktop/notifications/application/discord]
+application-id='discord.desktop'
 
 [org/gnome/desktop/notifications/application/gnome-power-panel]
 application-id='gnome-power-panel.desktop'
@@ -134,6 +137,9 @@ application-id='org.gnome.Rhythmbox3.desktop'
 [org/gnome/desktop/notifications/application/org-gnome-software]
 application-id='org.gnome.Software.desktop'
 
+[org/gnome/desktop/notifications/application/org-gnome-solanum]
+application-id='org.gnome.Solanum.desktop'
+
 [org/gnome/desktop/notifications/application/org-gnome-terminal]
 application-id='org.gnome.Terminal.desktop'
 
@@ -145,7 +151,7 @@ application-id='org.mozilla.firefox.desktop'
 
 [org/gnome/desktop/peripherals/keyboard]
 delay=uint32 300
-numlock-state=true
+numlock-state=false
 repeat-interval=uint32 15
 
 [org/gnome/desktop/peripherals/mouse]
@@ -171,7 +177,7 @@ document-directory=@ms 'file:///home/{{ username }}/Downloads'
 [org/gnome/evince/default]
 continuous=true
 dual-page=false
-dual-page-odd-left=false
+dual-page-odd-left=true
 enable-spellchecking=true
 fullscreen=false
 inverted-colors=false
@@ -207,7 +213,8 @@ enable-smartcard-authentication=false
 last-viewed-location=[44.543180100000001, 20.538563700000001]
 map-type='MapsStreetSource'
 transportation-type='pedestrian'
-window-maximized=true
+window-maximized=false
+window-size=[907, 826]
 zoom-level=18
 
 [org/gnome/nautilus/compression]
@@ -265,9 +272,9 @@ custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybin
 volume-step=5
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
-binding='<Ctrl>period'
+binding='<Control>period'
 command='flatpak run it.mijorus.smile'
-name='Smile Emoji picker'
+name='Smile emoji picker'
 
 [org/gnome/settings-daemon/plugins/power]
 power-button-action='interactive'
@@ -284,13 +291,14 @@ welcome-dialog-last-shown-version='46.4'
 locations=@av []
 
 [org/gnome/software]
-check-timestamp=int64 1727348424
+check-timestamp=int64 1728053119
 download-updates=false
 first-run=false
-flatpak-purge-timestamp=int64 1727698238
-install-timestamp=int64 1727020646
-packagekit-historical-updates-timestamp=uint64 1727020646
-update-notification-timestamp=int64 1727020822
+flatpak-purge-timestamp=int64 1728306844
+install-timestamp=int64 1728236300
+packagekit-historical-updates-timestamp=uint64 1728236300
+security-timestamp=int64 1728212627580400
+update-notification-timestamp=int64 1728298682
 
 [org/gnome/terminal/legacy]
 theme-variant='system'

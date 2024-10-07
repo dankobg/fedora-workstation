@@ -26,22 +26,6 @@
   until: >
     kernel_module_status.stdout | regex_search('^\d+\.\d+\.\d+$')
 
-- name: Check that nvidia-smi works
-  ansible.builtin.command:
-    cmd: nvidia-smi
-  register: nvidia_smi_status
-  changed_when: false
-  failed_when: >
-    'NVIDIA-SMI' not in nvidia_smi_status.stdout or
-    'Driver Version' not in nvidia_smi_status.stdout or
-    'CUDA Version' not in nvidia_smi_status.stdout
-  retries: 6
-  delay: 10
-  until: >
-    'NVIDIA-SMI' in nvidia_smi_status.stdout and
-    'Driver Version' in nvidia_smi_status.stdout and
-    'CUDA Version' in nvidia_smi_status.stdout
-
 - name: Display the kernel module status
   ansible.builtin.debug:
     msg: "{{ kernel_module_status.stdout }}"
@@ -54,3 +38,23 @@
   changed_when: "'Reboot should not be necessary' not in reboot_required.stdout"
   failed_when: false
   notify: Reboot machine
+#
+# Problem is that i am using connection: local
+# so nvidia-smi won't work unless after reboot
+# I could reboot manually and then rerun playbook but it is still manual work...
+#
+# - name: Check that nvidia-smi works
+#   ansible.builtin.command:
+#     cmd: nvidia-smi
+#   register: nvidia_smi_status
+#   changed_when: false
+#   failed_when: >
+#     'NVIDIA-SMI' not in nvidia_smi_status.stdout or
+#     'Driver Version' not in nvidia_smi_status.stdout or
+#     'CUDA Version' not in nvidia_smi_status.stdout
+#   retries: 6
+#   delay: 10
+#   until: >
+#     'NVIDIA-SMI' in nvidia_smi_status.stdout and
+#     'Driver Version' in nvidia_smi_status.stdout and
+#     'CUDA Version' in nvidia_smi_status.stdout
