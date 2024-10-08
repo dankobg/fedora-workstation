@@ -23,8 +23,8 @@
         zsh_path: "{{ zsh_installed.stdout }}"
 
     - name: Copy .zshenv
-      ansible.builtin.copy:
-        src: zshenv
+      ansible.builtin.template:
+        src: zshenv.j2
         dest: /etc/zshenv
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -40,8 +40,8 @@
       register: config_dir
 
     - name: Copy zsh config files
-      ansible.builtin.copy:
-        src: "{{ item }}"
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
         dest: "/home/{{ username }}/.config/zsh/{{ item }}"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -49,8 +49,8 @@
       loop:
         - ".aliasrc"
         - ".optionrc"
-        - ".pluginrc"
         - ".p10k.zsh"
+        - ".pluginrc"
         - ".zshrc"
 
     - name: Ensure plugins directory exists

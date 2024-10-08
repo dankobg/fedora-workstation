@@ -18,24 +18,24 @@
         mode: "0755"
 
     - name: Copy policies.json
-      ansible.builtin.copy:
-        src: policies.json
+      ansible.builtin.template:
+        src: policies.json.j2
         dest: "{{ firefox_policies_dir }}/policies.json"
         owner: root
         group: root
         mode: "0644"
 
     - name: Copy autoconfig.js
-      ansible.builtin.copy:
-        src: autoconfig.js
+      ansible.builtin.template:
+        src: autoconfig.js.j2
         dest: "{{ firefox_install_dir }}/defaults/pref/autoconfig.js"
         owner: root
         group: root
         mode: "0644"
 
     - name: Copy firefox.cfg
-      ansible.builtin.copy:
-        src: firefox.cfg
+      ansible.builtin.template:
+        src: firefox.cfg.j2
         dest: "{{ firefox_install_dir }}/firefox.cfg"
         owner: root
         group: root

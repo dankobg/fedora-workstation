@@ -114,17 +114,17 @@
       register: config_dir
 
     - name: Copy config
-      ansible.builtin.copy:
-        src: kitty.conf
-        dest: "{{ config_dir.path }}"
+      ansible.builtin.template:
+        src: kitty.conf.j2
+        dest: "{{ config_dir.path }}/kitty.conf"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0644"
 
     - name: Copy theme
-      ansible.builtin.copy:
-        src: current-theme.conf
-        dest: "{{ config_dir.path }}"
+      ansible.builtin.template:
+        src: current-theme.conf.j2
+        dest: "{{ config_dir.path }}/current-theme.conf"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0644"

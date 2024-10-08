@@ -18,8 +18,8 @@
         mode: "0755"
 
     - name: Copy managed policies.json file
-      ansible.builtin.copy:
-        src: managed_policies.json
+      ansible.builtin.template:
+        src: managed_policies.json.j2
         dest: "{{ google_chrome_managed_policies_dir }}/managed_policies.json"
         owner: root
         group: root

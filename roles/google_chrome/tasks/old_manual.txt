@@ -15,8 +15,8 @@ tasks file for google_chrome
     mode: '0755'
 
 - name: Copy managed policies.json file
-  ansible.builtin.copy:
-    src: managed_policies.json
+  ansible.builtin.template:
+    src: managed_policies.json.j2
     dest: /etc/opt/chrome/policies/managed
 
 - name: Get installed version data
