@@ -17,766 +17,753 @@
     name: "{{ gnome_apps }}"
     state: latest
 
-- name: Configure dconf-editor
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /ca/desrt/dconf-editor/show-warning
-      value: false
+- name: Configure desktop using dconf
+  become: true
+  become_user: "{{ username }}"
+  block:
+    - name: Configure dconf-editor
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /ca/desrt/dconf-editor/show-warning
+          value: false
 
-- name: Configure compression
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /nautilus/compression/default-compression-format
-      value: "'tar.xz'"
+    - name: Configure TextEditor
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/TextEditor/indent-style
+          value: "'space'"
+        - key: /org/gnome/TextEditor/last-save-directory
+          value: "'file:///home/{{ username }}/Downloads'"
+        - key: /org/gnome/TextEditor/show-line-numbers
+          value: true
+        - key: /org/gnome/TextEditor/show-right-margin
+          value: false
+        - key: /org/gnome/TextEditor/tab-width
+          value: "uint32 2"
 
-- name: Configure TextEditor
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/TextEditor/indent-style
-      value: "'space'"
-    - key: /org/gnome/TextEditor/last-save-directory
-      value: "'file:///home/{{ username }}/Downloads'"
-    - key: /org/gnome/TextEditor/show-line-numbers
-      value: true
-    - key: /org/gnome/TextEditor/show-right-margin
-      value: false
-    - key: /org/gnome/TextEditor/tab-width
-      value: "uint32 2"
+    - name: Configure Totem
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/Totem/active-plugins
+          value: >
+            ['screenshot', 'recent', 'vimeo', 'skipto', 'variable-rate',
+            'open-directory', 'apple-trailers', 'mpris', 'save-file', 'rotation',
+            'screensaver', 'autoload-subtitles', 'movie-properties']
+        - key: /org/gnome/Totem/subtitle-encoding
+          value: "'UTF-8'"
 
-- name: Configure Totem
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/Totem/active-plugins
-      value: >
-        ['screenshot', 'recent', 'vimeo', 'skipto', 'variable-rate',
-         'open-directory', 'apple-trailers', 'mpris', 'save-file', 'rotation',
-         'screensaver', 'autoload-subtitles', 'movie-properties']
-    - key: /org/gnome/Totem/subtitle-encoding
-      value: "'UTF-8'"
+    - name: Configure baobab
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/baobab/ui/active-chart
+          value: "'rings'"
 
-- name: Configure baobab
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/baobab/ui/active-chart
-      value: "'rings'"
+    - name: Configure boxes
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/boxes/first-run
+          value: false
+        - key: /org/gnome/boxes/view
+          value: "'icon-view'"
 
-- name: Configure boxes
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/boxes/first-run
-      value: false
-    - key: /org/gnome/boxes/view
-      value: "'icon-view'"
+    - name: Configure calculator
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/calculator/accuracy
+          value: 9
+        - key: /org/gnome/calculator/angle-units
+          value: "'degrees'"
+        - key: /org/gnome/calculator/base
+          value: 10
+        - key: /org/gnome/calculator/button-mode
+          value: "'basic'"
+        - key: /org/gnome/calculator/number-format
+          value: "'automatic'"
+        - key: /org/gnome/calculator/refresh-interval
+          value: 604800
+        - key: /org/gnome/calculator/show-thousands
+          value: false
+        - key: /org/gnome/calculator/show-zeroes
+          value: false
+        - key: /org/gnome/calculator/source-currency
+          value: "'EUR'"
+        - key: /org/gnome/calculator/source-units
+          value: "'degree'"
+        - key: /org/gnome/calculator/target-currency
+          value: "'RSD'"
+        - key: /org/gnome/calculator/target-units
+          value: "'degree'"
+        - key: /org/gnome/calculator/word-size
+          value: 64
 
-- name: Configure calculator
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/calculator/accuracy
-      value: 9
-    - key: /org/gnome/calculator/angle-units
-      value: "'degrees'"
-    - key: /org/gnome/calculator/base
-      value: 10
-    - key: /org/gnome/calculator/button-mode
-      value: "'basic'"
-    - key: /org/gnome/calculator/number-format
-      value: "'automatic'"
-    - key: /org/gnome/calculator/refresh-interval
-      value: 604800
-    - key: /org/gnome/calculator/show-thousands
-      value: false
-    - key: /org/gnome/calculator/show-zeroes
-      value: false
-    - key: /org/gnome/calculator/source-currency
-      value: "'EUR'"
-    - key: /org/gnome/calculator/source-units
-      value: "'degree'"
-    - key: /org/gnome/calculator/target-currency
-      value: "'RSD'"
-    - key: /org/gnome/calculator/target-units
-      value: "'degree'"
-    - key: /org/gnome/calculator/word-size
-      value: 64
+    - name: Configure clocks
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/clocks/state/window/panel-id
+          value: "'world'"
 
-- name: Configure clocks
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/clocks/state/window/panel-id
-      value: "'world'"
+    - name: Configure control-center
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/control-center/last-panel
+          value: "'network'"
 
-- name: Configure control-center
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/control-center/last-panel
-      value: "'network'"
+    - name: Configure desktop app folders
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/app-folders/folder-children
+          value: "['Utilities', '4999c2ff-841b-41a1-8870-3ef9c4058011']"
+        - key: /org/gnome/desktop/app-folders/folders/4999c2ff-841b-41a1-8870-3ef9c4058011/apps
+          value: "['libreoffice-impress.desktop', 'libreoffice-calc.desktop', 'libreoffice-writer.desktop']"
+        - key: /org/gnome/desktop/app-folders/folders/4999c2ff-841b-41a1-8870-3ef9c4058011/name
+          value: "'Office'"
+        - key: /org/gnome/desktop/app-folders/folders/Utilities/apps
+          value: >
+            ['gnome-abrt.desktop', 'gnome-system-log.desktop', 'nm-connection-editor.desktop', 'org.gnome.baobab.desktop', 'org.gnome.Connections.desktop',
+            'org.gnome.DejaDup.desktop', 'org.gnome.Dictionary.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Evince.desktop',
+            'org.gnome.FileRoller.desktop', 'org.gnome.fonts.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.seahorse.Application.desktop',
+            'org.gnome.tweaks.desktop', 'org.gnome.Usage.desktop', 'vinagre.desktop']
+        - key: /org/gnome/desktop/app-folders/folders/Utilities/categories
+          value: "['X-GNOME-Utilities']"
+        - key: /org/gnome/desktop/app-folders/folders/Utilities/name
+          value: "'X-GNOME-Utilities.directory'"
+        - key: /org/gnome/desktop/app-folders/folders/Utilities/translate
+          value: true
 
-- name: Configure desktop app folders
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/app-folders/folder-children
-      value: "['Utilities', '4999c2ff-841b-41a1-8870-3ef9c4058011']"
-    - key: /org/gnome/desktop/app-folders/folders/4999c2ff-841b-41a1-8870-3ef9c4058011/apps
-      value: "['libreoffice-impress.desktop', 'libreoffice-calc.desktop', 'libreoffice-writer.desktop']"
-    - key: /org/gnome/desktop/app-folders/folders/4999c2ff-841b-41a1-8870-3ef9c4058011/name
-      value: "'Office'"
-    - key: /org/gnome/desktop/app-folders/folders/Utilities/apps
-      value: >
-        ['gnome-abrt.desktop', 'gnome-system-log.desktop', 'nm-connection-editor.desktop', 'org.gnome.baobab.desktop', 'org.gnome.Connections.desktop',
-         'org.gnome.DejaDup.desktop', 'org.gnome.Dictionary.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Evince.desktop',
-         'org.gnome.FileRoller.desktop', 'org.gnome.fonts.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.seahorse.Application.desktop',
-         'org.gnome.tweaks.desktop', 'org.gnome.Usage.desktop', 'vinagre.desktop']
-    - key: /org/gnome/desktop/app-folders/folders/Utilities/categories
-      value: "['X-GNOME-Utilities']"
-    - key: /org/gnome/desktop/app-folders/folders/Utilities/name
-      value: "'X-GNOME-Utilities.directory'"
-    - key: /org/gnome/desktop/app-folders/folders/Utilities/translate
-      value: true
+    - name: Configure calendar
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/calendar/show-weekdate
+          value: false
 
-- name: Configure calendar
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/calendar/show-weekdate
-      value: false
+    - name: Configure datetime
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/datetime/automatic-timezone
+          value: false
 
-- name: Configure datetime
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/datetime/automatic-timezone
-      value: false
+    - name: Configure input sources
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/input-sources/mru-sources
+          value: "[('xkb', 'us'), ('xkb', 'rs+alternatequotes'), ('xkb', 'rs+latinalternatequotes')]"
+        - key: /org/gnome/desktop/input-sources/sources
+          value: "[('xkb', 'us'), ('xkb', 'rs+latinalternatequotes'), ('xkb', 'rs+alternatequotes')]"
+        - key: /org/gnome/desktop/input-sources/xkb-options
+          value: "['caps:escape']"
 
-- name: Configure input sources
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/input-sources/mru-sources
-      value: "[('xkb', 'us'), ('xkb', 'rs+alternatequotes'), ('xkb', 'rs+latinalternatequotes')]"
-    - key: /org/gnome/desktop/input-sources/sources
-      value: "[('xkb', 'us'), ('xkb', 'rs+latinalternatequotes'), ('xkb', 'rs+alternatequotes')]"
-    - key: /org/gnome/desktop/input-sources/xkb-options
-      value: "['caps:escape']"
+    - name: Configure interface
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/interface/clock-format
+          value: "'24h'"
+        - key: /org/gnome/desktop/interface/clock-show-date
+          value: true
+        - key: /org/gnome/desktop/interface/clock-show-seconds
+          value: false
+        - key: /org/gnome/desktop/interface/clock-show-weekday
+          value: true
+        - key: /org/gnome/desktop/interface/color-scheme
+          value: "'prefer-dark'"
+        - key: /org/gnome/desktop/interface/gtk-enable-primary-paste
+          value: false
+        - key: /org/gnome/desktop/interface/toolkit-accessibility
+          value: false
 
-- name: Configure interface
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/interface/clock-format
-      value: "'24h'"
-    - key: /org/gnome/desktop/interface/clock-show-date
-      value: true
-    - key: /org/gnome/desktop/interface/clock-show-seconds
-      value: false
-    - key: /org/gnome/desktop/interface/clock-show-weekday
-      value: true
-    - key: /org/gnome/desktop/interface/color-scheme
-      value: "'prefer-dark'"
-    - key: /org/gnome/desktop/interface/gtk-enable-primary-paste
-      value: false
-    - key: /org/gnome/desktop/interface/toolkit-accessibility
-      value: false
+    - name: Configure notifications
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application-children
+          value: >
+            ['org-gnome-software', 'gnome-power-panel', 'org-gnome-texteditor', 'org-gnome-nautilus', 'org-mozilla-firefox',
+            'org-gnome-terminal', 'org-freedesktop-problems-applet', 'code', 'it-mijorus-smile', 'discord', 'org-gnome-solanum']
 
-- name: Configure notifications
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application-children
-      value: >
-        ['org-gnome-software', 'gnome-power-panel', 'org-gnome-texteditor', 'org-gnome-nautilus', 'org-mozilla-firefox',
-         'org-gnome-terminal', 'org-freedesktop-problems-applet', 'code', 'it-mijorus-smile', 'discord', 'org-gnome-solanum']
+    - name: Configure vscode
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/code/application-id
+          value: "'code.desktop'"
 
-- name: Configure vscode
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/code/application-id
-      value: "'code.desktop'"
+    - name: Configure discord
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/discord/application-id
+          value: "'discord.desktop'"
 
-- name: Configure discord
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/discord/application-id
-      value: "'discord.desktop'"
+    - name: Configure gnome-power-panel
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/gnome-power-panel/application-id
+          value: "'gnome-power-panel.desktop'"
 
-- name: Configure gnome-power-panel
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/gnome-power-panel/application-id
-      value: "'gnome-power-panel.desktop'"
+    - name: Configure it-mijorus-smile
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/it-mijorus-smile/application-id
+          value: "'it.mijorus.smile.desktop'"
 
-- name: Configure it-mijorus-smile
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/it-mijorus-smile/application-id
-      value: "'it.mijorus.smile.desktop'"
+    - name: Configure org-freedesktop-problems-applet
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-freedesktop-problems-applet/application-id
+          value: "'org.freedesktop.problems.applet.desktop'"
 
-- name: Configure org-freedesktop-problems-applet
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-freedesktop-problems-applet/application-id
-      value: "'org.freedesktop.problems.applet.desktop'"
+    - name: Configure org-gnome-nautilus
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-gnome-nautilus/application-id
+          value: "'org.gnome.Nautilus.desktop'"
 
-- name: Configure org-gnome-nautilus
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-gnome-nautilus/application-id
-      value: "'org.gnome.Nautilus.desktop'"
+    - name: Configure org-gnome-rhythmbox3
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-gnome-rhythmbox3/application-id
+          value: "'org.gnome.Rhythmbox3.desktop'"
 
-- name: Configure org-gnome-rhythmbox3
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-gnome-rhythmbox3/application-id
-      value: "'org.gnome.Rhythmbox3.desktop'"
+    - name: Configure org-gnome-software
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-gnome-software/application-id
+          value: "'org.gnome.Software.desktop'"
 
-- name: Configure org-gnome-software
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-gnome-software/application-id
-      value: "'org.gnome.Software.desktop'"
+    - name: Configure org-gnome-solanum
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-gnome-solanum/application-id
+          value: "'org.gnome.Solanum.desktop'"
 
-- name: Configure org-gnome-solanum
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-gnome-solanum/application-id
-      value: "'org.gnome.Solanum.desktop'"
+    - name: Configure org-gnome-terminal
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-gnome-terminal/application-id
+          value: "'org.gnome.Terminal.desktop'"
 
-- name: Configure org-gnome-terminal
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-gnome-terminal/application-id
-      value: "'org.gnome.Terminal.desktop'"
+    - name: Configure org-gnome-texteditor
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-gnome-texteditor/application-id
+          value: "'org.gnome.TextEditor.desktop'"
 
-- name: Configure org-gnome-texteditor
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-gnome-texteditor/application-id
-      value: "'org.gnome.TextEditor.desktop'"
+    - name: Configure org-mozilla-firefox
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/notifications/application/org-mozilla-firefox/application-id
+          value: "'org.mozilla.firefox.desktop'"
 
-- name: Configure org-mozilla-firefox
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/notifications/application/org-mozilla-firefox/application-id
-      value: "'org.mozilla.firefox.desktop'"
+    - name: Configure peripherals keyboard
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/peripherals/keyboard/delay
+          value: "uint32 300"
+        - key: /org/gnome/desktop/peripherals/keyboard/numlock-state
+          value: false
+        - key: /org/gnome/desktop/peripherals/keyboard/repeat-interval
+          value: "uint32 15"
 
-- name: Configure peripherals keyboard
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/peripherals/keyboard/delay
-      value: "uint32 300"
-    - key: /org/gnome/desktop/peripherals/keyboard/numlock-state
-      value: false
-    - key: /org/gnome/desktop/peripherals/keyboard/repeat-interval
-      value: "uint32 15"
+    - name: Configure peripherals mouse
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/peripherals/mouse/accel-profile
+          value: "'flat'"
+        - key: /org/gnome/desktop/peripherals/mouse/speed
+          value: 0.5
 
-- name: Configure peripherals mouse
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/peripherals/mouse/accel-profile
-      value: "'flat'"
-    - key: /org/gnome/desktop/peripherals/mouse/speed
-      value: 0.5
+    - name: Configure peripherals touchpad
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled
+          value: true
 
-- name: Configure peripherals touchpad
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled
-      value: true
+    - name: Configure privacy
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/privacy/old-files-age
+          value: "uint32 30"
+        - key: /org/gnome/desktop/privacy/recent-files-max-age
+          value: -1
 
-- name: Configure privacy
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/privacy/old-files-age
-      value: "uint32 30"
-    - key: /org/gnome/desktop/privacy/recent-files-max-age
-      value: -1
+    - name: Configure search-providers
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/search-providers/sort-order
+          value: "['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']"
 
-- name: Configure search-providers
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/search-providers/sort-order
-      value: "['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']"
+    - name: Configure session
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/session/idle-delay
+          value: "uint32 900"
 
-- name: Configure session
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/desktop/session/idle-delay
-      value: "uint32 900"
+    - name: Configure evince
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/evince/document-directory
+          value: "@ms 'file:///home/{{ username }}/Downloads'"
+        - key: /org/gnome/evince/default/continuous
+          value: true
+        - key: /org/gnome/evince/default/dual-page
+          value: false
+        - key: /org/gnome/evince/default/dual-page-odd-left
+          value: true
+        - key: /org/gnome/evince/default/enable-spellchecking
+          value: true
+        - key: /org/gnome/evince/default/fullscreen
+          value: false
+        - key: /org/gnome/evince/default/inverted-colors
+          value: false
+        - key: /org/gnome/evince/default/show-sidebar
+          value: true
+        - key: /org/gnome/evince/default/sidebar-page
+          value: "'thumbnails'"
+        - key: /org/gnome/evince/default/sidebar-size
+          value: 132
+        - key: /org/gnome/evince/default/sizing-mode
+          value: "'automatic'"
 
-- name: Configure evince
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/evince/document-directory
-      value: "@ms 'file:///home/{{ username }}/Downloads'"
-    - key: /org/gnome/evince/default/continuous
-      value: true
-    - key: /org/gnome/evince/default/dual-page
-      value: false
-    - key: /org/gnome/evince/default/dual-page-odd-left
-      value: true
-    - key: /org/gnome/evince/default/enable-spellchecking
-      value: true
-    - key: /org/gnome/evince/default/fullscreen
-      value: false
-    - key: /org/gnome/evince/default/inverted-colors
-      value: false
-    - key: /org/gnome/evince/default/show-sidebar
-      value: true
-    - key: /org/gnome/evince/default/sidebar-page
-      value: "'thumbnails'"
-    - key: /org/gnome/evince/default/sidebar-size
-      value: 132
-    - key: /org/gnome/evince/default/sizing-mode
-      value: "'automatic'"
+    - name: Configure evolution-data-server
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/evolution-data-server/migrated
+          value: true
 
-- name: Configure evolution-data-server
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/evolution-data-server/migrated
-      value: true
+    - name: Configure gnome-system-monitor
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/gnome-system-monitor/current-tab
+          value: "'resources'"
+        - key: /org/gnome/gnome-system-monitor/maximized
+          value: true
+        - key: /org/gnome/gnome-system-monitor/show-dependencies
+          value: false
+        - key: /org/gnome/gnome-system-monitor/show-whose-processes
+          value: "'user'"
 
-- name: Configure gnome-system-monitor
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/gnome-system-monitor/current-tab
-      value: "'resources'"
-    - key: /org/gnome/gnome-system-monitor/maximized
-      value: true
-    - key: /org/gnome/gnome-system-monitor/show-dependencies
-      value: false
-    - key: /org/gnome/gnome-system-monitor/show-whose-processes
-      value: "'user'"
+    - name: Configure gnome-system-monitor
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/gnome-system-monitor/disktreenew/col-6-visible
+          value: true
+        - key: /org/gnome/gnome-system-monitor/disktreenew/col-6-width
+          value: 0
+        - key: /org/gnome/gnome-system-monitor/proctree/columns-order
+          value: "[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]"
+        - key: /org/gnome/gnome-system-monitor/proctree/sort-col
+          value: 0
+        - key: /org/gnome/gnome-system-monitor/proctree/sort-order
+          value: 1
 
-- name: Configure gnome-system-monitor
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/gnome-system-monitor/disktreenew/col-6-visible
-      value: true
-    - key: /org/gnome/gnome-system-monitor/disktreenew/col-6-width
-      value: 0
-    - key: /org/gnome/gnome-system-monitor/proctree/columns-order
-      value: "[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]"
-    - key: /org/gnome/gnome-system-monitor/proctree/sort-col
-      value: 0
-    - key: /org/gnome/gnome-system-monitor/proctree/sort-order
-      value: 1
+    - name: Configure login-screen
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/login-screen/enable-fingerprint-authentication
+          value: true
+        - key: /org/gnome/login-screen/enable-smartcard-authentication
+          value: false
 
-- name: Configure login-screen
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/login-screen/enable-fingerprint-authentication
-      value: true
-    - key: /org/gnome/login-screen/enable-smartcard-authentication
-      value: false
+    - name: Configure maps
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/maps/last-viewed-location
+          value: "[44.543180100000001, 20.538563700000001]"
+        - key: /org/gnome/maps/map-type
+          value: "'MapsStreetSource'"
+        - key: /org/gnome/maps/transportation-type
+          value: "'pedestrian'"
+        - key: /org/gnome/maps/zoom-level
+          value: 18
 
-- name: Configure maps
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/maps/last-viewed-location
-      value: "[44.543180100000001, 20.538563700000001]"
-    - key: /org/gnome/maps/map-type
-      value: "'MapsStreetSource'"
-    - key: /org/gnome/maps/transportation-type
-      value: "'pedestrian'"
-    - key: /org/gnome/maps/zoom-level
-      value: 18
+    - name: Configure nautilus
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /nautilus/compression/default-compression-format
+          value: "'tar.xz'"
+        - key: /org/gnome/nautilus/compression/default-compression-format
+          value: "'tar.xz'"
+        - key: /org/gnome/nautilus/icon-view/default-zoom-level
+          value: "'small'"
+        - key: /org/gnome/nautilus/preferences/default-folder-viewer
+          value: "'icon-view'"
+        - key: /org/gnome/nautilus/preferences/default-sort-order
+          value: "'type'"
+        - key: /org/gnome/nautilus/preferences/migrated-gtk-settings
+          value: true
+        - key: /org/gnome/nautilus/preferences/search-filter-time-type
+          value: "'last_modified'"
+        - key: /org/gnome/nautilus/preferences/show-hidden-files
+          value: true
 
-- name: Configure nautilus
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/nautilus/compression/default-compression-format
-      value: "'tar.xz'"
-    - key: /org/gnome/nautilus/icon-view/default-zoom-level
-      value: "'small'"
-    - key: /org/gnome/nautilus/preferences/default-folder-viewer
-      value: "'icon-view'"
-    - key: /org/gnome/nautilus/preferences/default-sort-order
-      value: "'type'"
-    - key: /org/gnome/nautilus/preferences/migrated-gtk-settings
-      value: true
-    - key: /org/gnome/nautilus/preferences/search-filter-time-type
-      value: "'last_modified'"
-    - key: /org/gnome/nautilus/preferences/show-hidden-files
-      value: true
+    - name: Configure portal filechooser
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/portal/filechooser/code/last-folder-path
+          value: "'/home/{{ username }}/Downloads'"
 
-- name: Configure portal filechooser
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/portal/filechooser/code/last-folder-path
-      value: "'/home/{{ username }}/Downloads'"
+    - name: Configure it.mijorus.gearlever
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/portal/filechooser/it.mijorus.gearlever/last-folder-path
+          value: "'/home/{{ username }}/Downloads'"
 
-- name: Configure it.mijorus.gearlever
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/portal/filechooser/it.mijorus.gearlever/last-folder-path
-      value: "'/home/{{ username }}/Downloads'"
+    - name: Configure org.gnome.Settings
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/portal/filechooser/org.gnome.Settings/last-folder-path
+          value: "'/home/{{ username }}/Downloads'"
 
-- name: Configure org.gnome.Settings
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/portal/filechooser/org.gnome.Settings/last-folder-path
-      value: "'/home/{{ username }}/Downloads'"
+    - name: Configure rhythmbox
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/rhythmbox/position
+          value: (26, 23)
+        - key: /org/gnome/rhythmbox/player/volume
+          value: 0.5
+        - key: /org/gnome/rhythmbox/plugins/active-plugins
+          value: >
+            ['mtpdevice', 'power-manager', 'ipod', 'iradio', 'dbus-media-server',
+            'audioscrobbler', 'notification', 'android', 'mpris', 'audiocd',
+            'generic-player', 'cd-recorder', 'rb', 'artsearch']
+        - key: /org/gnome/rhythmbox/plugins/seen-plugins
+          value: >
+            ['mtpdevice', 'ipod', 'pythonconsole', 'dbus-media-server', 'daap',
+            'fmradio', 'audioscrobbler', 'grilo', 'notification', 'cd-recorder',
+            'rb', 'im-status', 'listenbrainz', 'webremote', 'lyrics',
+            'magnatune', 'rbzeitgeist', 'replaygain', 'artsearch']
+        - key: /org/gnome/rhythmbox/plugins/audioscrobbler/Last.fm/scrobbling-enabled
+          value: true
+        - key: /org/gnome/rhythmbox/plugins/audioscrobbler/Libre.fm/scrobbling-enabled
+          value: true
+        - key: /org/gnome/rhythmbox/plugins/iradio/initial-stations-loaded
+          value: true
+        - key: /org/gnome/rhythmbox/rhythmdb/locations
+          value: "['file:///home/{{ username }}/Music']"
 
-- name: Configure rhythmbox
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/rhythmbox/position
-      value: (26, 23)
-    - key: /org/gnome/rhythmbox/player/volume
-      value: 0.5
-    - key: /org/gnome/rhythmbox/plugins/active-plugins
-      value: >
-        ['mtpdevice', 'power-manager', 'ipod', 'iradio', 'dbus-media-server',
-         'audioscrobbler', 'notification', 'android', 'mpris', 'audiocd',
-         'generic-player', 'cd-recorder', 'rb', 'artsearch']
-    - key: /org/gnome/rhythmbox/plugins/seen-plugins
-      value: >
-        ['mtpdevice', 'ipod', 'pythonconsole', 'dbus-media-server', 'daap',
-         'fmradio', 'audioscrobbler', 'grilo', 'notification', 'cd-recorder',
-         'rb', 'im-status', 'listenbrainz', 'webremote', 'lyrics',
-         'magnatune', 'rbzeitgeist', 'replaygain', 'artsearch']
-    - key: /org/gnome/rhythmbox/plugins/audioscrobbler/Last.fm/scrobbling-enabled
-      value: true
-    - key: /org/gnome/rhythmbox/plugins/audioscrobbler/Libre.fm/scrobbling-enabled
-      value: true
-    - key: /org/gnome/rhythmbox/plugins/iradio/initial-stations-loaded
-      value: true
-    - key: /org/gnome/rhythmbox/rhythmdb/locations
-      value: "['file:///home/{{ username }}/Music']"
+    - name: Configure settings-daemon
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/settings-daemon/plugins/color/night-light-enabled
+          value: true
+        - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings
+          value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+        - key: /org/gnome/settings-daemon/plugins/media-keys/volume-step
+          value: 5
+        - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding
+          value: "'<Control>period'"
+        - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command
+          value: "'flatpak run it.mijorus.smile'"
+        - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name
+          value: "'Smile emoji picker'"
+        - key: /org/gnome/settings-daemon/plugins/power/power-button-action
+          value: "'interactive'"
+        - key: /org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-timeout
+          value: 1800
 
-- name: Configure settings-daemon
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/settings-daemon/plugins/color/night-light-enabled
-      value: true
-    - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings
-      value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
-    - key: /org/gnome/settings-daemon/plugins/media-keys/volume-step
-      value: 5
-    - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding
-      value: "'<Control>period'"
-    - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command
-      value: "'flatpak run it.mijorus.smile'"
-    - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name
-      value: "'Smile emoji picker'"
-    - key: /org/gnome/settings-daemon/plugins/power/power-button-action
-      value: "'interactive'"
-    - key: /org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-timeout
-      value: 1800
+    - name: Configure gnome shell
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/shell/app-picker-layout
+          value: >
+            [{'4999c2ff-841b-41a1-8870-3ef9c4058011': <{'position': <0>}>, 'Utilities': <{'position': <1>}>,
+             'org.gnome.Snapshot.desktop': <{'position': <2>}>, 'org.gnome.Contacts.desktop': <{'position': <3>}>,
+             'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Weather.desktop': <{'position': <5>}>,
+            'org.gnome.clocks.desktop': <{'position': <6>}>, 'org.gnome.Maps.desktop': <{'position': <7>}>,
+            'org.fedoraproject.MediaWriter.desktop': <{'position': <8>}>, 'simple-scan.desktop': <{'position': <9>}>,
+            'org.gnome.Totem.desktop': <{'position': <10>}>, 'org.gnome.Rhythmbox3.desktop': <{'position': <11>}>,
+            'org.gnome.Calculator.desktop': <{'position': <12>}>, 'org.gnome.Settings.desktop': <{'position': <13>}>,
+            'org.gnome.SystemMonitor.desktop': <{'position': <14>}>, 'org.gnome.Boxes.desktop': <{'position': <15>}>,
+            'nvidia-settings.desktop': <{'position': <16>}>, 'org.gnome.Tour.desktop': <{'position': <17>}>,
+            'yelp.desktop': <{'position': <18>}>, 'google-chrome.desktop': <{'position': <19>}>, 'htop.desktop': <{'position': <20>}>,
+            'org.bleachbit.BleachBit.desktop': <{'position': <21>}>, 'btop.desktop': <{'position': <22>}>,
+            'com.github.qarmin.czkawka.desktop': <{'position': <23>}>}, {'ca.desrt.dconf-editor.desktop': <{'position': <0>}>,
+            'com.mattjakeman.ExtensionManager.desktop': <{'position': <1>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <2>}>,
+            'org.codeberg.dnkl.foot.desktop': <{'position': <3>}>, 'org.codeberg.dnkl.footclient.desktop': <{'position': <4>}>,
+            'org.codeberg.dnkl.foot-server.desktop': <{'position': <5>}>, 'it.mijorus.gearlever.desktop': <{'position': <6>}>,
+            'fr.handbrake.ghb.desktop': <{'position': <7>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <8>}>,
+            'org.kde.kdeconnect.nonplasma.desktop': <{'position': <9>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <10>}>,
+            'org.kde.kdeconnect.sms.desktop': <{'position': <11>}>, 'org.gnome.World.PikaBackup.desktop': <{'position': <12>}>,
+            'org.qbittorrent.qBittorrent.desktop': <{'position': <13>}>, 'it.mijorus.smile.desktop': <{'position': <14>}>,
+            'stacer.desktop': <{'position': <15>}>, 'org.mozilla.thunderbird.desktop': <{'position': <16>}>,
+            'timeshift-gtk.desktop': <{'position': <17>}>, 'vlc.desktop': <{'position': <18>}>, 'syncthing-start.desktop': <{'position': <19>}>,
+            'syncthing-ui.desktop': <{'position': <20>}>, 'org.gnome.Terminal.desktop': <{'position': <21>}>,'zed.desktop': <{'position': <22>}>}]
+        - key: /org/gnome/shell/disabled-extensions
+          value: "'@as []'"
+        - key: /org/gnome/shell/enabled-extensions
+          value: "['background-logo@fedorahosted.org', 'appindicatorsupport@rgcjonas.gmail.com']"
+        - key: /org/gnome/shell/favorite-apps
+          value:
+            [
+              "org.gnome.Nautilus.desktop",
+              "kitty.desktop",
+              "org.mozilla.firefox.desktop",
+              "code.desktop",
+              "zed.desktop",
+              "io.beekeeperstudio.Studio.desktop",
+              "bruno.desktop",
+              "com.logseq.Logseq.desktop",
+              "com.bitwarden.desktop.desktop",
+              "discord.desktop",
+              "com.slack.Slack.desktop",
+              "org.gnome.Solanum.desktop",
+              "org.gnome.TextEditor.desktop",
+              "org.gnome.Software.desktop",
+            ]
+        - key: /org/gnome/shell/welcome-dialog-last-shown-version
+          value: "'46.4'"
 
-- name: Configure gnome shell
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/shell/app-picker-layout
-      value: >
-        [{'4999c2ff-841b-41a1-8870-3ef9c4058011': <{'position': <0>}>, 'Utilities': <{'position': <1>}>, 'org.gnome.Snapshot.desktop': <{'position': <2>}>,
-         'org.gnome.Contacts.desktop': <{'position': <3>}>, 'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Weather.desktop': <{'position': <5>}>,
-         'org.gnome.clocks.desktop': <{'position': <6>}>, 'org.gnome.Maps.desktop': <{'position': <7>}>,
-         'org.fedoraproject.MediaWriter.desktop': <{'position': <8>}>, 'simple-scan.desktop': <{'position': <9>}>,
-         'org.gnome.Totem.desktop': <{'position': <10>}>, 'org.gnome.Rhythmbox3.desktop': <{'position': <11>}>,
-         'org.gnome.Calculator.desktop': <{'position': <12>}>, 'org.gnome.Settings.desktop': <{'position': <13>}>,
-         'org.gnome.SystemMonitor.desktop': <{'position': <14>}>, 'org.gnome.Boxes.desktop': <{'position': <15>}>,
-         'nvidia-settings.desktop': <{'position': <16>}>, 'org.gnome.Tour.desktop': <{'position': <17>}>,
-         'yelp.desktop': <{'position': <18>}>, 'google-chrome.desktop': <{'position': <19>}>, 'htop.desktop': <{'position': <20>}>,
-         'org.bleachbit.BleachBit.desktop': <{'position': <21>}>, 'btop.desktop': <{'position': <22>}>,
-         'com.github.qarmin.czkawka.desktop': <{'position': <23>}>}, {'ca.desrt.dconf-editor.desktop': <{'position': <0>}>,
-         'com.mattjakeman.ExtensionManager.desktop': <{'position': <1>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <2>}>,
-         'org.codeberg.dnkl.foot.desktop': <{'position': <3>}>, 'org.codeberg.dnkl.footclient.desktop': <{'position': <4>}>,
-         'org.codeberg.dnkl.foot-server.desktop': <{'position': <5>}>, 'it.mijorus.gearlever.desktop': <{'position': <6>}>,
-         'fr.handbrake.ghb.desktop': <{'position': <7>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <8>}>,
-         'org.kde.kdeconnect.nonplasma.desktop': <{'position': <9>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <10>}>,
-         'org.kde.kdeconnect.sms.desktop': <{'position': <11>}>, 'org.gnome.World.PikaBackup.desktop': <{'position': <12>}>,
-         'org.qbittorrent.qBittorrent.desktop': <{'position': <13>}>, 'it.mijorus.smile.desktop': <{'position': <14>}>, 'stacer.desktop': <{'position': <15>}>,
-         'org.mozilla.thunderbird.desktop': <{'position': <16>}>, 'timeshift-gtk.desktop': <{'position': <17>}>, 'vlc.desktop': <{'position': <18>}>,
-         'syncthing-start.desktop': <{'position': <19>}>, 'syncthing-ui.desktop': <{'position': <20>}>, 'org.gnome.Terminal.desktop': <{'position': <21>}>,
-         'zed.desktop': <{'position': <22>}>}]
-    - key: /org/gnome/shell/disabled-extensions
-      value: "@as '[]'"
-    - key: /org/gnome/shell/enabled-extensions
-      value: "['background-logo@fedorahosted.org', 'appindicatorsupport@rgcjonas.gmail.com']"
-    - key: /org/gnome/shell/favorite-apps
-      value:
-        [
-          "org.gnome.Nautilus.desktop",
-          "kitty.desktop",
-          "org.mozilla.firefox.desktop",
-          "code.desktop",
-          "zed.desktop",
-          "io.beekeeperstudio.Studio.desktop",
-          "bruno.desktop",
-          "com.logseq.Logseq.desktop",
-          "com.bitwarden.desktop.desktop",
-          "discord.desktop",
-          "com.slack.Slack.desktop",
-          "org.gnome.Solanum.desktop",
-          "org.gnome.TextEditor.desktop",
-          "org.gnome.Software.desktop",
-        ]
-    - key: /org/gnome/shell/welcome-dialog-last-shown-version
-      value: "46.4"
+    - name: Configure software
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/software/download-updates
+          value: false
+        - key: /org/gnome/software/first-run
+          value: false
+        - key: /org/gnome/software/flatpak-purge-timestamp
+          value: "int64 1728306844"
+        - key: /org/gnome/software/install-timestamp
+          value: "int64 1728236300"
+        - key: /org/gnome/software/packagekit-historical-updates-timestamp
+          value: "uint64 1728236300"
+        - key: /org/gnome/software/security-timestamp
+          value: "int64 1728212627580400"
+        - key: /org/gnome/software/update-notification-timestamp
+          value: "int64 1728298682"
 
-- name: Configure world-clocks
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/shell/world-clocks/locations
-      value: "@av '[]'"
+    - name: Configure legacy
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/terminal/legacy/theme-variant
+          value: "'system'"
+        - key: /org/gnome/terminal/legacy/profiles:/default
+          value: "'67af2a7a-bb72-424a-8245-0c6cebb52301'"
+        - key: /org/gnome/terminal/legacy/profiles:/list
+          value: "['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '67af2a7a-bb72-424a-8245-0c6cebb52301']"
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/audible-bell
+          value: false
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/bold-is-bright
+          value: true
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/font
+          value: "'JetBrainsMono Nerd Font 11'"
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/palette
+          value: >
+            ['rgb(23,20,33)', 'rgb(192,28,40)', 'rgb(38,162,105)', 'rgb(162,115,76)', 'rgb(18,72,139)', 'rgb(163,71,186)',
+            'rgb(42,161,179)', 'rgb(208,207,204)', 'rgb(94,92,100)', 'rgb(246,97,81)', 'rgb(51,209,122)',
+            'rgb(233,173,12)', 'rgb(42,123,222)', 'rgb(192,97,203)', 'rgb(51,199,222)', 'rgb(255,255,255)']
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/use-system-font
+          value: false
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/use-theme-colors
+          value: true
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/use-transparent-background
+          value: false
+        - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/visible-name
+          value: "'{{ username }}'"
 
-- name: Configure software
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/software/check-timestamp
-      value: "int64 1728053119"
-    - key: /org/gnome/software/download-updates
-      value: false
-    - key: /org/gnome/software/first-run
-      value: false
-    - key: /org/gnome/software/flatpak-purge-timestamp
-      value: "int64 1728306844"
-    - key: /org/gnome/software/install-timestamp
-      value: "int64 1728236300"
-    - key: /org/gnome/software/packagekit-historical-updates-timestamp
-      value: "uint64 1728236300"
-    - key: /org/gnome/software/security-timestamp
-      value: "int64 1728212627580400"
-    - key: /org/gnome/software/update-notification-timestamp
-      value: "int64 1728298682"
+    - name: Configure gtk4 file-chooser
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gtk/gtk4/settings/file-chooser/date-format
+          value: "'regular'"
+        - key: /org/gtk/gtk4/settings/file-chooser/location-mode
+          value: "'path-bar'"
+        - key: /org/gtk/gtk4/settings/file-chooser/show-hidden
+          value: true
+        - key: /org/gtk/gtk4/settings/file-chooser/sidebar-width
+          value: 140
+        - key: /org/gtk/gtk4/settings/file-chooser/sort-column
+          value: "'name'"
+        - key: /org/gtk/gtk4/settings/file-chooser/sort-directories-first
+          value: true
+        - key: /org/gtk/gtk4/settings/file-chooser/sort-order
+          value: "'ascending'"
+        - key: /org/gtk/gtk4/settings/file-chooser/type-format
+          value: "'category'"
+        - key: /org/gtk/gtk4/settings/file-chooser/view-type
+          value: "'list'"
+        - key: /org/gtk/gtk4/settings/file-chooser/window-size
+          value: "(867, 561)"
 
-- name: Configure legacy
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gnome/terminal/legacy/theme-variant
-      value: "'system'"
-    - key: /org/gnome/terminal/legacy/profiles:/default
-      value: "'67af2a7a-bb72-424a-8245-0c6cebb52301'"
-    - key: /org/gnome/terminal/legacy/profiles:/list
-      value: "['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '67af2a7a-bb72-424a-8245-0c6cebb52301']"
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/audible-bell
-      value: false
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/bold-is-bright
-      value: true
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/font
-      value: "'JetBrainsMono Nerd Font 11'"
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/palette
-      value: >
-        ['rgb(23,20,33)', 'rgb(192,28,40)', 'rgb(38,162,105)', 'rgb(162,115,76)', 'rgb(18,72,139)', 'rgb(163,71,186)',
-         'rgb(42,161,179)', 'rgb(208,207,204)', 'rgb(94,92,100)', 'rgb(246,97,81)', 'rgb(51,209,122)',
-         'rgb(233,173,12)', 'rgb(42,123,222)', 'rgb(192,97,203)', 'rgb(51,199,222)', 'rgb(255,255,255)']
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/use-system-font
-      value: false
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/use-theme-colors
-      value: true
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/use-transparent-background
-      value: false
-    - key: /org/gnome/terminal/legacy/profiles:/:67af2a7a-bb72-424a-8245-0c6cebb52301/visible-name
-      value: "'{{ username }}'"
+    - name: Configure color-chooser
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gtk/settings/color-chooser/custom-colors
+          value: "[(0.090196078431372548, 0.078431372549019607, 0.12941176470588237, 1.0), (0.80392156862745101, 0.0, 0.0, 1.0)]"
+        - key: /org/gtk/settings/color-chooser/selected-color
+          value: "(true, 0.090196078431372548, 0.078431372549019607, 0.12941176470588237, 1.0)"
 
-- name: Configure gtk4 file-chooser
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gtk/gtk4/settings/file-chooser/date-format
-      value: "'regular'"
-    - key: /org/gtk/gtk4/settings/file-chooser/location-mode
-      value: "'path-bar'"
-    - key: /org/gtk/gtk4/settings/file-chooser/show-hidden
-      value: true
-    - key: /org/gtk/gtk4/settings/file-chooser/sidebar-width
-      value: 140
-    - key: /org/gtk/gtk4/settings/file-chooser/sort-column
-      value: "'name'"
-    - key: /org/gtk/gtk4/settings/file-chooser/sort-directories-first
-      value: true
-    - key: /org/gtk/gtk4/settings/file-chooser/sort-order
-      value: "'ascending'"
-    - key: /org/gtk/gtk4/settings/file-chooser/type-format
-      value: "'category'"
-    - key: /org/gtk/gtk4/settings/file-chooser/view-type
-      value: "'list'"
-    - key: /org/gtk/gtk4/settings/file-chooser/window-size
-      value: "(867, 561)"
-
-- name: Configure color-chooser
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gtk/settings/color-chooser/custom-colors
-      value: "[(0.090196078431372548, 0.078431372549019607, 0.12941176470588237, 1.0), (0.80392156862745101, 0.0, 0.0, 1.0)]"
-    - key: /org/gtk/settings/color-chooser/selected-color
-      value: "(true, 0.090196078431372548, 0.078431372549019607, 0.12941176470588237, 1.0)"
-
-- name: Configure file-chooser
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state | default('present') }}"
-  loop:
-    - key: /org/gtk/settings/file-chooser/clock-format
-      value: "'24h'"
-    - key: /org/gtk/settings/file-chooser/date-format
-      value: "'regular'"
-    - key: /org/gtk/settings/file-chooser/location-mode
-      value: "'path-bar'"
-    - key: /org/gtk/settings/file-chooser/show-hidden
-      value: false
-    - key: /org/gtk/settings/file-chooser/show-size-column
-      value: true
-    - key: /org/gtk/settings/file-chooser/show-type-column
-      value: true
-    - key: /org/gtk/settings/file-chooser/sidebar-width
-      value: 157
-    - key: /org/gtk/settings/file-chooser/sort-column
-      value: "'name'"
-    - key: /org/gtk/settings/file-chooser/sort-directories-first
-      value: false
-    - key: /org/gtk/settings/file-chooser/sort-order
-      value: "'ascending'"
-    - key: /org/gtk/settings/file-chooser/type-format
-      value: "'category'"
-    - key: /org/gtk/settings/file-chooser/window-position
-      value: "(26, 23)"
-    - key: /org/gtk/settings/file-chooser/window-size
-      value: "(1231, 902)"
+    - name: Configure file-chooser
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gtk/settings/file-chooser/clock-format
+          value: "'24h'"
+        - key: /org/gtk/settings/file-chooser/date-format
+          value: "'regular'"
+        - key: /org/gtk/settings/file-chooser/location-mode
+          value: "'path-bar'"
+        - key: /org/gtk/settings/file-chooser/show-hidden
+          value: false
+        - key: /org/gtk/settings/file-chooser/show-size-column
+          value: true
+        - key: /org/gtk/settings/file-chooser/show-type-column
+          value: true
+        - key: /org/gtk/settings/file-chooser/sidebar-width
+          value: 157
+        - key: /org/gtk/settings/file-chooser/sort-column
+          value: "'name'"
+        - key: /org/gtk/settings/file-chooser/sort-directories-first
+          value: false
+        - key: /org/gtk/settings/file-chooser/sort-order
+          value: "'ascending'"
+        - key: /org/gtk/settings/file-chooser/type-format
+          value: "'category'"
+        - key: /org/gtk/settings/file-chooser/window-position
+          value: "(26, 23)"
+        - key: /org/gtk/settings/file-chooser/window-size
+          value: "(1231, 902)"
