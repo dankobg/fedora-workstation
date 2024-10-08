@@ -16,11 +16,11 @@
   register: k9s_installed_version_data
   changed_when: false
   failed_when: "k9s_installed_version_data.rc != 0 or (k9s_installed_version_data.rc == 0 and 'Version' not in k9s_installed_version_data.stdout)"
-  when: not k9s_installed.failed
+  when: k9s_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    k9s_installed_version: "{{ 'v' + k9s_installed_version_data.stdout_lines[7].split(':')[1].split('v')[1] if not k9s_installed_version_data.failed else '' }}"
+    k9s_installed_version: "{{ 'v' + k9s_installed_version_data.stdout_lines[7].split(':')[1].split('v')[1] if k9s_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

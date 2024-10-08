@@ -14,7 +14,7 @@
 #   register: ksops_installed_version_data
 #   changed_when: false
 #   failed_when: "ksops_installed_version_data.rc != 0 or (ksops_installed_version_data.rc == 0 and 'ksops' not in ksops_installed_version_data.stdout)"
-#   when: not ksops_installed.failed
+#   when: ksops_installed.rc == 0
 
 # ksops does not expose version flag lol
 - name: Ensure ksops version file exists

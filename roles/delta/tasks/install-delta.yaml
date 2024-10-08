@@ -18,11 +18,11 @@
   register: delta_installed_version_data
   changed_when: false
   failed_when: "delta_installed_version_data.rc != 0 or (delta_installed_version_data.rc == 0 and 'delta' not in delta_installed_version_data.stdout)"
-  when: not delta_installed.failed
+  when: delta_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    delta_installed_version: "{{ delta_installed_version_data.stdout.split()[1] if not delta_installed_version_data.failed else '' }}"
+    delta_installed_version: "{{ delta_installed_version_data.stdout.split()[1] if delta_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

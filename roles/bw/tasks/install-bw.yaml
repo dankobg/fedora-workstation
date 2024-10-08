@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     bw_installed_version_data.rc != 0 or not (bw_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
-  when: not bw_installed.failed
+  when: bw_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    bw_installed_version: "{{ 'cli-v' + bw_installed_version_data.stdout if not bw_installed_version_data.failed else '' }}"
+    bw_installed_version: "{{ 'cli-v' + bw_installed_version_data.stdout if bw_installed.rc == 0 else '' }}"
 
 - name: Get the list of GitHub releases
   ansible.builtin.uri:

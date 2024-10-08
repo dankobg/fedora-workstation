@@ -16,11 +16,11 @@
   register: rclone_installed_version_data
   changed_when: false
   failed_when: "rclone_installed_version_data.rc != 0 or (rclone_installed_version_data.rc == 0 and 'rclone' not in rclone_installed_version_data.stdout)"
-  when: not rclone_installed.failed
+  when: rclone_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    rclone_installed_version: "{{ rclone_installed_version_data.stdout_lines[0].split()[1] if not rclone_installed_version_data.failed else '' }}"
+    rclone_installed_version: "{{ rclone_installed_version_data.stdout_lines[0].split()[1] if rclone_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

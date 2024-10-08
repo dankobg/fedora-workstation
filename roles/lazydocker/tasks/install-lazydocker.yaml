@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     lazydocker_installed_version_data.rc != 0 or (lazydocker_installed_version_data.rc == 0 and 'Version' not in lazydocker_installed_version_data.stdout)
-  when: not lazydocker_installed.failed
+  when: lazydocker_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    lazydocker_installed_version: "{{ 'v' + lazydocker_installed_version_data.stdout_lines[0].split()[1] if not lazydocker_installed_version_data.failed else '' }}" # noqa yaml[line-length]
+    lazydocker_installed_version: "{{ 'v' + lazydocker_installed_version_data.stdout_lines[0].split()[1] if lazydocker_installed.rc == 0 else '' }}" # noqa yaml[line-length]
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

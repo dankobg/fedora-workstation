@@ -16,11 +16,11 @@
   register: glow_installed_version_data
   changed_when: false
   failed_when: "glow_installed_version_data.rc != 0 or (glow_installed_version_data.rc == 0 and 'glow' not in glow_installed_version_data.stdout)"
-  when: not glow_installed.failed
+  when: glow_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    glow_installed_version: "{{ 'v' + glow_installed_version_data.stdout.split()[2] if not glow_installed_version_data.failed else '' }}"
+    glow_installed_version: "{{ 'v' + glow_installed_version_data.stdout.split()[2] if glow_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

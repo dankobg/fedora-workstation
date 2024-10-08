@@ -16,11 +16,11 @@
   register: zellij_installed_version_data
   changed_when: false
   failed_when: "zellij_installed_version_data.rc != 0 or (zellij_installed_version_data.rc == 0 and 'zellij' not in zellij_installed_version_data.stdout)"
-  when: not zellij_installed.failed
+  when: zellij_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    zellij_installed_version: "{{ 'v' + zellij_installed_version_data.stdout.split()[1] if not zellij_installed_version_data.failed else '' }}"
+    zellij_installed_version: "{{ 'v' + zellij_installed_version_data.stdout.split()[1] if zellij_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

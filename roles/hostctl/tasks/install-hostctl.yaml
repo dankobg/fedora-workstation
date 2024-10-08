@@ -16,11 +16,11 @@
   register: hostctl_installed_version_data
   changed_when: false
   failed_when: "hostctl_installed_version_data.rc != 0 or (hostctl_installed_version_data.rc == 0 and 'hostctl' not in hostctl_installed_version_data.stdout)"
-  when: not hostctl_installed.failed
+  when: hostctl_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    hostctl_installed_version: "{{ 'v' + hostctl_installed_version_data.stdout.split()[2] if not hostctl_installed_version_data.failed else '' }}"
+    hostctl_installed_version: "{{ 'v' + hostctl_installed_version_data.stdout.split()[2] if hostctl_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

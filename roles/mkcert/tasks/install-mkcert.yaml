@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     mkcert_installed_version_data.rc != 0 or not (mkcert_installed_version_data.stdout | regex_search('^v\d+\.\d+\.\d+$'))
-  when: not mkcert_installed.failed
+  when: mkcert_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    mkcert_installed_version: "{{ mkcert_installed_version_data.stdout if not mkcert_installed_version_data.failed else '' }}"
+    mkcert_installed_version: "{{ mkcert_installed_version_data.stdout if mkcert_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

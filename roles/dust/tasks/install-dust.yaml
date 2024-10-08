@@ -16,15 +16,15 @@
   register: dust_installed_version_data
   changed_when: false
   failed_when: "dust_installed_version_data.rc != 0 or (dust_installed_version_data.rc == 0 and 'Dust' not in dust_installed_version_data.stdout)"
-  when: not dust_installed.failed
+  when: dust_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if not dust_installed_version_data.failed else '' }}"
+    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if dust_installed.rc == 0 else '' }}"
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if not dust_installed_version_data.failed else '' }}"
+    dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if dust_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

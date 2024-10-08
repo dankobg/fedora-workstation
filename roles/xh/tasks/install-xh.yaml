@@ -16,11 +16,11 @@
   register: xh_installed_version_data
   changed_when: false
   failed_when: "xh_installed_version_data.rc != 0 or (xh_installed_version_data.rc == 0 and 'xh' not in xh_installed_version_data.stdout)"
-  when: not xh_installed.failed
+  when: xh_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    xh_installed_version: "{{ 'v' + xh_installed_version_data.stdout_lines[0].split()[1] if not xh_installed_version_data.failed else '' }}"
+    xh_installed_version: "{{ 'v' + xh_installed_version_data.stdout_lines[0].split()[1] if xh_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

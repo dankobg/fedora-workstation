@@ -16,11 +16,11 @@
   register: atlas_installed_version_data
   changed_when: false
   failed_when: "atlas_installed_version_data.rc != 0 or (atlas_installed_version_data.rc == 0 and 'atlas version' not in atlas_installed_version_data.stdout)"
-  when: not atlas_installed.failed
+  when: atlas_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if not atlas_installed_version_data.failed else '' }}"
+    atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if atlas_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release
   ansible.builtin.uri:

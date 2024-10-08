@@ -29,11 +29,11 @@
   register: go_installed_version_data
   changed_when: false
   failed_when: "go_installed_version_data.rc != 0 or (go_installed_version_data.rc == 0 and 'go version' not in go_installed_version_data.stdout)"
-  when: not go_installed.failed
+  when: go_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    go_installed_version: "{{ go_installed_version_data.stdout.split()[2] if not go_installed_version_data.failed else '' }}"
+    go_installed_version: "{{ go_installed_version_data.stdout.split()[2] if go_installed.rc == 0 else '' }}"
 
 - name: Get the latest release data
   ansible.builtin.uri:

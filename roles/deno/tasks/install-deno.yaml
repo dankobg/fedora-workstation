@@ -16,11 +16,11 @@
   register: deno_installed_version_data
   changed_when: false
   failed_when: "deno_installed_version_data.rc != 0 or (deno_installed_version_data.rc == 0 and 'deno' not in deno_installed_version_data.stdout)"
-  when: not deno_installed.failed
+  when: deno_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    deno_installed_version: "{{ 'v' + deno_installed_version_data.stdout_lines[0].split()[1] if not deno_installed_version_data.failed else '' }}"
+    deno_installed_version: "{{ 'v' + deno_installed_version_data.stdout_lines[0].split()[1] if deno_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

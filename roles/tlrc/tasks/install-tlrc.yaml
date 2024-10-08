@@ -16,11 +16,11 @@
   register: tlrc_installed_version_data
   changed_when: false
   failed_when: "tlrc_installed_version_data.rc != 0 or (tlrc_installed_version_data.rc == 0 and 'tlrc' not in tlrc_installed_version_data.stdout)"
-  when: not tlrc_installed.failed
+  when: tlrc_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    tlrc_installed_version: "{{ tlrc_installed_version_data.stdout.split()[1] if not tlrc_installed_version_data.failed else '' }}"
+    tlrc_installed_version: "{{ tlrc_installed_version_data.stdout.split()[1] if tlrc_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

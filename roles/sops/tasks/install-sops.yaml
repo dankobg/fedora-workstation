@@ -16,11 +16,11 @@
   register: sops_installed_version_data
   changed_when: false
   failed_when: "sops_installed_version_data.rc != 0 or (sops_installed_version_data.rc == 0 and 'sops' not in sops_installed_version_data.stdout)"
-  when: not sops_installed.failed
+  when: sops_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    sops_installed_version: "{{ 'v' + sops_installed_version_data.stdout.split()[1] if not sops_installed_version_data.failed else '' }}"
+    sops_installed_version: "{{ 'v' + sops_installed_version_data.stdout.split()[1] if sops_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

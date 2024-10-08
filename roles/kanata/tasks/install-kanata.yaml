@@ -16,11 +16,11 @@
   register: kanata_installed_version_data
   changed_when: false
   failed_when: "kanata_installed_version_data.rc != 0 or (kanata_installed_version_data.rc == 0 and 'kanata' not in kanata_installed_version_data.stdout)"
-  when: not kanata_installed.failed
+  when: kanata_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kanata_installed_version: "{{ 'v' + kanata_installed_version_data.stdout.split()[1] if not kanata_installed_version_data.failed else '' }}"
+    kanata_installed_version: "{{ 'v' + kanata_installed_version_data.stdout.split()[1] if kanata_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

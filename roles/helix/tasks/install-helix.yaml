@@ -16,11 +16,11 @@
   register: helix_installed_version_data
   changed_when: false
   failed_when: "helix_installed_version_data.rc != 0 or (helix_installed_version_data.rc == 0 and 'helix' not in helix_installed_version_data.stdout)"
-  when: not helix_installed.failed
+  when: helix_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    helix_installed_version: "{{ helix_installed_version_data.stdout.split()[1] if not helix_installed_version_data.failed else '' }}"
+    helix_installed_version: "{{ helix_installed_version_data.stdout.split()[1] if helix_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     devspace_installed_version_data.rc != 0 or (devspace_installed_version_data.rc == 0 and 'devspace version' not in devspace_installed_version_data.stdout)
-  when: not devspace_installed.failed
+  when: devspace_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    devspace_installed_version: "{{ 'v' + devspace_installed_version_data.stdout.split()[2] if not devspace_installed_version_data.failed else '' }}"
+    devspace_installed_version: "{{ 'v' + devspace_installed_version_data.stdout.split()[2] if devspace_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

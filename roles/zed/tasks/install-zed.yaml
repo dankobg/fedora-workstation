@@ -16,11 +16,11 @@
   register: zed_installed_version_data
   changed_when: false
   failed_when: "zed_installed_version_data.rc != 0 or (zed_installed_version_data.rc == 0 and 'zed' not in zed_installed_version_data.stdout)"
-  when: not zed_installed.failed
+  when: zed_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    zed_installed_version: "{{ 'v' + zed_installed_version_data.stdout.split()[1] if not zed_installed_version_data.failed else '' }}"
+    zed_installed_version: "{{ 'v' + zed_installed_version_data.stdout.split()[1] if zed_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

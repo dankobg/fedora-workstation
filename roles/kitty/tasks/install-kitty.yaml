@@ -16,11 +16,11 @@
   register: kitty_installed_version_data
   changed_when: false
   failed_when: "kitty_installed_version_data.rc != 0 or (kitty_installed_version_data.rc == 0 and 'kitty' not in kitty_installed_version_data.stdout)"
-  when: not kitty_installed.failed
+  when: kitty_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kitty_installed_version: "{{ 'v' + kitty_installed_version_data.stdout.split()[1] if not kitty_installed_version_data.failed else '' }}"
+    kitty_installed_version: "{{ 'v' + kitty_installed_version_data.stdout.split()[1] if kitty_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

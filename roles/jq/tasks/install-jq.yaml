@@ -16,11 +16,11 @@
   register: jq_installed_version_data
   changed_when: false
   failed_when: "jq_installed_version_data.rc != 0 or (jq_installed_version_data.rc == 0 and 'jq' not in jq_installed_version_data.stdout)"
-  when: not jq_installed.failed
+  when: jq_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    jq_installed_version: "{{ jq_installed_version_data.stdout if not jq_installed_version_data.failed else '' }}"
+    jq_installed_version: "{{ jq_installed_version_data.stdout if jq_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

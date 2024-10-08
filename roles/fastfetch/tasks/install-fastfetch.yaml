@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     fastfetch_installed_version_data.rc != 0 or (fastfetch_installed_version_data.rc == 0 and 'fastfetch' not in fastfetch_installed_version_data.stdout)
-  when: not fastfetch_installed.failed
+  when: fastfetch_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    fastfetch_installed_version: "{{ fastfetch_installed_version_data.stdout.split()[1] if not fastfetch_installed_version_data.failed else '' }}"
+    fastfetch_installed_version: "{{ fastfetch_installed_version_data.stdout.split()[1] if fastfetch_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

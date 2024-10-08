@@ -16,11 +16,11 @@
   register: restic_installed_version_data
   changed_when: false
   failed_when: "restic_installed_version_data.rc != 0 or (restic_installed_version_data.rc == 0 and 'restic' not in restic_installed_version_data.stdout)"
-  when: not restic_installed.failed
+  when: restic_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    restic_installed_version: "{{ 'v' + restic_installed_version_data.stdout.split()[1] if not restic_installed_version_data.failed else '' }}"
+    restic_installed_version: "{{ 'v' + restic_installed_version_data.stdout.split()[1] if restic_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

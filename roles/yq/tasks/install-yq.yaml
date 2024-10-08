@@ -16,11 +16,11 @@
   register: yq_installed_version_data
   changed_when: false
   failed_when: "yq_installed_version_data.rc != 0 or (yq_installed_version_data.rc == 0 and 'yq' not in yq_installed_version_data.stdout)"
-  when: not yq_installed.failed
+  when: yq_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    yq_installed_version: "{{ yq_installed_version_data.stdout.split()[3] if not yq_installed_version_data.failed else '' }}"
+    yq_installed_version: "{{ yq_installed_version_data.stdout.split()[3] if yq_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

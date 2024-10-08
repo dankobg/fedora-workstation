@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     onefetch_installed_version_data.rc != 0 or (onefetch_installed_version_data.rc == 0 and 'onefetch' not in onefetch_installed_version_data.stdout)
-  when: not onefetch_installed.failed
+  when: onefetch_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    onefetch_installed_version: "{{ onefetch_installed_version_data.stdout.split()[1] if not onefetch_installed_version_data.failed else '' }}"
+    onefetch_installed_version: "{{ onefetch_installed_version_data.stdout.split()[1] if onefetch_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

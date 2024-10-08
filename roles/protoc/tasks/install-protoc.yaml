@@ -16,11 +16,11 @@
   register: protoc_installed_version_data
   changed_when: false
   failed_when: "protoc_installed_version_data.rc != 0 or (protoc_installed_version_data.rc == 0 and 'libprotoc' not in protoc_installed_version_data.stdout)"
-  when: not protoc_installed.failed
+  when: protoc_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    protoc_installed_version: "{{ 'v' + protoc_installed_version_data.stdout.split()[1] if not protoc_installed_version_data.failed else '' }}"
+    protoc_installed_version: "{{ 'v' + protoc_installed_version_data.stdout.split()[1] if protoc_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

@@ -16,11 +16,11 @@
   register: k3d_installed_version_data
   changed_when: false
   failed_when: "k3d_installed_version_data.rc != 0 or (k3d_installed_version_data.rc == 0 and 'k3d' not in k3d_installed_version_data.stdout)"
-  when: not k3d_installed.failed
+  when: k3d_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    k3d_installed_version: "{{ k3d_installed_version_data.stdout_lines[0].split()[2] if not k3d_installed_version_data.failed else '' }}"
+    k3d_installed_version: "{{ k3d_installed_version_data.stdout_lines[0].split()[2] if k3d_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

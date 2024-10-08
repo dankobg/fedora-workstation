@@ -16,11 +16,11 @@
   register: eza_installed_version_data
   changed_when: false
   failed_when: "eza_installed_version_data.rc != 0 or (eza_installed_version_data.rc == 0 and 'eza' not in eza_installed_version_data.stdout)"
-  when: not eza_installed.failed
+  when: eza_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    eza_installed_version: "{{ eza_installed_version_data.stdout_lines[1].split()[0] if not eza_installed_version_data.failed else '' }}"
+    eza_installed_version: "{{ eza_installed_version_data.stdout_lines[1].split()[0] if eza_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

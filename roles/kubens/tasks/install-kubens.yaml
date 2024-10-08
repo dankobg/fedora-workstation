@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     kubens_installed_version_data.rc != 0 or not (kubens_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
-  when: not kubens_installed.failed
+  when: kubens_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kubens_installed_version: "{{ 'v' + kubens_installed_version_data.stdout if not kubens_installed_version_data.failed else '' }}"
+    kubens_installed_version: "{{ 'v' + kubens_installed_version_data.stdout if kubens_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:

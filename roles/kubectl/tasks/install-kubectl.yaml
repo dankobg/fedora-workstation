@@ -18,11 +18,11 @@
   failed_when: >
     (kubectl_installed_version_data.rc != 0 and 'was refused' not in kubectl_installed_version_data.stderr) or
     (kubectl_installed_version_data.rc == 0 and 'Client Version' not in kubectl_installed_version_data.stdout)
-  when: not kubectl_installed.failed
+  when: kubectl_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kubectl_installed_version: "{{ kubectl_installed_version_data.stdout_lines[0].split()[2] if not kubectl_installed_version_data.failed else '' }}"
+    kubectl_installed_version: "{{ kubectl_installed_version_data.stdout_lines[0].split()[2] if kubectl_installed.rc == 0 else '' }}"
 
 - name: Get the stable release data
   ansible.builtin.uri:

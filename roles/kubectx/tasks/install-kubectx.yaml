@@ -17,11 +17,11 @@
   changed_when: false
   failed_when: >
     kubectx_installed_version_data.rc != 0 or not (kubectx_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
-  when: not kubectx_installed.failed
+  when: kubectx_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    kubectx_installed_version: "{{ 'v' + kubectx_installed_version_data.stdout if not kubectx_installed_version_data.failed else '' }}"
+    kubectx_installed_version: "{{ 'v' + kubectx_installed_version_data.stdout if kubectx_installed.rc == 0 else '' }}"
 
 - name: Get the latest GitHub release data
   ansible.builtin.uri:
