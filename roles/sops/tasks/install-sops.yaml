@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ sops_binary_name }}"
-  changed_when: false
   register: sops_installed
+  changed_when: false
   failed_when: sops_installed.rc != 0 and sops_installed.stderr != ""
 
 - name: Get installed version data

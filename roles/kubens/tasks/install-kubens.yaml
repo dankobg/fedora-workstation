@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ kubens_binary_name }}"
-  changed_when: false
   register: kubens_installed
+  changed_when: false
   failed_when: kubens_installed.rc != 0 and kubens_installed.stderr != ""
 
 - name: Get installed version data

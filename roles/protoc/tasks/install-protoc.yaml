@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ protoc_binary_name }}"
-  changed_when: false
   register: protoc_installed
+  changed_when: false
   failed_when: protoc_installed.rc != 0 and protoc_installed.stderr != ""
 
 - name: Get installed version data

@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ jq_binary_name }}"
-  changed_when: false
   register: jq_installed
+  changed_when: false
   failed_when: jq_installed.rc != 0 and jq_installed.stderr != ""
 
 - name: Get installed version data

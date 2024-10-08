@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ fastfetch_binary_name }}"
-  changed_when: false
   register: fastfetch_installed
+  changed_when: false
   failed_when: fastfetch_installed.rc != 0 and fastfetch_installed.stderr != ""
 
 - name: Get installed version data

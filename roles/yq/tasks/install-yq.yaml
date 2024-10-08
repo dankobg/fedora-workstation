@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ yq_binary_name }}"
-  changed_when: false
   register: yq_installed
+  changed_when: false
   failed_when: yq_installed.rc != 0 and yq_installed.stderr != ""
 
 - name: Get installed version data

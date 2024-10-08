@@ -9,8 +9,8 @@
 - name: Get the gnome shell version
   ansible.builtin.command:
     cmd: gnome-shell --version
-  changed_when: false
   register: gnome_shell_version_data
+  changed_when: false
 
 - name: Get extensions info data
   ansible.builtin.uri:
@@ -41,5 +41,5 @@
       gnome-shell-extension-tool
       {{ '-e' if (extension_manager_gnome_extensions | selectattr('id', '==', item.json.pk) | first).state == 'present' else '-d' }}
       {{ item.json.uuid }}
-  changed_when: false
   loop: "{{ gnome_extensions_info.results }}"
+  changed_when: false

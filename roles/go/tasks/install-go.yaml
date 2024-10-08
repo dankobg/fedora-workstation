@@ -17,8 +17,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ go_binary_name }}"
-  changed_when: false
   register: go_installed
+  changed_when: false
   failed_when: go_installed.rc != 0 and go_installed.stderr != ""
 
 - name: Get installed version data

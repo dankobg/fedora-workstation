@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: type rustup
-  changed_when: false
   register: rustup_installed
+  changed_when: false
   failed_when: "not ('rustup: not found' in rustup_installed.stderr or 'rustup is' in rustup_installed.stdout)"
 
 - name: Get installed rustup version data

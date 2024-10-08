@@ -14,8 +14,8 @@
       become_user: "{{ username }}"
       ansible.builtin.command:
         cmd: command -v zsh
-      changed_when: false
       register: zsh_installed
+      changed_when: false
       failed_when: zsh_installed.rc != 0 and zsh_installed.stderr != ""
 
     - name: Set zsh installed path
@@ -131,8 +131,9 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: command -v bash
-  changed_when: false
   register: bash_path
+  changed_when: false
+  when: zsh_state == 'absent'
 
 - name: Change shell to bash
   ansible.builtin.user:

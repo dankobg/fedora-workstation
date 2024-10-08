@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ gh_binary_name }}"
-  changed_when: false
   register: gh_installed
+  changed_when: false
   failed_when: gh_installed.rc != 0 and gh_installed.stderr != ""
 
 - name: Get installed version data

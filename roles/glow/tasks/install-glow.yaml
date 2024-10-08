@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ glow_binary_name }}"
-  changed_when: false
   register: glow_installed
+  changed_when: false
   failed_when: glow_installed.rc != 0 and glow_installed.stderr != ""
 
 - name: Get installed version data

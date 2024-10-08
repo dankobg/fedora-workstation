@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ rclone_binary_name }}"
-  changed_when: false
   register: rclone_installed
+  changed_when: false
   failed_when: rclone_installed.rc != 0 and rclone_installed.stderr != ""
 
 - name: Get installed version data

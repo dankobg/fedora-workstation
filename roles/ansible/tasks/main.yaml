@@ -3,7 +3,9 @@
 
 - name: Install Ansible
   ansible.builtin.dnf:
-    name: ansible
+    name:
+      - ansible
+      - ansible-lint
     state: "{{ ansible_state }}"
 
 - name: Ensure ansible config directory exists

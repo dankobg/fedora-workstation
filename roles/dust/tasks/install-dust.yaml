@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ dust_binary_name }}"
-  changed_when: false
   register: dust_installed
+  changed_when: false
   failed_when: dust_installed.rc != 0 and dust_installed.stderr != ""
 
 - name: Get installed version data

@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ onefetch_binary_name }}"
-  changed_when: false
   register: onefetch_installed
+  changed_when: false
   failed_when: onefetch_installed.rc != 0 and onefetch_installed.stderr != ""
 
 - name: Get installed version data

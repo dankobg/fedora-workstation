@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ k9s_binary_name }}"
-  changed_when: false
   register: k9s_installed
+  changed_when: false
   failed_when: k9s_installed.rc != 0 and k9s_installed.stderr != ""
 
 - name: Get installed version data

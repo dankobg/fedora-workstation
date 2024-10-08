@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ zed_binary_name }}"
-  changed_when: false
   register: zed_installed
+  changed_when: false
   failed_when: zed_installed.rc != 0 and zed_installed.stderr != ""
 
 - name: Get installed version data

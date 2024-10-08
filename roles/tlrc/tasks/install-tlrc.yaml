@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ tlrc_binary_name }}"
-  changed_when: false
   register: tlrc_installed
+  changed_when: false
   failed_when: tlrc_installed.rc != 0 and tlrc_installed.stderr != ""
 
 - name: Get installed version data

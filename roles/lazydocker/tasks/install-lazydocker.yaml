@@ -4,8 +4,8 @@
   become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: "command -v {{ lazydocker_binary_name }}"
-  changed_when: false
   register: lazydocker_installed
+  changed_when: false
   failed_when: lazydocker_installed.rc != 0 and lazydocker_installed.stderr != ""
 
 - name: Get installed version data
