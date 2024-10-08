@@ -104,6 +104,13 @@
         - "kitty.desktop"
         - "kitty-open.desktop"
 
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ kitty_tempdir.path }}"
+        state: absent
+
+- name: Configure kitty
+  block:
     - name: Ensure config directory exists
       ansible.builtin.file:
         path: "/home/{{ username }}/.config/kitty"
@@ -158,8 +165,3 @@
         line: "Icon={{ icons_dir.path }}/kitty-{{ kitty_icon }}.png"
         state: present
       when: kitty_icon is defined
-
-    - name: Cleanup temp files
-      ansible.builtin.file:
-        path: "{{ kitty_tempdir.path }}"
-        state: absent
