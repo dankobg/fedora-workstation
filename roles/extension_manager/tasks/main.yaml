@@ -18,6 +18,8 @@
     return_content: true
   register: gnome_extensions_info
   loop: "{{ extension_manager_gnome_extensions }}"
+  retries: 3
+  delay: 5
 
 - name: Ensure individual extension directories exist
   ansible.builtin.file:

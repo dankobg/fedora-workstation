@@ -1,6 +1,7 @@
 {{ ansible_managed | comment }} adds managed by ansible haders to start of document
 
-<!-- x86_64
+<!--
+x86_64
 amd64
 x86
 i386
@@ -13,7 +14,8 @@ armv7l
 armv6l
 aarch32
 ppc64le
-s390x -->
+s390x
+-->
 
 not fully idempotent yet, they make small changes:
 
@@ -22,6 +24,7 @@ not fully idempotent yet, they make small changes:
 
 TODO: verify checksums for manuall downloads for apps:
 
+- [] atlas
 - [] bw
 - [] devspace
 - [] docker

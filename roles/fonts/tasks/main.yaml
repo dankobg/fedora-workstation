@@ -20,6 +20,8 @@
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: fonts_nerd_fonts_latest_release_data
+  retries: 3
+  delay: 5
 
 - name: Set the latest Nerd Fonts version
   ansible.builtin.set_fact:

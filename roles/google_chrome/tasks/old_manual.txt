@@ -45,6 +45,8 @@ tasks file for google_chrome
     dest: "/tmp/wtf/{{ item.id }}"
   register: rez
   loop: "{{ google_chrome_extensions }}"
+  retries: 3
+  delay: 5
 
 - name: Rename downloaded .crx to .zip
   ansible.builtin.copy:

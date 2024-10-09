@@ -30,6 +30,8 @@
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: bw_releases_data
+  retries: 3
+  delay: 5
 
 - name: Filter CLI releases list
   ansible.builtin.set_fact:

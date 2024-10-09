@@ -30,6 +30,8 @@
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
   register: onefetch_latest_release_data
+  retries: 3
+  delay: 5
 
 - name: Set the release version
   ansible.builtin.set_fact:

@@ -29,6 +29,8 @@
     url: https://dl.k8s.io/release/stable.txt
     return_content: true
   register: kubectl_stable_release_data
+  retries: 3
+  delay: 5
 
 - name: Set the release version
   ansible.builtin.set_fact:
