@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     k9s_installed_version: "{{ 'v' + k9s_installed_version_data.stdout_lines[7].split(':')[1].split('v')[1] if k9s_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/derailed/k9s/releases/latest
     return_content: true

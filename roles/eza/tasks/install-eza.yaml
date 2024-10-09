@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     eza_installed_version: "{{ eza_installed_version_data.stdout_lines[1].split()[0] if eza_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/eza-community/eza/releases/latest
     return_content: true

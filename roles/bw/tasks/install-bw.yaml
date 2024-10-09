@@ -35,7 +35,7 @@
   ansible.builtin.set_fact:
     bw_releases: "{{ bw_releases_data.json | selectattr('tag_name', 'search', '^cli-v') | list }}"
 
-- name: Get the latest CLI release
+- name: Get the latest release data
   ansible.builtin.set_fact:
     bw_latest_release_data: "{{ bw_releases | sort(attribute='tag_name', reverse=true) | first }}"
 

@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     glow_installed_version: "{{ 'v' + glow_installed_version_data.stdout.split()[2] if glow_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/charmbracelet/glow/releases/latest
     return_content: true

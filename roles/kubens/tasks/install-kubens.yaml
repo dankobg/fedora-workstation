@@ -23,7 +23,7 @@
   ansible.builtin.set_fact:
     kubens_installed_version: "{{ 'v' + kubens_installed_version_data.stdout if kubens_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
     return_content: true

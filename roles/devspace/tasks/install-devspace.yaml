@@ -23,7 +23,7 @@
   ansible.builtin.set_fact:
     devspace_installed_version: "{{ 'v' + devspace_installed_version_data.stdout.split()[2] if devspace_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/devspace-sh/devspace/releases/latest
     return_content: true

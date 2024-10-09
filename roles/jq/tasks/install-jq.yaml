@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     jq_installed_version: "{{ jq_installed_version_data.stdout if jq_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/jqlang/jq/releases/latest
     return_content: true

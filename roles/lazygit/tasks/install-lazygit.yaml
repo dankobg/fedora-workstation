@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     lazygit_installed_version: "{{ 'v' + lazygit_installed_version_data.stdout.split(',')[3].split('=')[1] if lazygit_installed.rc == 0 else '' }}" # noqa yaml[line-length]
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
     return_content: true

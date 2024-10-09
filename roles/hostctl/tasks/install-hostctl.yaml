@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     hostctl_installed_version: "{{ 'v' + hostctl_installed_version_data.stdout.split()[2] if hostctl_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/guumaster/hostctl/releases/latest
     return_content: true

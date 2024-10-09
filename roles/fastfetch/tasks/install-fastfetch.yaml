@@ -23,7 +23,7 @@
   ansible.builtin.set_fact:
     fastfetch_installed_version: "{{ fastfetch_installed_version_data.stdout.split()[1] if fastfetch_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest
     return_content: true

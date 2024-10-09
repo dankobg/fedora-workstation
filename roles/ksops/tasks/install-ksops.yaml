@@ -36,7 +36,7 @@
   ansible.builtin.set_fact:
     ksops_installed_version: "{{ ksops_installed_version_data.content | b64decode | trim }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/viaduct-ai/kustomize-sops/releases/latest
     return_content: true

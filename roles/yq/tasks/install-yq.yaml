@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     yq_installed_version: "{{ yq_installed_version_data.stdout.split()[3] if yq_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/mikefarah/yq/releases/latest
     return_content: true

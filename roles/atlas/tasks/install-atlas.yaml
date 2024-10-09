@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     atlas_installed_version: "{{ atlas_installed_version_data.stdout_lines[0].split()[2] if atlas_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/ariga/atlas/releases/latest
     return_content: true

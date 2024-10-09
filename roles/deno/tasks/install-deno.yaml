@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     deno_installed_version: "{{ 'v' + deno_installed_version_data.stdout_lines[0].split()[1] if deno_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/denoland/deno/releases/latest
     return_content: true

@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     zed_installed_version: "{{ 'v' + zed_installed_version_data.stdout.split()[1] if zed_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/zed-industries/zed/releases/latest
     return_content: true

@@ -26,7 +26,7 @@
   ansible.builtin.set_fact:
     dust_installed_version: "{{ 'v' + dust_installed_version_data.stdout.split()[1] if dust_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/bootandy/dust/releases/latest
     return_content: true

@@ -24,7 +24,7 @@
   ansible.builtin.set_fact:
     delta_installed_version: "{{ delta_installed_version_data.stdout.split()[1] if delta_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/dandavison/delta/releases/latest
     return_content: true

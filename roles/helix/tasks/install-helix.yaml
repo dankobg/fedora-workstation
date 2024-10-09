@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     helix_installed_version: "{{ helix_installed_version_data.stdout.split()[1] if helix_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/helix-editor/helix/releases/latest
     return_content: true

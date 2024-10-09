@@ -23,7 +23,7 @@
   ansible.builtin.set_fact:
     node_installed_version: "{{ node_installed_version_data.stdout if node_installed.rc == 0 else '' }}"
 
-- name: Get the latest GitHub release data
+- name: Get the latest release data
   ansible.builtin.uri:
     url: https://api.github.com/repos/nodejs/node/releases/latest
     return_content: true
