@@ -4,4 +4,4 @@
 glow_state: present
 glow_version: latest
 glow_binary_name: glow
-glow_path: "{{ binaries_path }}/{{ glow_binary_name }}"
+glow_binary_path: "{{ binaries_path }}/{{ glow_binary_name }}"

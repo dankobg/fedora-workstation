@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ yq_tempdir.path }}/{{ yq_release_artifact }}"
-        dest: "{{ yq_path }}"
+        dest: "{{ yq_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

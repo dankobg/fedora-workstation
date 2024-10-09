@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ eza_tempdir.path }}/eza"
-        dest: "{{ eza_path }}"
+        dest: "{{ eza_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

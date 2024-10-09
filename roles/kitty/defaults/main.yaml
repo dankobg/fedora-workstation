@@ -4,7 +4,7 @@
 kitty_state: present
 kitty_version: latest
 kitty_binary_name: kitty
-kitty_path: "{{ binaries_path }}/{{ kitty_binary_name }}"
+kitty_binary_path: "{{ binaries_path }}/{{ kitty_binary_name }}"
 kitty_kitten_binary_name: kitten
-kitty_kitten_path: "{{ binaries_path }}/{{ kitty_kitten_binary_name }}"
+kitty_kitten_binary_path: "{{ binaries_path }}/{{ kitty_kitten_binary_name }}"
 kitty_icon: dark

@@ -4,4 +4,4 @@
 atlas_state: present
 atlas_version: latest
 atlas_binary_name: atlas
-atlas_path: "{{ binaries_path }}/{{ atlas_binary_name }}"
+atlas_binary_path: "{{ binaries_path }}/{{ atlas_binary_name }}"

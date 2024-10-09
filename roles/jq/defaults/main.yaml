@@ -4,4 +4,4 @@
 jq_state: present
 jq_version: latest
 jq_binary_name: jq
-jq_path: "{{ binaries_path }}/{{ jq_binary_name }}"
+jq_binary_path: "{{ binaries_path }}/{{ jq_binary_name }}"

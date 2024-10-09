@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ gh_tempdir.path }}/{{ gh_release_artifact }}/bin/gh"
-        dest: "{{ gh_path }}"
+        dest: "{{ gh_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

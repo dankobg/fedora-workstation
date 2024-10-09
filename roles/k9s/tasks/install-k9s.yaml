@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ k9s_tempdir.path }}/k9s"
-        dest: "{{ k9s_path }}"
+        dest: "{{ k9s_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

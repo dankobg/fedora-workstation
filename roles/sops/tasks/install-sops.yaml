@@ -62,7 +62,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ sops_tempdir.path }}/{{ sops_release_artifact }}"
-        dest: "{{ sops_path }}"
+        dest: "{{ sops_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

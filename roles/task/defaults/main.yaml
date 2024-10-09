@@ -4,4 +4,4 @@
 task_state: present
 task_version: latest
 task_binary_name: task
-task_path: "{{ binaries_path }}/{{ task_binary_name }}"
+task_binary_path: "{{ binaries_path }}/{{ task_binary_name }}"

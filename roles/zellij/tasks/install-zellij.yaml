@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ zellij_tempdir.path }}/zellij"
-        dest: "{{ zellij_path }}"
+        dest: "{{ zellij_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

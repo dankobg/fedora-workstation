@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ protoc_tempdir.path }}/bin/protoc"
-        dest: "{{ protoc_path }}"
+        dest: "{{ protoc_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

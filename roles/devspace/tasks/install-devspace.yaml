@@ -63,7 +63,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ devspace_tempdir.path }}/{{ devspace_release_artifact }}"
-        dest: "{{ devspace_path }}"
+        dest: "{{ devspace_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

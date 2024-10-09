@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ task_tempdir.path }}/task"
-        dest: "{{ task_path }}"
+        dest: "{{ task_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

@@ -4,4 +4,4 @@
 k9s_state: present
 k9s_version: latest
 k9s_binary_name: k9s
-k9s_path: "{{ binaries_path }}/{{ k9s_binary_name }}"
+k9s_binary_path: "{{ binaries_path }}/{{ k9s_binary_name }}"

@@ -70,7 +70,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ node_tempdir.path }}/{{ node_release_artifact }}/bin/node"
-        dest: "{{ node_path }}"
+        dest: "{{ node_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
@@ -86,11 +86,11 @@
         state: link
       loop:
         - src: "/usr/local/lib/node_modules/corepack/dist/corepack.js"
-          dest: "{{ node_corepack_path }}"
+          dest: "{{ node_corepack_binary_path }}"
         - src: "/usr/local/lib/node_modules/npm/bin/npm-cli.js"
-          dest: "{{ node_npm_path }}"
+          dest: "{{ node_npm_binary_path }}"
         - src: "/usr/local/lib/node_modules/npm/bin/npx-cli.js"
-          dest: "{{ node_npx_path }}"
+          dest: "{{ node_npx_binary_path }}"
 
     - name: Copy include
       ansible.builtin.copy:

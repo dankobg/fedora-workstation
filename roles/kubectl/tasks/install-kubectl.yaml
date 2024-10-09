@@ -73,7 +73,7 @@
     - name: Copy the binary
       ansible.builtin.copy:
         src: "{{ kubectl_tempdir.path }}/kubectl"
-        dest: "{{ kubectl_path }}"
+        dest: "{{ kubectl_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

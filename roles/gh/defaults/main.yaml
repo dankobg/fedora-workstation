@@ -4,4 +4,4 @@
 gh_state: present
 gh_version: latest
 gh_binary_name: gh
-gh_path: "{{ binaries_path }}/{{ gh_binary_name }}"
+gh_binary_path: "{{ binaries_path }}/{{ gh_binary_name }}"

@@ -4,4 +4,4 @@
 zed_state: present
 zed_version: latest
 zed_binary_name: zed
-zed_path: "{{ binaries_path }}/{{ zed_binary_name }}"
+zed_binary_path: "{{ binaries_path }}/{{ zed_binary_name }}"

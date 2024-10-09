@@ -4,4 +4,4 @@
 tlrc_state: present
 tlrc_version: latest
 tlrc_binary_name: tldr
-tlrc_path: "{{ binaries_path }}/{{ tlrc_binary_name }}"
+tlrc_binary_path: "{{ binaries_path }}/{{ tlrc_binary_name }}"

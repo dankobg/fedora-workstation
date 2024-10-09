@@ -63,7 +63,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ mkcert_tempdir.path }}/{{ mkcert_release_artifact }}"
-        dest: "{{ mkcert_path }}"
+        dest: "{{ mkcert_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

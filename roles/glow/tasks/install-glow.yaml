@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ glow_tempdir.path }}/{{ glow_release_artifact }}/glow"
-        dest: "{{ glow_path }}"
+        dest: "{{ glow_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

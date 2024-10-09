@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ jq_tempdir.path }}/{{ jq_release_artifact }}"
-        dest: "{{ jq_path }}"
+        dest: "{{ jq_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

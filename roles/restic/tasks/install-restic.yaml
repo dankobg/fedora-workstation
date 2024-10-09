@@ -67,7 +67,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ restic_tempdir.path }}/{{ restic_release_artifact }}"
-        dest: "{{ restic_path }}"
+        dest: "{{ restic_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

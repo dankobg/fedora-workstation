@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ tlrc_tempdir.path }}/tldr"
-        dest: "{{ tlrc_path }}"
+        dest: "{{ tlrc_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

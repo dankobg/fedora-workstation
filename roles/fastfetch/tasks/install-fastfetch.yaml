@@ -68,9 +68,9 @@
         remote_src: true
       loop:
         - name: "{{ fastfetch_binary_name }}"
-          dest: "{{ fastfetch_path }}"
+          dest: "{{ fastfetch_binary_path }}"
         - name: "{{ fastfetch_flashfetch_binary_name }}"
-          dest: "{{ fastfetch_flashfetch_path }}"
+          dest: "{{ fastfetch_flashfetch_binary_path }}"
 
     - name: Cleanup temp files
       ansible.builtin.file:

@@ -4,4 +4,4 @@
 eza_state: present
 eza_version: latest
 eza_binary_name: eza
-eza_path: "{{ binaries_path }}/{{ eza_binary_name }}"
+eza_binary_path: "{{ binaries_path }}/{{ eza_binary_name }}"

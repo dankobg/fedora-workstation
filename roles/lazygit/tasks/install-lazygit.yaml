@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ lazygit_tempdir.path }}/lazygit"
-        dest: "{{ lazygit_path }}"
+        dest: "{{ lazygit_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

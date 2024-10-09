@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ hostctl_tempdir.path }}/hostctl"
-        dest: "{{ hostctl_path }}"
+        dest: "{{ hostctl_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

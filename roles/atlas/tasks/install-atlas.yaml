@@ -62,7 +62,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ atlas_tempdir.path }}/{{ atlas_release_artifact }}"
-        dest: "{{ atlas_path }}"
+        dest: "{{ atlas_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

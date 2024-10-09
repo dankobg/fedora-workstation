@@ -65,7 +65,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ bw_tempdir.path }}/bw"
-        dest: "{{ bw_path }}"
+        dest: "{{ bw_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

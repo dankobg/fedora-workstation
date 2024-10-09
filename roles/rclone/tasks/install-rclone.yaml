@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ rclone_tempdir.path }}/{{ rclone_release_artifact }}/rclone"
-        dest: "{{ rclone_path }}"
+        dest: "{{ rclone_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

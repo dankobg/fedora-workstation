@@ -64,7 +64,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ dust_tempdir.path }}/{{ dust_release_artifact }}/dust"
-        dest: "{{ dust_path }}"
+        dest: "{{ dust_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

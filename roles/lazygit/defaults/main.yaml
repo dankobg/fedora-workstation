@@ -4,4 +4,4 @@
 lazygit_state: present
 lazygit_version: latest
 lazygit_binary_name: lazygit
-lazygit_path: "{{ binaries_path }}/{{ lazygit_binary_name }}"
+lazygit_binary_path: "{{ binaries_path }}/{{ lazygit_binary_name }}"

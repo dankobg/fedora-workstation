@@ -61,7 +61,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ kubectx_tempdir.path }}/kubectx"
-        dest: "{{ kubectx_path }}"
+        dest: "{{ kubectx_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ zed_tempdir.path }}/zed.app/bin/zed"
-        dest: "{{ zed_path }}"
+        dest: "{{ zed_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

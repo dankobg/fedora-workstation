@@ -67,9 +67,9 @@
         remote_src: true
       loop:
         - name: "{{ kitty_binary_name }}"
-          dest: "{{ kitty_path }}"
+          dest: "{{ kitty_binary_path }}"
         - name: "{{ kitty_kitten_binary_name }}"
-          dest: "{{ kitty_kitten_path }}"
+          dest: "{{ kitty_kitten_binary_path }}"
 
     - name: Copy terminfo
       ansible.builtin.copy:

@@ -62,7 +62,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ delta_tempdir.path }}/{{ delta_release_artifact }}/delta"
-        dest: "{{ delta_path }}"
+        dest: "{{ delta_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

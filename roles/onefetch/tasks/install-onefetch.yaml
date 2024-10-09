@@ -57,7 +57,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ onefetch_tempdir.path }}/onefetch"
-        dest: "{{ onefetch_path }}"
+        dest: "{{ onefetch_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

@@ -61,7 +61,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ kubens_tempdir.path }}/kubens"
-        dest: "{{ kubens_path }}"
+        dest: "{{ kubens_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

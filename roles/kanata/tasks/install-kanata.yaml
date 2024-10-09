@@ -58,7 +58,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ kanata_tempdir.path }}/kanata"
-        dest: "{{ kanata_path }}"
+        dest: "{{ kanata_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

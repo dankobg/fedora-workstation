@@ -60,7 +60,7 @@
     - name: Copy binary
       ansible.builtin.copy:
         src: "{{ deno_tempdir.path }}/deno"
-        dest: "{{ deno_path }}"
+        dest: "{{ deno_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x

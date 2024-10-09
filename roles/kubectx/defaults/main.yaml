@@ -4,4 +4,4 @@
 kubectx_state: present
 kubectx_version: latest
 kubectx_binary_name: kubectx
-kubectx_path: "{{ binaries_path }}/{{ kubectx_binary_name }}"
+kubectx_binary_path: "{{ binaries_path }}/{{ kubectx_binary_name }}"
