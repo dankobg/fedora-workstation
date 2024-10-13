@@ -24,3 +24,34 @@ node_global_packages:
   - name: "typescript-svelte-plugin"
   - name: "yaml-language-server"
     version: "next"
+
+node_archs:
+  x86_64: x64
+  amd64: x64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+node_arch: "{{ node_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+node_force_download: false
+
+node_latest_version_url: https://api.github.com/repos/nodejs/node/releases/latest
+node_base_download_url: https://nodejs.org/dist
+node_artifact_name: "node-{{ node_release_version }}-{{ ansible_facts.system | lower }}-{{ node_arch }}.tar.xz"
+node_artifact_download_url: "{{ node_base_download_url }}/{{ node_release_version }}/{{ node_artifact_name }}"
+node_artifact_basename: "{{ node_artifact_name | regex_replace('.tar.xz', '') }}"
+
+node_checksum_algorithm: sha256
+node_checksum_name: SHASUMS256.txt
+node_checksum_url: "{{ node_base_download_url }}/{{ node_release_version }}/{{ node_checksum_name }}"
+node_checksum: "{{ node_checksum_algorithm }}:{{ node_checksum_url }}"

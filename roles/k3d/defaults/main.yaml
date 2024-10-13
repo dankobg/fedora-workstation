@@ -5,3 +5,35 @@ k3d_state: present
 k3d_version: latest
 k3d_binary_name: k3d
 k3d_binary_path: "{{ binaries_path }}/{{ k3d_binary_name }}"
+
+k3d_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+k3d_arch: "{{ k3d_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+k3d_force_download: false
+
+k3d_latest_version_url: https://api.github.com/repos/k3d-io/k3d/releases/latest
+k3d_base_download_url: https://github.com/k3d-io/k3d/releases/download
+k3d_build_lib: gnu
+k3d_artifact_name: "k3d-{{ ansible_facts.system | lower }}-{{ k3d_arch }}"
+k3d_artifact_download_url: "{{ k3d_base_download_url }}/{{ k3d_release_version }}/{{ k3d_artifact_name }}"
+k3d_artifact_basename: "{{ k3d_artifact_name }}"
+
+k3d_checksum_algorithm: sha256
+k3d_checksum_name: checksums.txt
+k3d_checksum_url: "{{ k3d_base_download_url }}/{{ k3d_release_version }}/{{ k3d_checksum_name }}"
+k3d_checksum: "{{ k3d_checksum_algorithm }}:{{ k3d_checksum_url }}"

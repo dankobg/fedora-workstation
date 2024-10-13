@@ -25,7 +25,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/o2sh/onefetch/releases/latest
+    url: "{{ onefetch_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -38,12 +38,8 @@
     onefetch_release_version: "{{ onefetch_latest_release_data.json.tag_name if onefetch_version == 'latest' else onefetch_version }}"
 
 - name: Download and install
-  when: onefetch_installed_version != onefetch_release_version
+  when: onefetch_force_download or onefetch_installed_version != onefetch_release_version
   block:
-    - name: Set the release artifact
-      ansible.builtin.set_fact:
-        onefetch_release_artifact: "onefetch-{{ 'win' if ansible_facts.system == 'Windows' else 'mac' if ansible_facts.system == 'Darwin' else 'linux' }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -52,7 +48,7 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/o2sh/onefetch/releases/download/{{ onefetch_release_version }}/{{ onefetch_release_artifact }}.tar.gz"
+        src: "{{ onefetch_artifact_download_url }}"
         dest: "{{ onefetch_tempdir.path }}"
         remote_src: true
 

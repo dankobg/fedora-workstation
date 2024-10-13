@@ -5,3 +5,34 @@ restic_state: present
 restic_version: latest
 restic_binary_name: restic
 restic_binary_path: "{{ binaries_path }}/{{ restic_binary_name }}"
+
+restic_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+restic_arch: "{{ restic_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+restic_force_download: false
+
+restic_latest_version_url: https://api.github.com/repos/restic/restic/releases/latest
+restic_base_download_url: https://github.com/restic/restic/releases/download
+restic_artifact_name: "restic_{{ restic_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ restic_arch }}.bz2"
+restic_artifact_download_url: "{{ restic_base_download_url }}/{{ restic_release_version }}/{{ restic_artifact_name }}"
+restic_artifact_basename: "{{ restic_artifact_name | regex_replace('.bz2', '') }}"
+
+restic_checksum_algorithm: sha256
+restic_checksum_name: SHA256SUMS
+restic_checksum_url: "{{ restic_base_download_url }}/{{ restic_release_version }}/{{ restic_checksum_name }}"
+restic_checksum: "{{ restic_checksum_algorithm }}:{{ restic_checksum_url }}"

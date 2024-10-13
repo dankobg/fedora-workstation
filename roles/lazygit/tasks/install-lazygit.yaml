@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+    url: "{{ lazygit_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,25 +37,53 @@
     lazygit_release_version: "{{ lazygit_latest_release_data.json.tag_name if lazygit_version == 'latest' else lazygit_version }}"
 
 - name: Download and install
-  when: lazygit_installed_version != lazygit_release_version
+  when: lazygit_force_download or lazygit_installed_version != lazygit_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: arm64
-      ansible.builtin.set_fact:
-        lazygit_release_artifact: "lazygit_{{ lazygit_release_version[1:] }}_{{ ansible_facts.system }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: lazygit_
       register: lazygit_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ lazygit_checksum_url }}"
+        dest: "{{ lazygit_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ lazygit_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        lazygit_checksum: "{{ lazygit_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ lazygit_artifact_download_url }}"
+        dest: "{{ lazygit_tempdir.path }}"
+        checksum: "{{ lazygit_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_release_version }}/{{ lazygit_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ lazygit_tempdir.path }}"
         remote_src: true
 

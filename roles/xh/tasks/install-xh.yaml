@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/ducaale/xh/releases/latest
+    url: "{{ xh_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,16 +37,8 @@
     xh_release_version: "{{ xh_latest_release_data.json.tag_name if xh_version == 'latest' else xh_version }}"
 
 - name: Download and install
-  when: xh_installed_version != xh_release_version
+  when: xh_force_download or xh_installed_version != xh_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: arm64
-      ansible.builtin.set_fact:
-        xh_release_artifact: "xh-{{ xh_release_version }}-{{ arch }}-unknown-{{ ansible_facts.system | lower }}-musl"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -55,13 +47,13 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/ducaale/xh/releases/download/{{ xh_release_version }}/{{ xh_release_artifact }}.tar.gz"
+        src: "{{ xh_artifact_download_url }}"
         dest: "{{ xh_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ xh_tempdir.path }}/{{ xh_release_artifact }}/xh"
+        src: "{{ xh_tempdir.path }}/{{ xh_artifact_basename }}/xh"
         dest: "{{ xh_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

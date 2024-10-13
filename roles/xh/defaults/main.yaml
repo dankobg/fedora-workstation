@@ -5,3 +5,29 @@ xh_state: present
 xh_version: latest
 xh_binary_name: xh
 xh_binary_path: "{{ binaries_path }}/{{ xh_binary_name }}"
+
+xh_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+xh_arch: "{{ xh_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+xh_force_download: false
+
+xh_latest_version_url: https://api.github.com/repos/ducaale/xh/releases/latest
+xh_base_download_url: https://github.com/ducaale/xh/releases/download
+xh_artifact_name: "xh-{{ xh_release_version }}-{{ xh_arch }}-unknown-{{ ansible_facts.system | lower }}-musl.tar.gz"
+xh_artifact_download_url: "{{ xh_base_download_url }}/{{ xh_release_version }}/{{ xh_artifact_name }}"
+xh_artifact_basename: "{{ xh_artifact_name | regex_replace('.tar.gz', '') }}"

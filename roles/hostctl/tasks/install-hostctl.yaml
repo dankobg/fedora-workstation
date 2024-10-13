@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/guumaster/hostctl/releases/latest
+    url: "{{ hostctl_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,25 +37,53 @@
     hostctl_release_version: "{{ hostctl_latest_release_data.json.tag_name if hostctl_version == 'latest' else hostctl_version }}"
 
 - name: Download and install
-  when: hostctl_installed_version != hostctl_release_version
+  when: hostctl_force_download or hostctl_installed_version != hostctl_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: 64-bit
-          arm: arm64
-      ansible.builtin.set_fact:
-        hostctl_release_artifact: "hostctl_{{ hostctl_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: hostctl_
       register: hostctl_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ hostctl_checksum_url }}"
+        dest: "{{ hostctl_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ hostctl_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        hostctl_checksum: "{{ hostctl_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ hostctl_artifact_download_url }}"
+        dest: "{{ hostctl_tempdir.path }}"
+        checksum: "{{ hostctl_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/guumaster/hostctl/releases/download/{{ hostctl_release_version }}/{{ hostctl_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ hostctl_tempdir.path }}"
         remote_src: true
 

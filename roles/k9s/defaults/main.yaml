@@ -5,3 +5,35 @@ k9s_state: present
 k9s_version: latest
 k9s_binary_name: k9s
 k9s_binary_path: "{{ binaries_path }}/{{ k9s_binary_name }}"
+
+k9s_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+k9s_arch: "{{ k9s_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+k9s_force_download: false
+
+k9s_latest_version_url: https://api.github.com/repos/derailed/k9s/releases/latest
+k9s_base_download_url: https://github.com/derailed/k9s/releases/download
+k9s_build_lib: gnu
+k9s_artifact_name: "k9s_{{ ansible_facts.system }}_{{ k9s_arch }}.tar.gz"
+k9s_artifact_download_url: "{{ k9s_base_download_url }}/{{ k9s_release_version }}/{{ k9s_artifact_name }}"
+k9s_artifact_basename: "{{ k9s_artifact_name }}"
+
+k9s_checksum_algorithm: sha256
+k9s_checksum_name: checksums.sha256
+k9s_checksum_url: "{{ k9s_base_download_url }}/{{ k9s_release_version }}/{{ k9s_checksum_name }}"
+k9s_checksum: "{{ k9s_checksum_algorithm }}:{{ k9s_checksum_url }}"

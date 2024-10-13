@@ -5,3 +5,34 @@ glow_state: present
 glow_version: latest
 glow_binary_name: glow
 glow_binary_path: "{{ binaries_path }}/{{ glow_binary_name }}"
+
+glow_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+glow_arch: "{{ glow_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+glow_force_download: false
+
+glow_latest_version_url: https://api.github.com/repos/charmbracelet/glow/releases/latest
+glow_base_download_url: https://github.com/charmbracelet/glow/releases/download
+glow_artifact_name: "glow_{{ glow_release_version[1:] }}_{{ ansible_facts.system }}_{{ glow_arch }}.tar.gz"
+glow_artifact_download_url: "{{ glow_base_download_url }}/{{ glow_release_version }}/{{ glow_artifact_name }}"
+glow_artifact_basename: "{{ glow_artifact_name | regex_replace('.tar.gz', '') }}"
+
+glow_checksum_algorithm: sha256
+glow_checksum_name: checksums.txt
+glow_checksum_url: "{{ glow_base_download_url }}/{{ glow_release_version }}/{{ glow_checksum_name }}"
+glow_checksum: "{{ glow_checksum_algorithm }}:{{ glow_checksum_url }}"

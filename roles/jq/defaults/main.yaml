@@ -5,3 +5,35 @@ jq_state: present
 jq_version: latest
 jq_binary_name: jq
 jq_binary_path: "{{ binaries_path }}/{{ jq_binary_name }}"
+
+jq_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+jq_arch: "{{ jq_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+jq_force_download: false
+
+jq_latest_version_url: https://api.github.com/repos/jqlang/jq/releases/latest
+jq_base_download_url: https://github.com/jqlang/jq/releases/download
+jq_build_lib: gnu
+jq_artifact_name: "jq-{{ ansible_facts.system | lower }}-{{ jq_arch }}"
+jq_artifact_download_url: "{{ jq_base_download_url }}/{{ jq_release_version }}/{{ jq_artifact_name }}"
+jq_artifact_basename: "{{ jq_artifact_name }}"
+
+jq_checksum_algorithm: sha256
+jq_checksum_name: sha256sum.txt
+jq_checksum_url: "{{ jq_base_download_url }}/{{ jq_release_version }}/{{ jq_checksum_name }}"
+jq_checksum: "{{ jq_checksum_algorithm }}:{{ jq_checksum_url }}"

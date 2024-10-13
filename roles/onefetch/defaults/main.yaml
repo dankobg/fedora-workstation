@@ -5,3 +5,29 @@ onefetch_state: present
 onefetch_version: latest
 onefetch_binary_name: onefetch
 onefetch_binary_path: "{{ binaries_path }}/{{ onefetch_binary_name }}"
+
+onefetch_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+onefetch_arch: "{{ onefetch_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+onefetch_force_download: false
+
+onefetch_latest_version_url: https://api.github.com/repos/o2sh/onefetch/releases/latest
+onefetch_base_download_url: https://github.com/o2sh/onefetch/releases/download
+onefetch_artifact_name: "onefetch-{{ 'win' if ansible_facts.system == 'Windows' else 'mac' if ansible_facts.system == 'Darwin' else 'linux' }}.tar.gz"
+onefetch_artifact_download_url: "{{ onefetch_base_download_url }}/{{ onefetch_release_version }}/{{ onefetch_artifact_name }}"
+onefetch_artifact_basename: "{{ onefetch_artifact_name | regex_replace('.tar.gz', '') }}"

@@ -5,3 +5,35 @@ ksops_state: present
 ksops_version: latest
 ksops_binary_name: ksops
 ksops_binary_path: "{{ binaries_path }}/{{ ksops_binary_name }}"
+
+ksops_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+ksops_arch: "{{ ksops_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+ksops_force_download: false
+
+ksops_latest_version_url: https://api.github.com/repos/viaduct-ai/kustomize-sops/releases/latest
+ksops_base_download_url: https://github.com/viaduct-ai/kustomize-sops/releases/download
+ksops_build_lib: gnu
+ksops_artifact_name: "ksops_{{ ksops_release_version[1:] }}_{{ ansible_facts.system }}_{{ ksops_arch }}.tar.gz"
+ksops_artifact_download_url: "{{ ksops_base_download_url }}/{{ ksops_release_version }}/{{ ksops_artifact_name }}"
+ksops_artifact_basename: "{{ ksops_artifact_name | regex_replace('.tar.gz', '') }}"
+
+ksops_checksum_algorithm: sha256
+ksops_checksum_name: checksums.txt
+ksops_checksum_url: "{{ ksops_base_download_url }}/{{ ksops_release_version }}/{{ ksops_checksum_name }}"
+ksops_checksum: "{{ ksops_checksum_algorithm }}:{{ ksops_checksum_url }}"

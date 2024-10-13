@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/mikefarah/yq/releases/latest
+    url: "{{ yq_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,31 +37,85 @@
     yq_release_version: "{{ yq_latest_release_data.json.tag_name if yq_version == 'latest' else yq_version }}"
 
 - name: Download and install
-  when: yq_installed_version != yq_release_version
+  when: yq_force_download or yq_installed_version != yq_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        yq_release_artifact: "yq_{{ ansible_facts.system | lower }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: yq_
       register: yq_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ yq_checksum_url }}"
+        dest: "{{ yq_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Download checksums hashes order
+      ansible.builtin.get_url:
+        url: "{{ yq_checksum_url }}_hashes_order"
+        dest: "{{ yq_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_hashes_order
+
+    - name: Get hashes order content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_hashes_order.dest }}"
+      register: hashes_order_data
+
+    - name: Get hashes order text
+      ansible.builtin.set_fact:
+        hashes_order_text: "{{ hashes_order_data.content | b64decode | trim }}"
+
+    - name: Get hashes sha256 index
+      ansible.builtin.set_fact:
+        sha256_index: "{{ hashes_order_text.split('\n').index('SHA-256') }}"
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get matched hashes list
+      ansible.builtin.set_fact:
+        sha_list: "{{ sha256_text.split(yq_artifact_name)[1] | trim | split }}"
+
+    - name: Get the sha256
+      ansible.builtin.set_fact:
+        sha256: "{{ sha_list[sha256_index | int] }}"
+
+    - name: Get the sha256
+      ansible.builtin.set_fact:
+        yq_checksum: "{{ yq_checksum_algorithm }}:{{ sha256 }}"
+
     - name: Download artifact
       ansible.builtin.get_url:
-        url: "https://github.com/mikefarah/yq/releases/download/{{ yq_release_version }}/{{ yq_release_artifact }}"
+        url: "{{ yq_artifact_download_url }}"
         dest: "{{ yq_tempdir.path }}"
+        checksum: "{{ yq_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: a+x
+      register: downloaded_artifact
+
+    - name: Unarchive artifact
+      ansible.builtin.unarchive:
+        src: "{{ downloaded_artifact.dest }}"
+        dest: "{{ yq_tempdir.path }}"
+        remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ yq_tempdir.path }}/{{ yq_release_artifact }}"
+        src: "{{ yq_tempdir.path }}/{{ yq_artifact_basename }}"
         dest: "{{ yq_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

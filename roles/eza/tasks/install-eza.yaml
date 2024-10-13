@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/eza-community/eza/releases/latest
+    url: "{{ eza_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,25 +37,39 @@
     eza_release_version: "{{ eza_latest_release_data.json.tag_name if eza_version == 'latest' else eza_version }}"
 
 - name: Download and install
-  when: eza_installed_version != eza_release_version
+  when: eza_force_download or eza_installed_version != eza_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        eza_release_artifact: "eza_{{ arch }}-unknown-{{ ansible_facts.system }}-gnu"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: eza_
       register: eza_tempdir
 
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ eza_latest_release_data.json.body.split('sha256sum')[1].split('md5sum')[0] | regex_replace('```|##', '') | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "./target/bin-{{ eza_release_version[1:] }}/{{ eza_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        eza_checksum: "{{ eza_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ eza_artifact_download_url }}"
+        dest: "{{ eza_tempdir.path }}"
+        checksum: "{{ eza_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/eza-community/eza/releases/download/{{ eza_release_version }}/{{ eza_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ eza_tempdir.path }}"
         remote_src: true
 

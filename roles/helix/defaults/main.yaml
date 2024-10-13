@@ -5,3 +5,29 @@ helix_state: present
 helix_version: latest
 helix_binary_name: helix
 helix_binary_path: "{{ binaries_path }}/{{ helix_binary_name }}"
+
+helix_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+helix_arch: "{{ helix_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+helix_force_download: false
+
+helix_latest_version_url: https://api.github.com/repos/helix-editor/helix/releases/latest
+helix_base_download_url: https://github.com/helix-editor/helix/releases/download
+helix_artifact_name: "helix-{{ helix_release_version }}-{{ helix_arch }}-{{ ansible_facts.system | lower }}.tar.xz"
+helix_artifact_download_url: "{{ helix_base_download_url }}/{{ helix_release_version }}/{{ helix_artifact_name }}"
+helix_artifact_basename: "{{ helix_artifact_name | regex_replace('.tar.xz', '') }}"

@@ -5,3 +5,34 @@ bw_state: present
 bw_version: latest
 bw_binary_name: bw
 bw_binary_path: "{{ binaries_path }}/{{ bw_binary_name }}"
+
+bw_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+bw_arch: "{{ bw_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+bw_force_download: false
+
+bw_latest_version_url: https://api.github.com/repos/bitwarden/clients/releases
+bw_base_download_url: https://github.com/bitwarden/clients/releases/download
+bw_artifact_name: "bw-{{ ansible_facts.system | lower }}-{{ bw_release_version.split('v')[1] }}.zip"
+bw_artifact_download_url: "{{ bw_base_download_url }}/{{ bw_release_version }}/{{ bw_artifact_name }}"
+bw_artifact_basename: "{{ bw_artifact_name | regex_replace('.zip', '') }}"
+
+bw_checksum_algorithm: sha256
+bw_checksum_name: "bw-{{ ansible_facts.system | lower }}-{{ bw_checksum_algorithm }}-{{ bw_release_version.split('v')[1] }}.txt"
+bw_checksum_url: "{{ bw_base_download_url }}/{{ bw_release_version }}/{{ bw_checksum_name }}"
+bw_checksum: "{{ bw_checksum_algorithm }}:{{ bw_checksum_url }}"

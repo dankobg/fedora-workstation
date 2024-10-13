@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/getsops/sops/releases/latest
+    url: "{{ sops_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,33 +37,53 @@
     sops_release_version: "{{ sops_latest_release_data.json.tag_name if sops_version == 'latest' else sops_version }}"
 
 - name: Download and install
-  when: sops_installed_version != sops_release_version
+  when: sops_force_download or sops_installed_version != sops_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        sops_release_artifact: "sops-{{ sops_release_version }}.{{ ansible_facts.system | lower }}.{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: sops_
       register: sops_tempdir
 
-    - name: Download artifact
+    - name: Download checksums
       ansible.builtin.get_url:
-        url: "https://github.com/getsops/sops/releases/download/{{ sops_release_version }}/{{ sops_release_artifact }}"
+        url: "{{ sops_checksum_url }}"
         dest: "{{ sops_tempdir.path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ sops_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        sops_checksum: "{{ sops_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ sops_artifact_download_url }}"
+        dest: "{{ sops_tempdir.path }}"
+        checksum: "{{ sops_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: a+x
+      register: downloaded_artifact
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ sops_tempdir.path }}/{{ sops_release_artifact }}"
+        src: "{{ sops_tempdir.path }}/{{ sops_artifact_basename }}"
         dest: "{{ sops_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/zed-industries/zed/releases/latest
+    url: "{{ zed_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,16 +37,8 @@
     zed_release_version: "{{ zed_latest_release_data.json.tag_name if zed_version == 'latest' else zed_version }}"
 
 - name: Download and install
-  when: zed_installed_version != zed_release_version
+  when: zed_force_download or zed_installed_version != zed_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        zed_release_artifact: "zed-{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -55,7 +47,7 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/zed-industries/zed/releases/download/{{ zed_release_version }}/{{ zed_release_artifact }}.tar.gz"
+        src: "{{ zed_artifact_download_url }}"
         dest: "{{ zed_tempdir.path }}"
         remote_src: true
 

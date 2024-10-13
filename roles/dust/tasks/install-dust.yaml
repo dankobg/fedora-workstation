@@ -28,7 +28,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/bootandy/dust/releases/latest
+    url: "{{ dust_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -41,16 +41,8 @@
     dust_release_version: "{{ dust_latest_release_data.json.tag_name if dust_version == 'latest' else dust_version }}"
 
 - name: Download and install
-  when: dust_installed_version != dust_release_version
+  when: dust_force_download or dust_installed_version != dust_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        dust_release_artifact: "dust-{{ dust_release_version }}-{{ arch }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -59,13 +51,13 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/bootandy/dust/releases/download/{{ dust_release_version }}/{{ dust_release_artifact }}.tar.gz"
+        src: "{{ dust_artifact_download_url }}"
         dest: "{{ dust_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ dust_tempdir.path }}/{{ dust_release_artifact }}/dust"
+        src: "{{ dust_tempdir.path }}/{{ dust_artifact_basename }}/dust"
         dest: "{{ dust_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/jtroo/kanata/releases/latest
+    url: "{{ kanata_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,29 +37,38 @@
     kanata_release_version: "{{ kanata_latest_release_data.json.tag_name if kanata_version == 'latest' else kanata_version }}"
 
 - name: Download and install
-  when: kanata_installed_version != kanata_release_version
+  when: kanata_force_download or kanata_installed_version != kanata_release_version
   block:
-    - name: Set the release version
-      ansible.builtin.set_fact:
-        kanata_latest_release_version: "{{ kanata_latest_release_data.json.tag_name }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: kanata_
       register: kanata_tempdir
 
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ kanata_latest_release_data.json.body.split('sha256 checksums')[1].split('```')[1] | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ kanata_artifact_basename }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        kanata_checksum: "{{ kanata_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
     - name: Download artifact
       ansible.builtin.get_url:
-        url: "https://github.com/jtroo/kanata/releases/download/{{ kanata_latest_release_version }}/kanata"
+        url: "{{ kanata_artifact_download_url }}"
         dest: "{{ kanata_tempdir.path }}"
+        checksum: "{{ kanata_checksum }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ kanata_tempdir.path }}/kanata"
+        src: "{{ kanata_tempdir.path }}/{{ kanata_artifact_basename }}"
         dest: "{{ kanata_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

@@ -5,3 +5,34 @@ atlas_state: present
 atlas_version: latest
 atlas_binary_name: atlas
 atlas_binary_path: "{{ binaries_path }}/{{ atlas_binary_name }}"
+
+atlas_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+atlas_arch: "{{ atlas_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+atlas_force_download: false
+
+atlas_latest_version_url: https://api.github.com/repos/ariga/atlas/releases/latest
+atlas_base_download_url: https://release.ariga.io/atlas
+atlas_artifact_name: "atlas-{{ ansible_facts.system | lower }}-{{ atlas_arch }}-{{ atlas_release_version }}"
+atlas_artifact_download_url: "{{ atlas_base_download_url }}/{{ atlas_artifact_name }}"
+atlas_artifact_basename: "{{ atlas_artifact_name }}"
+
+atlas_checksum_algorithm: sha256
+atlas_checksum_name: "{{ atlas_artifact_name }}.{{ atlas_checksum_algorithm }}"
+atlas_checksum_url: "{{ atlas_base_download_url }}/{{ atlas_checksum_name }}"
+atlas_checksum: "{{ atlas_checksum_algorithm }}:{{ atlas_checksum_url }}"

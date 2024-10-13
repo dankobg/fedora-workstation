@@ -22,3 +22,34 @@ go_tools:
   - github.com/josharian/impl@latest
   - honnef.co/go/tools/cmd/staticcheck@latest
   - honnef.co/go/tools/cmd/structlayout@latest
+
+go_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+go_arch: "{{ go_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+go_force_download: false
+
+go_latest_version_url: https://go.dev/dl/?mode=json
+go_base_download_url: https://go.dev/dl
+go_artifact_name: "{{ go_release_version }}.{{ ansible_facts.system | lower }}-{{ go_arch }}.tar.gz"
+go_artifact_download_url: "{{ go_base_download_url }}/{{ go_release_version }}/{{ go_artifact_name }}"
+go_artifact_basename: "{{ go_artifact_name | regex_replace('.tar.gz', '') }}"
+
+go_checksum_algorithm: sha256
+go_checksum_name: "{{ go_release_version }}.{{ ansible_facts.system | lower }}-{{ go_arch }}.tar.gz"
+go_checksum_url: "{{ go_base_download_url }}/{{ go_release_version }}/{{ go_checksum_name }}"
+go_checksum: "{{ go_checksum_algorithm }}:{{ go_checksum_url }}"

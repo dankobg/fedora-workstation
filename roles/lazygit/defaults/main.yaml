@@ -5,3 +5,34 @@ lazygit_state: present
 lazygit_version: latest
 lazygit_binary_name: lazygit
 lazygit_binary_path: "{{ binaries_path }}/{{ lazygit_binary_name }}"
+
+lazygit_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+lazygit_arch: "{{ lazygit_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+lazygit_force_download: false
+
+lazygit_latest_version_url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+lazygit_base_download_url: https://github.com/jesseduffield/lazygit/releases/download
+lazygit_artifact_name: "lazygit_{{ lazygit_release_version[1:] }}_{{ ansible_facts.system }}_{{ lazygit_arch }}.tar.gz"
+lazygit_artifact_download_url: "{{ lazygit_base_download_url }}/{{ lazygit_release_version }}/{{ lazygit_artifact_name }}"
+lazygit_artifact_basename: "{{ lazygit_artifact_name | regex_replace('.tar.gz', '') }}"
+
+lazygit_checksum_algorithm: sha256
+lazygit_checksum_name: checksums.txt
+lazygit_checksum_url: "{{ lazygit_base_download_url }}/{{ lazygit_release_version }}/{{ lazygit_checksum_name }}"
+lazygit_checksum: "{{ lazygit_checksum_algorithm }}:{{ lazygit_checksum_url }}"

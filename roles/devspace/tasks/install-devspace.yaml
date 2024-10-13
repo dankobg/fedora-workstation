@@ -25,7 +25,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/devspace-sh/devspace/releases/latest
+    url: "{{ devspace_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -38,33 +38,44 @@
     devspace_release_version: "{{ devspace_latest_release_data.json.tag_name if devspace_version == 'latest' else devspace_version }}"
 
 - name: Download and install
-  when: devspace_installed_version != devspace_release_version
+  when: devspace_force_download or devspace_installed_version != devspace_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        devspace_release_artifact: "devspace-{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: devspace_
       register: devspace_tempdir
 
+    - name: Download checksum
+      ansible.builtin.get_url:
+        url: "{{ devspace_checksum_url }}"
+        dest: "{{ devspace_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksum
+
+    - name: Set formatted checksum
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksum.dest }}"
+      register: checksum_data
+
+    - name: Format checksum
+      ansible.builtin.set_fact:
+        devspace_checksum: "{{ devspace_checksum_algorithm }}:{{ checksum_data.content | b64decode | trim | split | first }}"
+
     - name: Download artifact
       ansible.builtin.get_url:
-        url: "https://github.com/devspace-sh/devspace/releases/download/{{ devspace_release_version }}/{{ devspace_release_artifact }}"
+        url: "{{ devspace_artifact_download_url }}"
         dest: "{{ devspace_tempdir.path }}"
+        checksum: "{{ devspace_checksum }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ devspace_tempdir.path }}/{{ devspace_release_artifact }}"
+        src: "{{ devspace_tempdir.path }}/{{ devspace_artifact_name }}"
         dest: "{{ devspace_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

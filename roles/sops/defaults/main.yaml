@@ -5,3 +5,34 @@ sops_state: present
 sops_version: latest
 sops_binary_name: sops
 sops_binary_path: "{{ binaries_path }}/{{ sops_binary_name }}"
+
+sops_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+sops_arch: "{{ sops_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+sops_force_download: false
+
+sops_latest_version_url: https://api.github.com/repos/getsops/sops/releases/latest
+sops_base_download_url: https://github.com/getsops/sops/releases/download
+sops_artifact_name: "sops-{{ sops_release_version }}.{{ ansible_facts.system | lower }}.{{ sops_arch }}"
+sops_artifact_download_url: "{{ sops_base_download_url }}/{{ sops_release_version }}/{{ sops_artifact_name }}"
+sops_artifact_basename: "{{ sops_artifact_name }}"
+
+sops_checksum_algorithm: sha256
+sops_checksum_name: "sops-{{ sops_release_version }}.checksums.txt"
+sops_checksum_url: "{{ sops_base_download_url }}/{{ sops_release_version }}/{{ sops_checksum_name }}"
+sops_checksum: "{{ sops_checksum_algorithm }}:{{ sops_checksum_url }}"

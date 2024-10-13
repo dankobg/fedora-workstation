@@ -5,3 +5,34 @@ devspace_state: present
 devspace_version: latest
 devspace_binary_name: devspace
 devspace_binary_path: "{{ binaries_path }}/{{ devspace_binary_name }}"
+
+devspace_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  i386: "386"
+  # i686:
+  # ppc64le:
+
+devspace_arch: "{{ devspace_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+devspace_force_download: false
+
+devspace_latest_version_url: https://api.github.com/repos/devspace-sh/devspace/releases/latest
+devspace_base_download_url: https://github.com/devspace-sh/devspace/releases/download
+devspace_artifact_name: "devspace-{{ ansible_facts.system | lower }}-{{ devspace_arch }}"
+devspace_artifact_download_url: "{{ devspace_base_download_url }}/{{ devspace_release_version }}/{{ devspace_artifact_name }}"
+devspace_artifact_basename: "{{ devspace_artifact_name }}"
+
+devspace_checksum_algorithm: sha256
+devspace_checksum_name: "devspace-{{ ansible_facts.system | lower }}-{{ devspace_arch }}.{{ devspace_checksum_algorithm }}"
+devspace_checksum_url: "{{ devspace_base_download_url }}/{{ devspace_release_version }}/{{ devspace_checksum_name }}"
+devspace_checksum: "{{ devspace_checksum_algorithm }}:{{ devspace_checksum_url }}"

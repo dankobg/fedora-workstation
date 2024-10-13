@@ -5,3 +5,35 @@ kustomize_state: present
 kustomize_version: latest
 kustomize_binary_name: kustomize
 kustomize_binary_path: "{{ binaries_path }}/{{ kustomize_binary_name }}"
+
+kustomize_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+kustomize_arch: "{{ kustomize_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+kustomize_force_download: false
+
+kustomize_latest_version_url: https://api.github.com/repos/kubernetes-sigs/kustomize/releases/latest
+kustomize_base_download_url: https://github.com/kubernetes-sigs/kustomize/releases/download
+kustomize_build_lib: gnu
+kustomize_artifact_name: "kustomize_{{ kustomize_release_version }}_{{ ansible_facts.system | lower }}_{{ kustomize_arch }}.tar.gz"
+kustomize_artifact_download_url: "{{ kustomize_base_download_url }}/kustomize/{{ kustomize_release_version }}/{{ kustomize_artifact_name }}"
+kustomize_artifact_basename: "{{ kustomize_artifact_name | regex_replace('.tar.gz', '') }}"
+
+kustomize_checksum_algorithm: sha256
+kustomize_checksum_name: checksums.txt
+kustomize_checksum_url: "{{ kustomize_base_download_url }}/kustomize/{{ kustomize_release_version }}/{{ kustomize_checksum_name }}"
+kustomize_checksum: "{{ kustomize_checksum_algorithm }}:{{ kustomize_checksum_url }}"

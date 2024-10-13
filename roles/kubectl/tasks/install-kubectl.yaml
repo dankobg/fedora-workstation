@@ -26,7 +26,7 @@
 
 - name: Get the stable release data
   ansible.builtin.uri:
-    url: https://dl.k8s.io/release/stable.txt
+    url: "{{ kubectl_latest_version_url }}"
     return_content: true
   register: kubectl_stable_release_data
   retries: 3
@@ -37,40 +37,22 @@
     kubectl_release_version: "{{ kubectl_stable_release_data.content if kubectl_version == 'latest' else kubectl_version }}"
 
 - name: Download and install
-  when: kubectl_installed_version != kubectl_release_version
+  when: kubectl_force_download or kubectl_installed_version != kubectl_release_version
   block:
-    - name: Set the stable release version variable
-      ansible.builtin.set_fact:
-        kubectl_stable_release_version: "{{ kubectl_stable_release_data.content }}"
-
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        kubectl_arch: "{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: kubectl_
       register: kubectl_tempdir
 
-    - name: Download artifact and sha256 file
+    - name: Download artifact
       ansible.builtin.get_url:
-        url: "https://dl.k8s.io/release/{{ kubectl_stable_release_version }}/bin/{{ ansible_facts.system | lower }}/{{ kubectl_arch }}/{{ item }}"
+        url: "{{ kubectl_artifact_download_url }}"
         dest: "{{ kubectl_tempdir.path }}"
+        checksum: "{{ kubectl_checksum }}"
         owner: "{{ username }}"
         group: "{{ username }}"
-        mode: "0644"
-      loop:
-        - kubectl
-        - kubectl.sha256
-
-    # - name: Validate the binary against the checksum file
-    #   ansible.builtin.shell: "set -o pipefail; cd {{ kubectl_tempdir.path }} && echo '$(cat kubectl.sha256) kubectl' | sha256sum --check"
-    #   changed_when: false
+        mode: a+x
 
     - name: Copy the binary
       ansible.builtin.copy:

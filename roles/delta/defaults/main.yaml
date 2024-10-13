@@ -5,3 +5,30 @@ delta_state: present
 delta_version: latest
 delta_binary_name: delta
 delta_binary_path: "{{ binaries_path }}/{{ delta_binary_name }}"
+
+delta_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+delta_arch: "{{ delta_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+delta_force_download: false
+
+delta_latest_version_url: https://api.github.com/repos/dandavison/delta/releases/latest
+delta_base_download_url: https://github.com/dandavison/delta/releases/download
+delta_build_lib: gnu
+delta_artifact_name: "delta-{{ delta_release_version }}-{{ delta_arch }}-unknown-{{ ansible_facts.system | lower }}-{{ delta_build_lib }}.tar.gz"
+delta_artifact_download_url: "{{ delta_base_download_url }}/{{ delta_release_version }}/{{ delta_artifact_name }}"
+delta_artifact_basename: "{{ delta_artifact_name | regex_replace('.tar.gz', '') }}"

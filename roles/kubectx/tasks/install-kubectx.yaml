@@ -25,7 +25,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
+    url: "{{ kubectx_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -38,25 +38,53 @@
     kubectx_release_version: "{{ kubectx_latest_release_data.json.tag_name if kubectx_version == 'latest' else kubectx_version }}"
 
 - name: Download and install
-  when: kubectx_installed_version != kubectx_release_version
+  when: kubectx_force_download or kubectx_installed_version != kubectx_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: arm64
-      ansible.builtin.set_fact:
-        kubectx_release_artifact: "kubectx_{{ kubectx_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: kubectx_
       register: kubectx_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ kubectx_checksum_url }}"
+        dest: "{{ kubectx_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ kubectx_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        kubectx_checksum: "{{ kubectx_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ kubectx_artifact_download_url }}"
+        dest: "{{ kubectx_tempdir.path }}"
+        checksum: "{{ kubectx_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/ahmetb/kubectx/releases/download/{{ kubectx_latest_release_version }}/{{ kubectx_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ kubectx_tempdir.path }}"
         remote_src: true
 

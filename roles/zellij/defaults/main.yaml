@@ -5,3 +5,34 @@ zellij_state: present
 zellij_version: latest
 zellij_binary_name: zellij
 zellij_binary_path: "{{ binaries_path }}/{{ zellij_binary_name }}"
+
+zellij_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+zellij_arch: "{{ zellij_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+zellij_force_download: false
+
+zellij_latest_version_url: https://api.github.com/repos/zellij-org/zellij/releases/latest
+zellij_base_download_url: https://github.com/zellij-org/zellij/releases/download
+zellij_artifact_name: "zellij-{{ zellij_arch }}-unknown-{{ ansible_facts.system | lower }}-musl.tar.gz"
+zellij_artifact_download_url: "{{ zellij_base_download_url }}/{{ zellij_release_version }}/{{ zellij_artifact_name }}"
+zellij_artifact_basename: "{{ zellij_artifact_name | regex_replace('.tar.gz', '') }}"
+
+zellij_checksum_algorithm: sha256
+zellij_checksum_name: "zellij-{{ zellij_arch }}-unknown-{{ ansible_facts.system | lower }}-musl.sha256sum"
+zellij_checksum_url: "{{ zellij_base_download_url }}/{{ zellij_release_version }}/{{ zellij_checksum_name }}"
+zellij_checksum: "{{ zellij_checksum_algorithm }}:{{ zellij_checksum_url }}"

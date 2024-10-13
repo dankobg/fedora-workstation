@@ -5,3 +5,34 @@ lazydocker_state: present
 lazydocker_version: latest
 lazydocker_binary_name: lazydocker
 lazydocker_binary_path: "{{ binaries_path }}/{{ lazydocker_binary_name }}"
+
+lazydocker_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+lazydocker_arch: "{{ lazydocker_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+lazydocker_force_download: false
+
+lazydocker_latest_version_url: https://api.github.com/repos/jesseduffield/lazydocker/releases/latest
+lazydocker_base_download_url: https://github.com/jesseduffield/lazydocker/releases/download
+lazydocker_artifact_name: "lazydocker_{{ lazydocker_release_version[1:] }}_{{ ansible_facts.system }}_{{ lazydocker_arch }}.tar.gz"
+lazydocker_artifact_download_url: "{{ lazydocker_base_download_url }}/{{ lazydocker_release_version }}/{{ lazydocker_artifact_name }}"
+lazydocker_artifact_basename: "{{ lazydocker_artifact_name | regex_replace('.tar.gz', '') }}"
+
+lazydocker_checksum_algorithm: sha256
+lazydocker_checksum_name: checksums.txt
+lazydocker_checksum_url: "{{ lazydocker_base_download_url }}/{{ lazydocker_release_version }}/{{ lazydocker_checksum_name }}"
+lazydocker_checksum: "{{ lazydocker_checksum_algorithm }}:{{ lazydocker_checksum_url }}"

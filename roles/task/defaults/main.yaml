@@ -5,3 +5,34 @@ task_state: present
 task_version: latest
 task_binary_name: task
 task_binary_path: "{{ binaries_path }}/{{ task_binary_name }}"
+
+task_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+task_arch: "{{ task_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+task_force_download: false
+
+task_latest_version_url: https://api.github.com/repos/go-task/task/releases/latest
+task_base_download_url: https://github.com/go-task/task/releases/download
+task_artifact_name: "task_{{ ansible_facts.system | lower }}_{{ task_arch }}.tar.gz"
+task_artifact_download_url: "{{ task_base_download_url }}/{{ task_release_version }}/{{ task_artifact_name }}"
+task_artifact_basename: "{{ task_artifact_name }}"
+
+task_checksum_algorithm: sha256
+task_checksum_name: task_checksums.txt
+task_checksum_url: "{{ task_base_download_url }}/{{ task_release_version }}/{{ task_checksum_name }}"
+task_checksum: "{{ task_checksum_algorithm }}:{{ task_checksum_url }}"

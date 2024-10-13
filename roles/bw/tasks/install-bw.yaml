@@ -25,7 +25,7 @@
 
 - name: Get the list of GitHub releases
   ansible.builtin.uri:
-    url: https://api.github.com/repos/bitwarden/clients/releases
+    url: "{{ bw_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -46,21 +46,27 @@
     bw_release_version: "{{ bw_latest_release_data.tag_name if bw_version == 'latest' else bw_version }}"
 
 - name: Download and install
-  when: bw_installed_version != bw_release_version
+  when: bw_force_download or bw_installed_version != bw_release_version
   block:
-    - name: Set the release artifact
-      ansible.builtin.set_fact:
-        bw_release_artifact: "bw-{{ ansible_facts.system | lower }}-{{ bw_release_version.split('v')[1] }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: bw_
       register: bw_tempdir
 
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ bw_artifact_download_url }}"
+        dest: "{{ bw_tempdir.path }}"
+        checksum: "{{ bw_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/bitwarden/clients/releases/download/{{ bw_release_version }}/{{ bw_release_artifact }}.zip"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ bw_tempdir.path }}"
         remote_src: true
 

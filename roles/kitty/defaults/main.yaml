@@ -8,3 +8,35 @@ kitty_binary_path: "{{ binaries_path }}/{{ kitty_binary_name }}"
 kitty_kitten_binary_name: kitten
 kitty_kitten_binary_path: "{{ binaries_path }}/{{ kitty_kitten_binary_name }}"
 kitty_icon: dark
+
+kitty_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+kitty_arch: "{{ kitty_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+kitty_force_download: false
+
+kitty_latest_version_url: https://api.github.com/repos/kovidgoyal/kitty/releases/latest
+kitty_base_download_url: https://github.com/kovidgoyal/kitty/releases/download
+kitty_build_lib: gnu
+kitty_artifact_name: "kitty-{{ kitty_release_version[1:] }}-{{ kitty_arch }}.txz"
+kitty_artifact_download_url: "{{ kitty_base_download_url }}/{{ kitty_release_version }}/{{ kitty_artifact_name }}"
+kitty_artifact_basename: "{{ kitty_artifact_name | regex_replace('.txz', '') }}"
+
+kitty_checksum_algorithm: sha256
+kitty_checksum_name: "kitty-{{ kitty_release_version[1:] }}-{{ kitty_arch }}.txz"
+kitty_checksum_url: "{{ kitty_base_download_url }}/{{ kitty_release_version }}/{{ kitty_checksum_name }}"
+kitty_checksum: "{{ kitty_checksum_algorithm }}:{{ kitty_checksum_url }}"

@@ -25,7 +25,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/nodejs/node/releases/latest
+    url: "{{ node_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -38,31 +38,59 @@
     node_release_version: "{{ node_latest_release_data.json.tag_name if node_version == 'latest' else node_version }}"
 
 - name: Download and install
-  when: node_installed_version != node_release_version
+  when: node_force_download or node_installed_version != node_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x64
-          arm: arm64
-      ansible.builtin.set_fact:
-        node_release_artifact: node-{{ node_release_version }}-{{ ansible_facts.system | lower }}-{{ arch }}
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: node_
       register: node_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ node_checksum_url }}"
+        dest: "{{ node_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ node_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        node_checksum: "{{ node_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ node_artifact_download_url }}"
+        dest: "{{ node_tempdir.path }}"
+        checksum: "{{ node_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://nodejs.org/dist/{{ node_release_version }}/{{ node_release_artifact }}.tar.xz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ node_tempdir.path }}"
         remote_src: true
 
     - name: Copy lib
       ansible.builtin.copy:
-        src: "{{ node_tempdir.path }}/{{ node_release_artifact }}/lib/node_modules"
+        src: "{{ node_tempdir.path }}/{{ node_artifact_basename }}/lib/node_modules"
         dest: /usr/local/lib
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -71,7 +99,7 @@
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ node_tempdir.path }}/{{ node_release_artifact }}/bin/node"
+        src: "{{ node_tempdir.path }}/{{ node_artifact_basename }}/bin/node"
         dest: "{{ node_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -96,7 +124,7 @@
 
     - name: Copy include
       ansible.builtin.copy:
-        src: "{{ node_tempdir.path }}/{{ node_release_artifact }}/include/node"
+        src: "{{ node_tempdir.path }}/{{ node_artifact_basename }}/include/node"
         dest: /usr/local/include
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -114,7 +142,7 @@
 
     - name: Copy doc
       ansible.builtin.copy:
-        src: "{{ node_tempdir.path }}/{{ node_release_artifact }}/share/doc/node"
+        src: "{{ node_tempdir.path }}/{{ node_artifact_basename }}/share/doc/node"
         dest: "{{ doc_dir.path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -123,7 +151,7 @@
 
     - name: Copy man
       ansible.builtin.copy:
-        src: "{{ node_tempdir.path }}/{{ node_release_artifact }}/share/man/man1/node.1"
+        src: "{{ node_tempdir.path }}/{{ node_artifact_basename }}/share/man/man1/node.1"
         dest: /usr/local/share/man/man1
         owner: "{{ username }}"
         group: "{{ username }}"

@@ -5,3 +5,34 @@ rclone_state: present
 rclone_version: latest
 rclone_binary_name: rclone
 rclone_binary_path: "{{ binaries_path }}/{{ rclone_binary_name }}"
+
+rclone_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+rclone_arch: "{{ rclone_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+rclone_force_download: false
+
+rclone_latest_version_url: https://api.github.com/repos/rclone/rclone/releases/latest
+rclone_base_download_url: https://github.com/rclone/rclone/releases/download
+rclone_artifact_name: "rclone-{{ rclone_release_version }}-{{ ansible_facts.system | lower }}-{{ rclone_arch }}.zip"
+rclone_artifact_download_url: "{{ rclone_base_download_url }}/{{ rclone_release_version }}/{{ rclone_artifact_name }}"
+rclone_artifact_basename: "{{ rclone_artifact_name | regex_replace('.zip', '') }}"
+
+rclone_checksum_algorithm: sha256
+rclone_checksum_name: SHA256SUMS
+rclone_checksum_url: "{{ rclone_base_download_url }}/{{ rclone_release_version }}/{{ rclone_checksum_name }}"
+rclone_checksum: "{{ rclone_checksum_algorithm }}:{{ rclone_checksum_url }}"

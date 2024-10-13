@@ -25,7 +25,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
+    url: "{{ kubens_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -38,25 +38,53 @@
     kubens_release_version: "{{ kubens_latest_release_data.json.tag_name if kubens_version == 'latest' else kubens_version }}"
 
 - name: Download and install
-  when: kubens_installed_version != kubens_release_version
+  when: kubens_force_download or kubens_installed_version != kubens_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: arm64
-      ansible.builtin.set_fact:
-        kubens_release_artifact: "kubens_{{ kubens_latest_release_version }}_{{ ansible_facts.system | lower }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: kubens_
       register: kubens_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ kubens_checksum_url }}"
+        dest: "{{ kubens_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ kubens_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        kubens_checksum: "{{ kubens_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ kubens_artifact_download_url }}"
+        dest: "{{ kubens_tempdir.path }}"
+        checksum: "{{ kubens_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/ahmetb/kubectx/releases/download/{{ kubens_latest_release_version }}/{{ kubens_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ kubens_tempdir.path }}"
         remote_src: true
 

@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/kovidgoyal/kitty/releases/latest
+    url: "{{ kitty_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,16 +37,8 @@
     kitty_release_version: "{{ kitty_latest_release_data.json.tag_name if kitty_version == 'latest' else kitty_version }}"
 
 - name: Download and install
-  when: kitty_installed_version != kitty_release_version
+  when: kitty_force_download or kitty_installed_version != kitty_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: arm64
-      ansible.builtin.set_fact:
-        kitty_release_artifact: "kitty-{{ kitty_release_version[1:] }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -55,7 +47,7 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/kovidgoyal/kitty/releases/download/{{ kitty_release_version }}/{{ kitty_release_artifact }}.txz"
+        src: "{{ kitty_artifact_download_url }}"
         dest: "{{ kitty_tempdir.path }}"
         remote_src: true
 

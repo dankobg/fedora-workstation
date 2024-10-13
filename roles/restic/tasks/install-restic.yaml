@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/restic/restic/releases/latest
+    url: "{{ restic_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,38 +37,58 @@
     restic_release_version: "{{ restic_latest_release_data.json.tag_name if restic_version == 'latest' else restic_version }}"
 
 - name: Download and install
-  when: restic_installed_version != restic_release_version
+  when: restic_force_download or restic_installed_version != restic_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        restic_release_artifact: "restic_{{ restic_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: restic_
       register: restic_tempdir
 
-    - name: Download artifact
+    - name: Download checksums
       ansible.builtin.get_url:
-        url: "https://github.com/restic/restic/releases/download/{{ restic_release_version }}/{{ restic_release_artifact }}.bz2"
+        url: "{{ restic_checksum_url }}"
         dest: "{{ restic_tempdir.path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ restic_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        restic_checksum: "{{ restic_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ restic_artifact_download_url }}"
+        dest: "{{ restic_tempdir.path }}"
+        checksum: "{{ restic_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: a+x
+      register: downloaded_artifact
 
     - name: Uncompress bz2 artifact
       ansible.builtin.command:
-        cmd: "bunzip2 {{ restic_tempdir.path }}/{{ restic_release_artifact }}.bz2"
-        creates: "{{ restic_tempdir.path }}/{{ restic_release_artifact }}"
+        cmd: "bunzip2 {{ downloaded_artifact.dest }}"
+        creates: "{{ restic_tempdir.path }}/{{ restic_artifact_basename }}"
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ restic_tempdir.path }}/{{ restic_release_artifact }}"
+        src: "{{ restic_tempdir.path }}/{{ restic_artifact_basename }}"
         dest: "{{ restic_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

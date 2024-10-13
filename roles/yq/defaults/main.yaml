@@ -5,3 +5,34 @@ yq_state: present
 yq_version: latest
 yq_binary_name: yq
 yq_binary_path: "{{ binaries_path }}/{{ yq_binary_name }}"
+
+yq_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+yq_arch: "{{ yq_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+yq_force_download: false
+
+yq_latest_version_url: https://api.github.com/repos/mikefarah/yq/releases/latest
+yq_base_download_url: https://github.com/mikefarah/yq/releases/download
+yq_artifact_name: "yq_{{ ansible_facts.system | lower }}_{{ yq_arch }}.tar.gz"
+yq_artifact_download_url: "{{ yq_base_download_url }}/{{ yq_release_version }}/{{ yq_artifact_name }}"
+yq_artifact_basename: "{{ yq_artifact_name | regex_replace('.tar.gz', '') }}"
+
+yq_checksum_algorithm: sha256
+yq_checksum_name: checksums
+yq_checksum_url: "{{ yq_base_download_url }}/{{ yq_release_version }}/{{ yq_checksum_name }}"
+yq_checksum: "{{ yq_checksum_algorithm }}:{{ yq_checksum_url }}"

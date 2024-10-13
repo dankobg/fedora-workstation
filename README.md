@@ -1,21 +1,21 @@
 {{ ansible_managed | comment }} adds managed by ansible haders to start of document
 
 <!--
-x86_64
-amd64
-x86
-i386
-i686
-aarch64
-arm64
-armv9l
-armv8l
-armv7l
-armv6l
-aarch32
-ppc64le
-s390x
--->
+x86_64:
+  amd64:
+  x86:
+  aarch64:
+  arm64:
+  armv9l:
+  armv8l:
+  armv7l:
+  armv6l:
+  aarch32:
+  s390x:
+  i386:
+  i686:
+  ppc64le:
+ -->
 
 not fully idempotent yet, they make small changes:
 
@@ -56,3 +56,9 @@ TODO: verify checksums for manuall downloads for apps:
 - [] task
 - [] yq
 - [] zellij
+
+TODO: some other stuff
+
+bash completions or man pages etc.
+
+- [] eza

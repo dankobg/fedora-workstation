@@ -25,7 +25,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest
+    url: "{{ fastfetch_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -38,31 +38,45 @@
     fastfetch_release_version: "{{ fastfetch_latest_release_data.json.tag_name if fastfetch_version == 'latest' else fastfetch_version }}"
 
 - name: Download and install
-  when: fastfetch_installed_version != fastfetch_release_version
+  when: fastfetch_force_download or fastfetch_installed_version != fastfetch_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        fastfetch_release_artifact: "fastfetch-{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: fastfetch_
       register: fastfetch_tempdir
 
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ fastfetch_latest_release_data.json.body.split('SHA256SUMs')[1].split('SHA512SUMs')[0].split('```')[1] | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ fastfetch_artifact_basename }}/{{ fastfetch_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        fastfetch_checksum: "{{ fastfetch_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ fastfetch_artifact_download_url }}"
+        dest: "{{ fastfetch_tempdir.path }}"
+        checksum: "{{ fastfetch_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/fastfetch-cli/fastfetch/releases/download/{{ fastfetch_release_version }}/{{ fastfetch_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ fastfetch_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ fastfetch_tempdir.path }}/{{ fastfetch_release_artifact }}/usr/bin/{{ item.name }}"
+        src: "{{ fastfetch_tempdir.path }}/{{ fastfetch_artifact_basename }}/usr/bin/{{ item.name }}"
         dest: "{{ item.dest }}"
         owner: "{{ username }}"
         group: "{{ username }}"

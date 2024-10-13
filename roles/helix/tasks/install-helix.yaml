@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/helix-editor/helix/releases/latest
+    url: "{{ helix_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -46,16 +46,8 @@
   when: helix_installed_version.split('.')[1] | length == 1
 
 - name: Download and install
-  when: helix_installed_version != helix_release_version
+  when: helix_force_download or helix_installed_version != helix_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        helix_release_artifact: "helix-{{ helix_release_version }}-{{ arch }}-{{ ansible_facts.system | lower }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -64,13 +56,13 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/helix-editor/helix/releases/download/{{ helix_release_version }}/{{ helix_release_artifact }}.tar.xz"
+        src: "{{ helix_artifact_download_url }}"
         dest: "{{ helix_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ helix_tempdir.path }}/{{ helix_release_artifact }}/hx"
+        src: "{{ helix_tempdir.path }}/{{ helix_artifact_basename }}/hx"
         dest: "{{ helix_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -79,7 +71,7 @@
 
     - name: Copy runtime
       ansible.builtin.copy:
-        src: "{{ helix_tempdir.path }}/{{ helix_release_artifact }}/runtime"
+        src: "{{ helix_tempdir.path }}/{{ helix_artifact_basename }}/runtime"
         dest: "/home/{{ username }}/.config/helix"
         owner: "{{ username }}"
         group: "{{ username }}"

@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/rclone/rclone/releases/latest
+    url: "{{ rclone_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,31 +37,63 @@
     rclone_release_version: "{{ rclone_latest_release_data.json.tag_name if rclone_version == 'latest' else rclone_version }}"
 
 - name: Download and install
-  when: rclone_installed_version != rclone_release_version
+  when: rclone_force_download or rclone_installed_version != rclone_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        rclone_release_artifact: "rclone-{{ rclone_release_version }}-{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: rclone_
       register: rclone_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ rclone_checksum_url }}"
+        dest: "{{ rclone_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text data
+      ansible.builtin.set_fact:
+        sha256_data: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ sha256_data.split('Hash: SHA1')[1].split('-----BEGIN PGP SIGNATURE-----')[0] | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ rclone_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        rclone_checksum: "{{ rclone_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ rclone_artifact_download_url }}"
+        dest: "{{ rclone_tempdir.path }}"
+        checksum: "{{ rclone_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/rclone/rclone/releases/download/{{ rclone_release_version }}/{{ rclone_release_artifact }}.zip"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ rclone_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ rclone_tempdir.path }}/{{ rclone_release_artifact }}/rclone"
+        src: "{{ rclone_tempdir.path }}/{{ rclone_artifact_basename }}/rclone"
         dest: "{{ rclone_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

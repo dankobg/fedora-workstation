@@ -37,7 +37,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://go.dev/dl/?mode=json
+    url: "{{ go_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -50,24 +50,36 @@
     go_release_version: "{{ go_latest_release_data.json[0].version if go_version == 'latest' else go_version }}"
 
 - name: Download and install
-  when: go_installed_version != go_release_version
+  when: go_force_download or go_installed_version != go_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        go_release_artifact: "{{ go_release_version }}.{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Ensure clean extract path
       ansible.builtin.file:
         path: "{{ go_dir }}"
         state: absent
 
+    - name: Get info for the given version
+      ansible.builtin.set_fact:
+        releases_list: "{{ go_latest_release_data.json | selectattr('version', 'eq', '{{ go_release_version }}') | map(attribute='files') | first }}"
+
+    - name: Set checksum
+      ansible.builtin.set_fact:
+        go_checksum: >-
+          {{ go_checksum_algorithm }}:
+          {{ releases_list | selectattr('kind', 'eq', 'archive') | selectattr('filename', 'eq', '{{ go_artifact_name }}') | map(attribute='sha256') | first }}
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ go_artifact_download_url }}"
+        dest: "{{ go_tempdir.path }}"
+        checksum: "{{ go_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://go.dev/dl/{{ go_release_artifact }}.tar.gz"
+        src: "{{ go_artifact_download_url }}"
         dest: "/usr/local"
         owner: "{{ username }}"
         group: "{{ username }}"

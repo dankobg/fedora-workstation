@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/protocolbuffers/protobuf/releases/latest
+    url: "{{ protoc_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,16 +37,8 @@
     protoc_release_version: "{{ protoc_latest_release_data.json.tag_name if protoc_version == 'latest' else protoc_version }}"
 
 - name: Download and install
-  when: protoc_installed_version != protoc_release_version
+  when: protoc_force_download or protoc_installed_version != protoc_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        protoc_release_artifact: "protoc-{{ protoc_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -55,7 +47,7 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/protocolbuffers/protobuf/releases/download/{{ protoc_release_version }}/{{ protoc_release_artifact }}.zip"
+        src: "{{ protoc_artifact_download_url }}"
         dest: "{{ protoc_tempdir.path }}"
         remote_src: true
 

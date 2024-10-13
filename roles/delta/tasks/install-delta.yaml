@@ -26,7 +26,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/dandavison/delta/releases/latest
+    url: "{{ delta_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -39,16 +39,8 @@
     delta_release_version: "{{ delta_latest_release_data.json.tag_name if delta_version == 'latest' else delta_version }}"
 
 - name: Download and install
-  when: delta_installed_version != delta_release_version
+  when: delta_force_download or delta_installed_version != delta_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        delta_release_artifact: "delta-{{ delta_release_version }}-{{ arch }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -57,13 +49,13 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/dandavison/delta/releases/download/{{ delta_release_version }}/{{ delta_release_artifact }}.tar.gz"
+        src: "{{ delta_artifact_download_url }}"
         dest: "{{ delta_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ delta_tempdir.path }}/{{ delta_release_artifact }}/delta"
+        src: "{{ delta_tempdir.path }}/{{ delta_artifact_basename }}/delta"
         dest: "{{ delta_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

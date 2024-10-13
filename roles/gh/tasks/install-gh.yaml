@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/cli/cli/releases/latest
+    url: "{{ gh_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,31 +37,59 @@
     gh_release_version: "{{ gh_latest_release_data.json.tag_name if gh_version == 'latest' else gh_version }}"
 
 - name: Download and install
-  when: gh_installed_version != gh_release_version
+  when: gh_force_download or gh_installed_version != gh_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        gh_release_artifact: "gh_{{ gh_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: gh_
       register: gh_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ gh_checksum_url }}"
+        dest: "{{ gh_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ gh_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        gh_checksum: "{{ gh_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ gh_artifact_download_url }}"
+        dest: "{{ gh_tempdir.path }}"
+        checksum: "{{ gh_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/cli/cli/releases/download/{{ gh_release_version }}/{{ gh_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ gh_tempdir.path }}"
         remote_src: true
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ gh_tempdir.path }}/{{ gh_release_artifact }}/bin/gh"
+        src: "{{ gh_tempdir.path }}/{{ gh_artifact_basename }}/bin/gh"
         dest: "{{ gh_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

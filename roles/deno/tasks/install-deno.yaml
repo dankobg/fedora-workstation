@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/denoland/deno/releases/latest
+    url: "{{ deno_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,27 +37,56 @@
     deno_release_version: "{{ deno_latest_release_data.json.tag_name if deno_version == 'latest' else deno_version }}"
 
 - name: Download and install
-  when: deno_installed_version != deno_release_version
+  when: deno_force_download or deno_installed_version != deno_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        deno_release_artifact: "deno-{{ arch }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: deno_
       register: deno_tempdir
 
+    - name: Download checksum
+      ansible.builtin.get_url:
+        url: "{{ deno_checksum_url }}"
+        dest: "{{ deno_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksum
+
+    - name: Set formatted checksum
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksum.dest }}"
+      register: checksum_data
+
+    - name: Format checksum
+      ansible.builtin.set_fact:
+        deno_checksum: "{{ deno_checksum_algorithm }}:{{ checksum_data.content | b64decode | trim | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ deno_artifact_download_url }}"
+        dest: "{{ deno_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/denoland/deno/releases/download/{{ deno_release_version }}/{{ deno_release_artifact }}.zip"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ deno_tempdir.path }}"
         remote_src: true
+
+    - name: Get binary info
+      ansible.builtin.stat:
+        path: "{{ deno_tempdir.path }}/deno"
+        checksum_algorithm: "{{ deno_checksum_algorithm }}"
+      register: binary_info
+
+    - name: Verify checksum
+      ansible.builtin.assert:
+        that: "{{ binary_info.stat.checksum == deno_checksum[(deno_checksum_algorithm | length) + 1 :] }}"
 
     - name: Copy binary
       ansible.builtin.copy:

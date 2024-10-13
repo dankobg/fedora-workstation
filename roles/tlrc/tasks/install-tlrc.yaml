@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/tldr-pages/tlrc/releases/latest
+    url: "{{ tlrc_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,16 +37,8 @@
     tlrc_release_version: "{{ tlrc_latest_release_data.json.tag_name if tlrc_version == 'latest' else tlrc_version }}"
 
 - name: Download and install
-  when: tlrc_installed_version != tlrc_release_version
+  when: tlrc_force_download or tlrc_installed_version != tlrc_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: x86_64
-      ansible.builtin.set_fact:
-        tlrc_release_artifact: "tlrc-{{ tlrc_release_version }}-{{ arch }}-unknown-{{ ansible_facts.system | lower }}-gnu"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -55,7 +47,7 @@
 
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/tldr-pages/tlrc/releases/download/{{ tlrc_release_version }}/{{ tlrc_release_artifact }}.tar.gz"
+        src: "{{ tlrc_artifact_download_url }}"
         dest: "{{ tlrc_tempdir.path }}"
         remote_src: true
 

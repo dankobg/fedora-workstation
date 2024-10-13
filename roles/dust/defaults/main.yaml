@@ -5,3 +5,30 @@ dust_state: present
 dust_version: latest
 dust_binary_name: dust
 dust_binary_path: "{{ binaries_path }}/{{ dust_binary_name }}"
+
+dust_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  armv7l: arm
+  armv6l: arm
+  aarch32: arm
+  # s390x:
+  # i386:
+  i686: i686
+  # ppc64le:
+
+dust_arch: "{{ dust_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+dust_force_download: false
+
+dust_latest_version_url: https://api.github.com/repos/bootandy/dust/releases/latest
+dust_base_download_url: https://github.com/bootandy/dust/releases/download
+dust_build_lib: gnu
+dust_artifact_name: "dust-{{ dust_release_version }}-{{ dust_arch }}-unknown-{{ ansible_facts.system | lower }}-{{ dust_build_lib }}.tar.gz"
+dust_artifact_download_url: "{{ dust_base_download_url }}/{{ dust_release_version }}/{{ dust_artifact_name }}"
+dust_artifact_basename: "{{ dust_artifact_name | regex_replace('.tar.gz', '') }}"

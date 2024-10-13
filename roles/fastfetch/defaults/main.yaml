@@ -7,3 +7,34 @@ fastfetch_binary_name: fastfetch
 fastfetch_binary_path: "{{ binaries_path }}/{{ fastfetch_binary_name }}"
 fastfetch_flashfetch_binary_name: flashfetch
 fastfetch_flashfetch_binary_path: "{{ binaries_path }}/{{ fastfetch_flashfetch_binary_name }}"
+
+fastfetch_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+fastfetch_arch: "{{ fastfetch_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+fastfetch_force_download: false
+
+fastfetch_latest_version_url: https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest
+fastfetch_base_download_url: https://github.com/fastfetch-cli/fastfetch/releases/download
+fastfetch_artifact_name: "fastfetch-{{ ansible_facts.system | lower }}-{{ fastfetch_arch }}.tar.gz"
+fastfetch_artifact_download_url: "{{ fastfetch_base_download_url }}/{{ fastfetch_release_version }}/{{ fastfetch_artifact_name }}"
+fastfetch_artifact_basename: "{{ fastfetch_artifact_name | regex_replace('.tar.gz', '') }}"
+
+fastfetch_checksum_algorithm: sha256
+fastfetch_checksum_name: "fastfetch-{{ ansible_facts.system | lower }}-{{ fastfetch_arch }}.tar.gz"
+fastfetch_checksum_url: "{{ fastfetch_base_download_url }}/{{ fastfetch_release_version }}/{{ fastfetch_checksum_name }}"
+fastfetch_checksum: "{{ fastfetch_checksum_algorithm }}:{{ fastfetch_checksum_url }}"

@@ -14,25 +14,6 @@ github_pat: "{{ vault_github_pat }}"
 
 binaries_path: /usr/local/bin
 
-archs:
-  arm: arm
-  armv6l: arm
-  armv7l: arm
-  armv8l: arm
-  armv9l: arm
-  aarch64: arm
-  arm64: arm
-  x86_64: amd
-  x86-64: amd
-  amd64: amd
-
-# this is overriden per task that downloads specific artifact
-arch_name:
-  amd: amd64
-  arm: arm64
-
-arch: "{{ arch_name[archs.get(ansible_facts.architecture)] | default(ansible_facts.architecture) }}"
-
 roles_selected:
   - system
   - nvidia

@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/zellij-org/zellij/releases/latest
+    url: "{{ zellij_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,15 +37,13 @@
     zellij_release_version: "{{ zellij_latest_release_data.json.tag_name if zellij_version == 'latest' else zellij_version }}"
 
 - name: Download and install
-  when: zellij_installed_version != zellij_release_version
+  when: zellij_force_download or zellij_installed_version != zellij_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
-      ansible.builtin.set_fact:
-        zellij_release_artifact: "zellij-{{ arch }}-unknown-{{ ansible_facts.system | lower }}-musl"
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: zellij_
+      register: zellij_tempdir
 
     - name: Create download temporary directory
       ansible.builtin.tempfile:
@@ -53,11 +51,48 @@
         prefix: zellij_
       register: zellij_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ zellij_checksum_url }}"
+        dest: "{{ zellij_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        zellij_checksum: "{{ zellij_checksum_algorithm }}:{{ checksums_data.content | b64decode | trim | split | first }}"
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ zellij_artifact_download_url }}"
+        dest: "{{ zellij_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
     - name: Unarchive artifact
       ansible.builtin.unarchive:
-        src: "https://github.com/zellij-org/zellij/releases/download/{{ zellij_release_version }}/{{ zellij_release_artifact }}.tar.gz"
+        src: "{{ downloaded_artifact.dest }}"
         dest: "{{ zellij_tempdir.path }}"
         remote_src: true
+
+    - name: Get binary info
+      ansible.builtin.stat:
+        path: "{{ zellij_tempdir.path }}/zellij"
+        checksum_algorithm: "{{ zellij_checksum_algorithm }}"
+      register: binary_info
+
+    - name: Verify checksum
+      ansible.builtin.assert:
+        that: "{{ binary_info.stat.checksum == zellij_checksum[(zellij_checksum_algorithm | length) + 1 :] }}"
 
     - name: Copy binary
       ansible.builtin.copy:

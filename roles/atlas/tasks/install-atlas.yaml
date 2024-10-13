@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/ariga/atlas/releases/latest
+    url: "{{ atlas_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,16 +37,8 @@
     atlas_release_version: "{{ atlas_latest_release_data.json.tag_name if atlas_version == 'latest' else atlas_version }}"
 
 - name: Download and install
-  when: atlas_installed_version != atlas_release_version
+  when: atlas_force_download or atlas_installed_version != atlas_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        atlas_release_artifact: "atlas-{{ ansible_facts.system | lower }}-{{ arch }}-{{ atlas_release_version }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
@@ -55,15 +47,16 @@
 
     - name: Download artifact
       ansible.builtin.get_url:
-        url: "https://release.ariga.io/atlas/{{ atlas_release_artifact }}"
+        url: "{{ atlas_artifact_download_url }}"
         dest: "{{ atlas_tempdir.path }}"
+        checksum: "{{ atlas_checksum }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ atlas_tempdir.path }}/{{ atlas_release_artifact }}"
+        src: "{{ atlas_tempdir.path }}/{{ atlas_artifact_basename }}"
         dest: "{{ atlas_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

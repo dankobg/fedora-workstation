@@ -5,3 +5,35 @@ kanata_state: present
 kanata_version: latest
 kanata_binary_name: kanata
 kanata_binary_path: "{{ binaries_path }}/{{ kanata_binary_name }}"
+
+kanata_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+kanata_arch: "{{ kanata_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+kanata_force_download: false
+
+kanata_latest_version_url: https://api.github.com/repos/jtroo/kanata/releases/latest
+kanata_base_download_url: https://github.com/jtroo/kanata/releases/download
+kanata_build_lib: gnu
+kanata_artifact_name: kanata
+kanata_artifact_download_url: "{{ kanata_base_download_url }}/{{ kanata_release_version }}/{{ kanata_artifact_name }}"
+kanata_artifact_basename: "{{ kanata_artifact_name }}"
+
+kanata_checksum_algorithm: sha256
+kanata_checksum_name: kanata
+kanata_checksum_url: "{{ kanata_base_download_url }}/{{ kanata_release_version }}/{{ kanata_checksum_name }}"
+kanata_checksum: "{{ kanata_checksum_algorithm }}:{{ kanata_checksum_url }}"

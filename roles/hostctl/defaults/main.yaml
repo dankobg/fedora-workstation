@@ -4,3 +4,35 @@ hostctl_state: present
 hostctl_version: latest
 hostctl_binary_name: hostctl
 hostctl_binary_path: "{{ binaries_path }}/{{ hostctl_binary_name }}"
+
+hostctl_archs:
+  x86_64: 64-bit
+  amd64: 64-bit
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+hostctl_arch: "{{ hostctl_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+hostctl_force_download: false
+
+hostctl_latest_version_url: https://api.github.com/repos/guumaster/hostctl/releases/latest
+hostctl_base_download_url: https://github.com/guumaster/hostctl/releases/download
+hostctl_build_lib: gnu
+hostctl_artifact_name: "hostctl_{{ hostctl_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ hostctl_arch }}.tar.gz"
+hostctl_artifact_download_url: "{{ hostctl_base_download_url }}/{{ hostctl_release_version }}/{{ hostctl_artifact_name }}"
+hostctl_artifact_basename: "{{ hostctl_artifact_name | regex_replace('.tar.gz', '') }}"
+
+hostctl_checksum_algorithm: sha256
+hostctl_checksum_name: "hostctl_{{ hostctl_release_version[1:] }}_checksums.txt"
+hostctl_checksum_url: "{{ hostctl_base_download_url }}/{{ hostctl_release_version }}/{{ hostctl_checksum_name }}"
+hostctl_checksum: "{{ hostctl_checksum_algorithm }}:{{ hostctl_checksum_url }}"

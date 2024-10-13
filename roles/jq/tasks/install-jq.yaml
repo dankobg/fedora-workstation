@@ -24,7 +24,7 @@
 
 - name: Get the latest release data
   ansible.builtin.uri:
-    url: https://api.github.com/repos/jqlang/jq/releases/latest
+    url: "{{ jq_latest_version_url }}"
     return_content: true
     headers:
       Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
@@ -37,31 +37,52 @@
     jq_release_version: "{{ jq_latest_release_data.json.tag_name if jq_version == 'latest' else jq_version }}"
 
 - name: Download and install
-  when: jq_installed_version != jq_release_version
+  when: jq_force_download or jq_installed_version != jq_release_version
   block:
-    - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: amd64
-          arm: arm64
-      ansible.builtin.set_fact:
-        jq_release_artifact: "jq-{{ ansible_facts.system | lower }}-{{ arch }}"
-
     - name: Create download temporary directory
       ansible.builtin.tempfile:
         state: directory
         prefix: jq_
       register: jq_tempdir
 
+    - name: Download checksums
+      ansible.builtin.get_url:
+        url: "{{ jq_checksum_url }}"
+        dest: "{{ jq_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      register: downloaded_checksums
+
+    - name: Get checksum text content
+      ansible.builtin.slurp:
+        src: "{{ downloaded_checksums.dest }}"
+      register: checksums_data
+
+    - name: Get sha256 text content
+      ansible.builtin.set_fact:
+        sha256_text: "{{ checksums_data.content | b64decode | trim }}"
+
+    - name: Get search word rhs
+      ansible.builtin.set_fact:
+        search_word_rhs: "{{ jq_artifact_name }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        jq_checksum: "{{ jq_checksum_algorithm }}:{{ sha256_text | regex_search('([a-f0-9]{64})\\s+.*' ~ search_word_rhs) | split | first }}"
+
     - name: Download artifact
       ansible.builtin.get_url:
-        url: "https://github.com/jqlang/jq/releases/download/{{ jq_release_version }}/{{ jq_release_artifact }}"
+        url: "{{ jq_artifact_download_url }}"
         dest: "{{ jq_tempdir.path }}"
+        checksum: "{{ jq_checksum }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
         mode: a+x
 
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ jq_tempdir.path }}/{{ jq_release_artifact }}"
+        src: "{{ jq_tempdir.path }}/{{ jq_artifact_basename }}"
         dest: "{{ jq_binary_path }}"
         owner: "{{ username }}"
         group: "{{ username }}"

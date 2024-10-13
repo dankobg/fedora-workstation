@@ -5,3 +5,35 @@ kubens_state: present
 kubens_version: latest
 kubens_binary_name: kubens
 kubens_binary_path: "{{ binaries_path }}/{{ kubens_binary_name }}"
+
+kubens_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+kubens_arch: "{{ kubens_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+kubens_force_download: false
+
+kubens_latest_version_url: https://api.github.com/repos/ahmetb/kubectx/releases/latest
+kubens_base_download_url: https://github.com/ahmetb/kubectx/releases/download
+kubens_build_lib: gnu
+kubens_artifact_name: "kubens_{{ kubens_release_version }}_{{ ansible_facts.system | lower }}_{{ kubens_arch }}.tar.gz"
+kubens_artifact_download_url: "{{ kubens_base_download_url }}/{{ kubens_release_version }}/{{ kubens_artifact_name }}"
+kubens_artifact_basename: "{{ kubens_artifact_name | regex_replace('.tar.gz', '') }}"
+
+kubens_checksum_algorithm: sha256
+kubens_checksum_name: checksums.txt
+kubens_checksum_url: "{{ kubens_base_download_url }}/{{ kubens_release_version }}/{{ kubens_checksum_name }}"
+kubens_checksum: "{{ kubens_checksum_algorithm }}:{{ kubens_checksum_url }}"

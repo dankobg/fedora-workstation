@@ -5,3 +5,29 @@ protoc_state: present
 protoc_version: latest
 protoc_binary_name: protoc
 protoc_binary_path: "{{ binaries_path }}/{{ protoc_binary_name }}"
+
+protoc_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+protoc_arch: "{{ protoc_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+protoc_force_download: false
+
+protoc_latest_version_url: https://api.github.com/repos/protocolbuffers/protobuf/releases/latest
+protoc_base_download_url: https://github.com/protocolbuffers/protobuf/releases/download
+protoc_artifact_name: "protoc-{{ protoc_release_version[1:] }}-{{ ansible_facts.system | lower }}-{{ protoc_arch }}.zip"
+protoc_artifact_download_url: "{{ protoc_base_download_url }}/{{ protoc_release_version }}/{{ protoc_artifact_name }}"
+protoc_artifact_basename: "{{ protoc_artifact_name | regex_replace('.tar.gz', '') }}"
