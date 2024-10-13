@@ -22,43 +22,6 @@ not fully idempotent yet, they make small changes:
 - docker (hmm need to see what is going on, takes a bit of time. Should be idempotent because it's only dnf module. Ensure old deleted - says changed even though they dont exist)
 - go (go install tools like gopls,dlv,goimports etc. Don't know how to make it idempotent)
 
-TODO: verify checksums for manuall downloads for apps:
+TODO:
 
-- [] atlas
-- [] bw
-- [] devspace
-- [] docker
-- [] eza
-- [] fastfetch
-- [] gh
-- [] glow
-- [] go
-- [] hostctl
-- [] jq
-- [] just
-- [] k3d
-- [] k9s
-- [] kanata
-- [] kitty
-- [] ksops
-- [] kubectl
-- [] kubectx
-- [] kubens
-- [] kustomize
-- [] lazydocker
-- [] lazygit
-- [] nerdfonts
-- [] node
-- [] rclone
-- [] restic
-- [] sops
-- [] syncthing
-- [] task
-- [] yq
-- [] zellij
-
-TODO: some other stuff
-
-bash completions or man pages etc.
-
-- [] eza
+add bash completions or man pages for custom binary installs...
