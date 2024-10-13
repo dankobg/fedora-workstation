@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ k9s_path }}"
+    path: "{{ k9s_binary_path }}"
     state: absent

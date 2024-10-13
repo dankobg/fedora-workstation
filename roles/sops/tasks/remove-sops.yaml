@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ sops_path }}"
+    path: "{{ sops_binary_path }}"
     state: absent

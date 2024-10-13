@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ dust_path }}"
+    path: "{{ dust_binary_path }}"
     state: absent

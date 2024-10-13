@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ mkcert_path }}"
+    path: "{{ mkcert_binary_path }}"
     state: absent

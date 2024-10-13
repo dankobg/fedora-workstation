@@ -1,5 +1,8 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ fastfetch_path }}"
+    path: "{{ item }}"
     state: absent
+  loop:
+    - "{{ fastfetch_binary_path }}"
+    - "{{ fastfetch_flashfetch_binary_path }}"

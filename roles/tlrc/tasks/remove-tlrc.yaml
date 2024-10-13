@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ tlrc_path }}"
+    path: "{{ tlrc_binary_path }}"
     state: absent

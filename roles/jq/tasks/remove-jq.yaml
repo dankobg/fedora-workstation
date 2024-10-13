@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ jq_path }}"
+    path: "{{ jq_binary_path }}"
     state: absent

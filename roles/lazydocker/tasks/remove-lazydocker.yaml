@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ lazydocker_path }}"
+    path: "{{ lazydocker_binary_path }}"
     state: absent

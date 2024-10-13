@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ k3d_path }}"
+    path: "{{ k3d_binary_path }}"
     state: absent

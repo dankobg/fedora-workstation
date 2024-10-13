@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ hostctl_path }}"
+    path: "{{ hostctl_binary_path }}"
     state: absent

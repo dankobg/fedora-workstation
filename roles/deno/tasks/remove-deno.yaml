@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ deno_path }}"
+    path: "{{ deno_binary_path }}"
     state: absent

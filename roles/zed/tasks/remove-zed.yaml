@@ -1,10 +1,10 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ zed_path }}"
+    path: "{{ item }}"
     state: absent
   loop:
-    - "{{ zed_path }}"
+    - "{{ zed_binary_path }}"
     - /usr/local/libexec/zed-editor
     - /usr/local/share/applications/zed.desktop
     - /usr/local/share/icons/hicolor/512x512/apps/zed.png

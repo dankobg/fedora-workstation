@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ gh_path }}"
+    path: "{{ gh_binary_path }}"
     state: absent

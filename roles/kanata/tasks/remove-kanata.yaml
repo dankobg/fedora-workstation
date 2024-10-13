@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ kanata_path }}"
+    path: "{{ kanata_binary_path }}"
     state: absent

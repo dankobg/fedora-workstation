@@ -1,4 +1,4 @@
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ kubectl_path }}"
+    path: "{{ kubectl_binary_path }}"
     state: absent

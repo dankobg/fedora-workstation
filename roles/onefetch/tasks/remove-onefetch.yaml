@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ onefetch_path }}"
+    path: "{{ onefetch_binary_path }}"
     state: absent

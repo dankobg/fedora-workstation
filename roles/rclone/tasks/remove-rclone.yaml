@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ rclone_path }}"
+    path: "{{ rclone_binary_path }}"
     state: absent

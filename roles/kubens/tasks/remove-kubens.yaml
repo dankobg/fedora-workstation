@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ kubens_path }}"
+    path: "{{ kubens_binary_path }}"
     state: absent

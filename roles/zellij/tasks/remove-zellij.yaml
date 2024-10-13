@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ zellij_path }}"
+    path: "{{ zellij_binary_path }}"
     state: absent

@@ -1,8 +1,8 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ helix_path }}"
+    path: "{{ item }}"
     state: absent
   loop:
-    - "{{ helix_path }}"
+    - "{{ helix_binary)path }}"
     - "/home/{{ username }}/.config/helix"

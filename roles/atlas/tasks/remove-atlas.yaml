@@ -1,5 +1,5 @@
 ---
 - name: Ensure removed
   ansible.builtin.file:
-    path: "{{ atlas_path }}"
+    path: "{{ atlas_binary_path }}"
     state: absent
