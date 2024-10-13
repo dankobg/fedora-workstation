@@ -48,3 +48,4 @@
   loop:
     - "{{ firefox_install_dir }}"
     - "{{ firefox_policies_dir }}"
+  when: firefox_state == 'absent'
