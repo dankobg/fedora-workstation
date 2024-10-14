@@ -4,7 +4,7 @@
 protoc_state: present
 protoc_version: latest
 protoc_binary_name: protoc
-protoc_binary_path: "{{ binaries_path }}/{{ protoc_binary_name }}"
+protoc_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ protoc_binary_name }}"
 
 protoc_archs:
   x86_64: x86_64

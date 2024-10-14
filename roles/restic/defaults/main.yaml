@@ -4,7 +4,7 @@
 restic_state: present
 restic_version: latest
 restic_binary_name: restic
-restic_binary_path: "{{ binaries_path }}/{{ restic_binary_name }}"
+restic_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ restic_binary_name }}"
 
 restic_archs:
   x86_64: amd64

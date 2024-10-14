@@ -4,7 +4,7 @@
 kubens_state: present
 kubens_version: latest
 kubens_binary_name: kubens
-kubens_binary_path: "{{ binaries_path }}/{{ kubens_binary_name }}"
+kubens_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ kubens_binary_name }}"
 
 kubens_archs:
   x86_64: x86_64

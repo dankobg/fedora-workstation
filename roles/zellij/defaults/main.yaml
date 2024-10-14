@@ -4,7 +4,7 @@
 zellij_state: present
 zellij_version: latest
 zellij_binary_name: zellij
-zellij_binary_path: "{{ binaries_path }}/{{ zellij_binary_name }}"
+zellij_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ zellij_binary_name }}"
 
 zellij_archs:
   x86_64: x86_64

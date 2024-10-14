@@ -4,7 +4,7 @@
 ksops_state: present
 ksops_version: latest
 ksops_binary_name: ksops
-ksops_binary_path: "{{ binaries_path }}/{{ ksops_binary_name }}"
+ksops_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ ksops_binary_name }}"
 
 ksops_archs:
   x86_64: x86_64

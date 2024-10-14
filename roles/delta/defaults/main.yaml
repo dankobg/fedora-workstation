@@ -4,7 +4,7 @@
 delta_state: present
 delta_version: latest
 delta_binary_name: delta
-delta_binary_path: "{{ binaries_path }}/{{ delta_binary_name }}"
+delta_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ delta_binary_name }}"
 
 delta_archs:
   x86_64: x86_64

@@ -4,7 +4,7 @@
 mkcert_state: present
 mkcert_version: latest
 mkcert_binary_name: mkcert
-mkcert_binary_path: "{{ binaries_path }}/{{ mkcert_binary_name }}"
+mkcert_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ mkcert_binary_name }}"
 
 mkcert_archs:
   x86_64: amd64

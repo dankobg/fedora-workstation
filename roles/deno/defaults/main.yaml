@@ -4,7 +4,7 @@
 deno_state: present
 deno_version: latest
 deno_binary_name: deno
-deno_binary_path: "{{ binaries_path }}/{{ deno_binary_name }}"
+deno_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ deno_binary_name }}"
 
 deno_archs:
   x86_64: x86_64

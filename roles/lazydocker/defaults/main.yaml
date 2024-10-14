@@ -4,7 +4,7 @@
 lazydocker_state: present
 lazydocker_version: latest
 lazydocker_binary_name: lazydocker
-lazydocker_binary_path: "{{ binaries_path }}/{{ lazydocker_binary_name }}"
+lazydocker_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ lazydocker_binary_name }}"
 
 lazydocker_archs:
   x86_64: x86_64

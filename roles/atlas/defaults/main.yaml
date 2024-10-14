@@ -4,7 +4,7 @@
 atlas_state: present
 atlas_version: latest
 atlas_binary_name: atlas
-atlas_binary_path: "{{ binaries_path }}/{{ atlas_binary_name }}"
+atlas_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ atlas_binary_name }}"
 
 atlas_archs:
   x86_64: amd64

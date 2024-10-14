@@ -4,7 +4,7 @@
 onefetch_state: present
 onefetch_version: latest
 onefetch_binary_name: onefetch
-onefetch_binary_path: "{{ binaries_path }}/{{ onefetch_binary_name }}"
+onefetch_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ onefetch_binary_name }}"
 
 onefetch_archs:
   x86_64: amd64

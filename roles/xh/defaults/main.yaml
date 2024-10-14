@@ -4,7 +4,7 @@
 xh_state: present
 xh_version: latest
 xh_binary_name: xh
-xh_binary_path: "{{ binaries_path }}/{{ xh_binary_name }}"
+xh_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ xh_binary_name }}"
 
 xh_archs:
   x86_64: x86_64

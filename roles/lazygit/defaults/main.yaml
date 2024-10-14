@@ -4,7 +4,7 @@
 lazygit_state: present
 lazygit_version: latest
 lazygit_binary_name: lazygit
-lazygit_binary_path: "{{ binaries_path }}/{{ lazygit_binary_name }}"
+lazygit_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ lazygit_binary_name }}"
 
 lazygit_archs:
   x86_64: x86_64

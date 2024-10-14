@@ -4,7 +4,7 @@
 task_state: present
 task_version: latest
 task_binary_name: task
-task_binary_path: "{{ binaries_path }}/{{ task_binary_name }}"
+task_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ task_binary_name }}"
 
 task_archs:
   x86_64: amd64

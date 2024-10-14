@@ -4,9 +4,9 @@
 fastfetch_state: present
 fastfetch_version: latest
 fastfetch_binary_name: fastfetch
-fastfetch_binary_path: "{{ binaries_path }}/{{ fastfetch_binary_name }}"
+fastfetch_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ fastfetch_binary_name }}"
 fastfetch_flashfetch_binary_name: flashfetch
-fastfetch_flashfetch_binary_path: "{{ binaries_path }}/{{ fastfetch_flashfetch_binary_name }}"
+fastfetch_flashfetch_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ fastfetch_flashfetch_binary_name }}"
 
 fastfetch_archs:
   x86_64: amd64

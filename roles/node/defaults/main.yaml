@@ -4,13 +4,13 @@
 node_state: present
 node_version: latest
 node_binary_name: node
-node_binary_path: "{{ binaries_path }}/{{ node_binary_name }}"
+node_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ node_binary_name }}"
 node_corepack_binary_name: corepack
-node_corepack_binary_path: "{{ binaries_path }}/{{ node_corepack_binary_name }}"
+node_corepack_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ node_corepack_binary_name }}"
 node_npm_binary_name: npm
-node_npm_binary_path: "{{ binaries_path }}/{{ node_npm_binary_name }}"
+node_npm_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ node_npm_binary_name }}"
 node_npx_binary_name: npx
-node_npx_binary_path: "{{ binaries_path }}/{{ node_npx_binary_name }}"
+node_npx_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ node_npx_binary_name }}"
 node_npm_global_dir: /usr/local/lib/npm-global
 
 node_global_packages:

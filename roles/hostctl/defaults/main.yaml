@@ -3,7 +3,7 @@
 hostctl_state: present
 hostctl_version: latest
 hostctl_binary_name: hostctl
-hostctl_binary_path: "{{ binaries_path }}/{{ hostctl_binary_name }}"
+hostctl_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ hostctl_binary_name }}"
 
 hostctl_archs:
   x86_64: 64-bit
