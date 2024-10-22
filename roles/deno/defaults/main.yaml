@@ -33,6 +33,6 @@ deno_artifact_download_url: "{{ deno_base_download_url }}/{{ deno_release_versio
 deno_artifact_basename: "{{ deno_artifact_name | regex_replace('.zip', '') }}"
 
 deno_checksum_algorithm: sha256
-deno_checksum_name: "deno-{{ deno_arch }}-unknown-{{ ansible_facts.system | lower }}-gnu.{{ deno_checksum_algorithm }}sum"
+deno_checksum_name: "deno-{{ deno_arch }}-unknown-{{ ansible_facts.system | lower }}-gnu.zip.{{ deno_checksum_algorithm }}sum"
 deno_checksum_url: "{{ deno_base_download_url }}/{{ deno_release_version }}/{{ deno_checksum_name }}"
 deno_checksum: "{{ deno_checksum_algorithm }}:{{ deno_checksum_url }}"

@@ -19,6 +19,11 @@
     - name: Include selected roles
       ansible.builtin.include_role:
         name: "{{ role_item }}"
+        apply:
+          tags:
+            - "{{ role_item }}"
       loop: "{{ roles_selected }}"
       loop_control:
         loop_var: role_item
+      tags:
+        - always

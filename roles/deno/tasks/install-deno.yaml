@@ -54,19 +54,24 @@
         mode: "0644"
       register: downloaded_checksum
 
-    - name: Set formatted checksum
+    - name: Get checksum text content
       ansible.builtin.slurp:
         src: "{{ downloaded_checksum.dest }}"
       register: checksum_data
 
-    - name: Format checksum
+    - name: Get sha256 text content
       ansible.builtin.set_fact:
-        deno_checksum: "{{ deno_checksum_algorithm }}:{{ checksum_data.content | b64decode | trim | split | first }}"
+        sha256_text: "{{ checksum_data.content | b64decode | trim }}"
+
+    - name: Extract checksum
+      ansible.builtin.set_fact:
+        deno_checksum: "{{ deno_checksum_algorithm }}:{{ sha256_text | split | first }}"
 
     - name: Download artifact
       ansible.builtin.get_url:
         url: "{{ deno_artifact_download_url }}"
         dest: "{{ deno_tempdir.path }}"
+        checksum: "{{ deno_checksum }}"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
@@ -83,10 +88,6 @@
         path: "{{ deno_tempdir.path }}/deno"
         checksum_algorithm: "{{ deno_checksum_algorithm }}"
       register: binary_info
-
-    - name: Verify checksum
-      ansible.builtin.assert:
-        that: "{{ binary_info.stat.checksum == deno_checksum[(deno_checksum_algorithm | length) + 1 :] }}"
 
     - name: Copy binary
       ansible.builtin.copy:
