@@ -4,5 +4,5 @@
     path: "{{ item }}"
     state: absent
   loop:
-    - "{{ helix_binary)path }}"
+    - "{{ helix_binary_path }}"
     - "/home/{{ username }}/.config/helix"

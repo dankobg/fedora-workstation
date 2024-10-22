@@ -4,8 +4,8 @@
     path: "{{ item }}"
     state: absent
   loop:
-    - "{{ kitty_path }}"
-    - "{{ kitty_kitten_path }}"
+    - "{{ kitty_binary_path }}"
+    - "{{ kitty_kitten_binary_path }}"
     - "/home/{{ username }}/.config/kitty"
     - /usr/local/share/terminfo
     - /usr/local/lib/kitty
