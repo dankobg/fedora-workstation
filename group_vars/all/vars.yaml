@@ -14,6 +14,11 @@ github_pat: "{{ vault_github_pat }}"
 
 binaries_path: /usr/local/bin
 
+system_hosts:
+  - juicer-dev.xyz
+  - mail.juicer-dev.xyz
+  - traefik.juicer-dev.xyz
+
 roles_selected:
   - system
   - nvidia

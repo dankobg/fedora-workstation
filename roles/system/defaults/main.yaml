@@ -1,6 +1,8 @@
 ---
 # defaults file for system
 
+system_hosts: []
+
 system_common_packages:
   - dnf-plugins-core
   - git

@@ -22,6 +22,7 @@ go_tools:
   - github.com/josharian/impl@latest
   - honnef.co/go/tools/cmd/staticcheck@latest
   - honnef.co/go/tools/cmd/structlayout@latest
+  - google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
 go_archs:
   x86_64: amd64
