@@ -63,7 +63,11 @@
 
     - name: Set checksum
       ansible.builtin.set_fact:
-        go_checksum: "{{ go_checksum_algorithm }}:{{ releases_list | selectattr('kind', 'eq', 'archive') | selectattr('filename', 'eq', go_artifact_name) | map(attribute='sha256') | first }}"
+        go_checksum: >-
+          {{ go_checksum_algorithm }}:{{ releases_list
+          | selectattr('kind', 'eq', 'archive')
+          | selectattr('filename', 'eq', go_artifact_name)
+          | map(attribute='sha256') | first }}
 
     - name: Ensure go directory exists
       ansible.builtin.file:
@@ -113,8 +117,6 @@
     - name: Install go tools
       become: true
       become_user: "{{ username }}"
-      #environment:
-      #  PATH: "{{ ansible_env.PATH }}:{{ go_gopath_dir }}/bin"
       ansible.builtin.command:
         cmd: "go install {{ item }}"
       loop: "{{ go_tools }}"
