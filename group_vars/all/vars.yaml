@@ -34,6 +34,7 @@ roles_selected:
   - flatpak
   - fonts
   - gnome
+  - nautilus
   - libreoffice
   - age
   - ansible
