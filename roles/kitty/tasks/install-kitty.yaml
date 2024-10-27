@@ -86,6 +86,24 @@
         - kitty
         - kitty-extensions
 
+    - name: Find .so files
+      ansible.builtin.find:
+        paths: "{{ kitty_tempdir.path }}/lib"
+        recurse: false
+        patterns: "*.so*"
+      register: so_files
+
+    - name: Copy .so files
+      ansible.builtin.copy:
+        src: "{{ item.path }}"
+        dest: /usr/lib64
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+        remote_src: true
+        force: false
+      loop: "{{ so_files.files }}"
+
     - name: Copy dekstop files
       ansible.builtin.copy:
         src: "{{ kitty_tempdir.path }}/share/applications/{{ item }}"
