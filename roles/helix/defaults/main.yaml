@@ -3,7 +3,7 @@
 
 helix_state: present
 helix_version: latest
-helix_binary_name: helix
+helix_binary_name: hx
 helix_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ helix_binary_name }}"
 
 helix_archs:

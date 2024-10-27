@@ -10,3 +10,21 @@ rust_rustup_state: present
 rust_rustup_version: latest
 rust_rustup_dir: "/usr/local/lib/rustup"
 rust_cargo_dir: "/usr/local/lib/cargo"
+
+rust_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+rust_arch: "{{ rust_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"

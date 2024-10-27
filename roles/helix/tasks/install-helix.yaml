@@ -36,14 +36,15 @@
   ansible.builtin.set_fact:
     helix_release_version: "{{ helix_latest_release_data.json.tag_name if helix_version == 'latest' else helix_version }}"
 
-- name: Temp fix 1
-  ansible.builtin.set_fact:
-    parts: "{{ helix_installed_version.split('.') }}"
+- name: Temp fix for version missmatch
+  block:
+    - name: Temp fix 1
+      ansible.builtin.set_fact:
+        parts: "{{ helix_installed_version.split('.') if helix_installed.rc == 0 else [] }}"
 
-- name: Temp fix 2
-  ansible.builtin.set_fact:
-    helix_installed_version: "{{ parts[0] + '.0' + parts[1] }}"
-  when: helix_installed_version.split('.')[1] | length == 1
+    - name: Temp fix 2
+      ansible.builtin.set_fact:
+        helix_installed_version: "{{ parts[0] + '.0' + parts[1] if (parts | length == 2) else '' }}"
 
 - name: Download and install
   when: helix_force_download or helix_installed_version != helix_release_version

@@ -10,7 +10,7 @@
     gpgcheck: true
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
     state: present
-  when: vscode_state == 'present'
+  when: vscode_state == 'latest'
 
 - name: Install VSCode
   ansible.builtin.dnf:

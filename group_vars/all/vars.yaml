@@ -20,6 +20,8 @@ system_hosts:
   - traefik.juicer-dev.xyz
 
 roles_selected:
+  - dnf
+  - zsh
   - system
   - nvidia
   - firmware
@@ -28,7 +30,6 @@ roles_selected:
   - zram
   - user
   - ssh
-  - dnf
   - multimedia
   - flatpak
   - fonts
@@ -118,7 +119,6 @@ roles_selected:
   - zed
   - zellij
   - zoxide
-  - zsh
 
   # maybe tag these with (audio/video/editting or something, i don't use them right now)
   # - audacity

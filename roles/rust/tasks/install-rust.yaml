@@ -40,12 +40,8 @@
   when: rustup_installed.rc == 1
   block:
     - name: Set the release artifact
-      vars:
-        arch_name:
-          amd: x86_64
-          arm: aarch64
       ansible.builtin.set_fact:
-        rustup_release_artifact: "{{ arch }}-unknown-{{ ansible_facts.system | lower }}-gnu/rustup-init"
+        rustup_release_artifact: "{{ rust_arch }}-unknown-{{ ansible_facts.system | lower }}-gnu/rustup-init"
 
     - name: Create download temporary directory
       become: true

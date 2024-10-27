@@ -1,4 +1,16 @@
 ---
+- name: Install common gnome apps
+  ansible.builtin.dnf:
+    name: "{{ gnome_apps }}"
+    state: latest
+
+- name: Install python and pip
+  ansible.builtin.dnf:
+    name:
+      - python3
+      - python3-pip
+    state: latest
+
 - name: Ensure psutil is installed
   ansible.builtin.pip:
     name: psutil
@@ -11,11 +23,6 @@
     owner: root
     group: root
     mode: "0644"
-
-- name: Install common gnome apps
-  ansible.builtin.dnf:
-    name: "{{ gnome_apps }}"
-    state: latest
 
 - name: Configure desktop using dconf
   become: true

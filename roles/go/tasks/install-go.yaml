@@ -59,18 +59,24 @@
 
     - name: Get info for the given version
       ansible.builtin.set_fact:
-        releases_list: "{{ go_latest_release_data.json | selectattr('version', 'eq', '{{ go_release_version }}') | map(attribute='files') | first }}"
+        releases_list: "{{ go_latest_release_data.json | selectattr('version', 'eq', go_release_version) | map(attribute='files') | first }}"
 
     - name: Set checksum
       ansible.builtin.set_fact:
-        go_checksum: >-
-          {{ go_checksum_algorithm }}:
-          {{ releases_list | selectattr('kind', 'eq', 'archive') | selectattr('filename', 'eq', '{{ go_artifact_name }}') | map(attribute='sha256') | first }}
+        go_checksum: "{{ go_checksum_algorithm }}:{{ releases_list | selectattr('kind', 'eq', 'archive') | selectattr('filename', 'eq', go_artifact_name) | map(attribute='sha256') | first }}"
+
+    - name: Ensure go directory exists
+      ansible.builtin.file:
+        path: "{{ go_dir }}"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
 
     - name: Download artifact
       ansible.builtin.get_url:
         url: "{{ go_artifact_download_url }}"
-        dest: "{{ go_tempdir.path }}"
+        dest: "{{ go_dir }}"
         checksum: "{{ go_checksum }}"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -107,6 +113,8 @@
     - name: Install go tools
       become: true
       become_user: "{{ username }}"
+      #environment:
+      #  PATH: "{{ ansible_env.PATH }}:{{ go_gopath_dir }}/bin"
       ansible.builtin.command:
         cmd: "go install {{ item }}"
       loop: "{{ go_tools }}"

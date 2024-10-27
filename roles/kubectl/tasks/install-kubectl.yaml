@@ -12,12 +12,12 @@
   become: true
   become_user: "{{ username }}"
   ansible.builtin.command:
-    cmd: "{{ kubectl_binary_name }} version"
+    cmd: "{{ kubectl_binary_name }} version --client=true"
   register: kubectl_installed_version_data
   changed_when: false
   failed_when: >
-    (kubectl_installed_version_data.rc != 0 and 'Error from server' not in kubectl_installed_version_data.stderr) or
-    (kubectl_installed_version_data.rc == 0 and 'Client Version' not in kubectl_installed_version_data.stdout)
+    kubectl_installed_version_data.rc != 0 or (kubectl_installed_version_data.rc == 0 and 'Client Version' not in kubectl_installed_version_data.stdout)
+
   when: kubectl_installed.rc == 0
 
 - name: Set installed version
