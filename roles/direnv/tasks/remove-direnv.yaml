@@ -1,0 +1,5 @@
+---
+- name: Ensure removed
+  ansible.builtin.file:
+    path: "{{ direnv_binary_path }}"
+    state: absent

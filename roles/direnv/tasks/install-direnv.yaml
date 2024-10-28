@@ -1,0 +1,70 @@
+---
+- name: Check if installed
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: "command -v {{ direnv_binary_name }}"
+  register: direnv_installed
+  changed_when: false
+  failed_when: direnv_installed.rc != 0 and direnv_installed.stderr != ""
+
+- name: Get installed version data
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: "{{ direnv_binary_name }} --version"
+  register: direnv_installed_version_data
+  changed_when: false
+  failed_when: >
+    direnv_installed_version_data.rc != 0 or not (direnv_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
+  when: direnv_installed.rc == 0
+
+- name: Set installed version
+  ansible.builtin.set_fact:
+    direnv_installed_version: "{{ 'v' + direnv_installed_version_data.stdout if direnv_installed.rc == 0 else '' }}"
+
+- name: Get the latest release data
+  ansible.builtin.uri:
+    url: "{{ direnv_latest_version_url }}"
+    return_content: true
+    headers:
+      Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
+  register: direnv_latest_release_data
+  retries: 3
+  delay: 5
+
+- name: Set the release version
+  ansible.builtin.set_fact:
+    direnv_release_version: "{{ direnv_latest_release_data.json.tag_name if direnv_version == 'latest' else direnv_version }}"
+
+- name: Download and install
+  when: direnv_force_download or direnv_installed_version != direnv_release_version
+  block:
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: direnv_
+      register: direnv_tempdir
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ direnv_artifact_download_url }}"
+        dest: "{{ direnv_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ direnv_tempdir.path }}/{{ direnv_artifact_basename }}"
+        dest: "{{ direnv_binary_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ direnv_tempdir.path }}"
+        state: absent

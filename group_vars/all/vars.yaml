@@ -50,6 +50,7 @@ roles_selected:
   - dconf_editor
   - deno
   - devspace
+  - direnv
   - discord
   - docker
   - dust

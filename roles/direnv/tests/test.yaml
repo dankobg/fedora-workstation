@@ -1,0 +1,6 @@
+---
+- name: Test direnv
+  hosts: localhost
+  remote_user: root
+  roles:
+    - direnv

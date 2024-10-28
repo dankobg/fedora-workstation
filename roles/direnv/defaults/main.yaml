@@ -1,0 +1,33 @@
+---
+# defaults file for direnv
+
+direnv_state: present
+direnv_version: latest
+direnv_binary_name: direnv
+direnv_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ direnv_binary_name }}"
+
+direnv_archs:
+  x86_64: amd64
+  amd64: amd64
+  # x86:
+  aarch64: arm64
+  arm64: arm64
+  armv9l: arm64
+  armv8l: arm64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+direnv_arch: "{{ direnv_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+direnv_force_download: false
+
+direnv_latest_version_url: https://api.github.com/repos/direnv/direnv/releases/latest
+direnv_base_download_url: https://github.com/direnv/direnv/releases/download
+direnv_artifact_name: "direnv.{{ ansible_facts.system | lower }}-{{ direnv_arch }}"
+direnv_artifact_download_url: "{{ direnv_base_download_url }}/{{ direnv_release_version }}/{{ direnv_artifact_name }}"
+direnv_artifact_basename: "{{ direnv_artifact_name }}"

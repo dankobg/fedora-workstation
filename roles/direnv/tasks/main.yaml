@@ -1,0 +1,10 @@
+---
+# tasks file for direnv
+
+- name: Include tasks to install direnv
+  ansible.builtin.include_tasks: install-direnv.yaml
+  when: direnv_state == 'present'
+
+- name: Include tasks to remove direnv
+  ansible.builtin.include_tasks: remove-direnv.yaml
+  when: direnv_state == 'absent'
