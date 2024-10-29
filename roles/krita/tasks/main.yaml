@@ -2,6 +2,6 @@
 # tasks file for krita
 
 - name: Install Krita
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: krita
     state: "{{ krita_state }}"

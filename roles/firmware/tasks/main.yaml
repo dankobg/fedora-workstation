@@ -2,7 +2,7 @@
 # tasks file for firmware
 
 - name: Install firmware update manager
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: fwupd
     state: "{{ firmware_state }}"
 

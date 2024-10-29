@@ -2,6 +2,6 @@
 # tasks file for obs
 
 - name: Install obs
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: obs-studio
     state: "{{ obs_state }}"

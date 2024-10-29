@@ -2,6 +2,6 @@
 # tasks file for age
 
 - name: Install age
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: age
     state: "{{ age_state }}"

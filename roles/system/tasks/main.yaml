@@ -14,19 +14,19 @@
     mode: "0644"
 
 - name: Update DNF package cache
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: "*"
     state: latest
     update_cache: true
     update_only: true
 
 - name: Upgrade all packages to the latest version
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: "*"
     state: latest
 
 - name: Install development tools and libraries group packages
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - "@Development Tools"
       - "@C Development Tools and Libraries"
@@ -34,7 +34,7 @@
   notify: Remove packages not needed anymore
 
 - name: Install common core packages
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: "{{ system_common_packages }}"
     state: latest
   notify: Remove packages not needed anymore

@@ -2,6 +2,6 @@
 # tasks file for just
 
 - name: Install just
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: just
     state: "{{ just_state }}"

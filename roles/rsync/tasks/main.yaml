@@ -2,6 +2,6 @@
 # tasks file for rsync
 
 - name: Install rsync
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: rsync
     state: "{{ rsync_state }}"

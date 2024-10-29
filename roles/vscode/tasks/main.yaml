@@ -13,7 +13,7 @@
   when: vscode_state == 'latest'
 
 - name: Install VSCode
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: code
     state: "{{ vscode_state }}"
 

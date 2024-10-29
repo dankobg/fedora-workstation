@@ -2,6 +2,6 @@
 # tasks file for kde_connect
 
 - name: Install Kde Connect
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: kde-connect
     state: "{{ kde_connect_state }}"

@@ -2,6 +2,6 @@
 # tasks file for qbittorrent
 
 - name: Install qBittorrent
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: qbittorrent
     state: "{{ qbittorrent_state }}"

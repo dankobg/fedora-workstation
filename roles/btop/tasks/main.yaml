@@ -2,6 +2,6 @@
 # tasks file for btop
 
 - name: Install btop
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: btop
     state: "{{ btop_state }}"

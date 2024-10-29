@@ -1,6 +1,6 @@
 ---
 - name: Ensure DNF config-manager plugin exists to manage repository
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: dnf-plugins-core
     state: latest
 
@@ -10,7 +10,7 @@
     creates: /etc/yum.repos.d/docker-ce.repo
 
 - name: Ensure old packages don't exist
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - docker-client
       - docker-client-latest
@@ -24,7 +24,7 @@
     state: absent
 
 - name: Install Docker
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - docker-ce
       - docker-ce-cli

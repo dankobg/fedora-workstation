@@ -18,7 +18,7 @@
     - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
 
 - name: Enable RPM Fusion free and nonfree repositories
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: "{{ item }}"
     state: present
   loop:

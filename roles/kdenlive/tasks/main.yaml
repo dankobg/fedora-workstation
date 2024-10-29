@@ -2,6 +2,6 @@
 # tasks file for kdenlive
 
 - name: Install kdenlive
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: kdenlive
     state: "{{ kdenlive_state }}"

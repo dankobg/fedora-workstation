@@ -10,7 +10,7 @@
   when: ansible_facts.services[item] is defined
 
 - name: Ensure old packages don't exist
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - docker
       - docker-client
@@ -25,7 +25,7 @@
     state: absent
 
 - name: Remove Docker
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - docker-ce
       - docker-ce-cli
@@ -35,7 +35,7 @@
     state: absent
 
 - name: Ensure DNF config-manager plugin exists to manage repository
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: dnf-plugins-core
     state: latest
 

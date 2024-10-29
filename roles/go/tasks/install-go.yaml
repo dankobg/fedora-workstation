@@ -1,6 +1,6 @@
 ---
 - name: Ensure not installed via dnf
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - golang
       - golang-src

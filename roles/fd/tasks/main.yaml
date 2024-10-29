@@ -2,6 +2,6 @@
 # tasks file for fd
 
 - name: Install fd
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: fd-find
     state: "{{ fd_state }}"

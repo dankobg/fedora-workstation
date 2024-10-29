@@ -2,6 +2,6 @@
 # tasks file for flatseal
 
 - name: Install Flatseal
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: flatseal
     state: "{{ flatseal_state }}"

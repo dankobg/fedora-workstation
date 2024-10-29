@@ -2,6 +2,6 @@
 # tasks file for bleachbit
 
 - name: Install Bleachbit
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: bleachbit
     state: "{{ bleachbit_state }}"

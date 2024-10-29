@@ -2,6 +2,6 @@
 # tasks file for gimp
 
 - name: Install gimp
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: gimp
     state: "{{ gimp_state }}"

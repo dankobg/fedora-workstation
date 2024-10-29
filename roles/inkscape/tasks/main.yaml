@@ -2,6 +2,6 @@
 # tasks file for inkscape
 
 - name: Install Inkscape
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: inkscape
     state: "{{ inkscape_state }}"

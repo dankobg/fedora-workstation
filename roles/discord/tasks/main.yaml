@@ -2,6 +2,6 @@
 # tasks file for discord
 
 - name: Install Discord
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: discord
     state: "{{ discord_state }}"

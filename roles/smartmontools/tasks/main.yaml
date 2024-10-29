@@ -2,6 +2,6 @@
 # tasks file for smartmontools
 
 - name: Install smartmontools
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: smartmontools
     state: "{{ smartmontools_state }}"

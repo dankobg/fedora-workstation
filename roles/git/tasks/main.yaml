@@ -2,7 +2,7 @@
 # tasks file for git
 
 - name: Install git
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: git
     state: "{{ git_state }}"
 

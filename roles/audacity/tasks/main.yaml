@@ -2,6 +2,6 @@
 # tasks file for audacity
 
 - name: Install Audacity
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: audacity
     state: "{{ audacity_state }}"

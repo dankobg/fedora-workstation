@@ -2,7 +2,7 @@
 # tasks file for ansible
 
 - name: Install Ansible
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - ansible
       - ansible-lint

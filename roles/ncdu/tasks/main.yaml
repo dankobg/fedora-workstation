@@ -2,6 +2,6 @@
 # tasks file for ncdu
 
 - name: Install ncdu
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: ncdu
     state: "{{ ncdu_state }}"

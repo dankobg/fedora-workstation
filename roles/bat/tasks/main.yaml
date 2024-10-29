@@ -2,6 +2,6 @@
 # tasks file for bat
 
 - name: Install bat
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: bat
     state: "{{ bat_state }}"

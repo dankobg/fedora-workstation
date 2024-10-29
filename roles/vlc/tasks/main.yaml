@@ -2,6 +2,6 @@
 # tasks file for vlc
 
 - name: Install VLC
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: vlc
     state: "{{ vlc_state }}"

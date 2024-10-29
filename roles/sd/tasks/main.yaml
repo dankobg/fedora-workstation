@@ -2,6 +2,6 @@
 # tasks file for sd
 
 - name: Install sd
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: sd
     state: "{{ sd_state }}"

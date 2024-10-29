@@ -2,6 +2,6 @@
 # tasks file for fzf
 
 - name: Install fzf
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: fzf
     state: "{{ fzf_state }}"

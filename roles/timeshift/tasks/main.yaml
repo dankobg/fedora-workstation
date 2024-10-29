@@ -2,6 +2,6 @@
 # tasks file for timeshift
 
 - name: Install Timeshift
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: timeshift
     state: "{{ timeshift_state }}"

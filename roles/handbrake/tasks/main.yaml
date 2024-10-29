@@ -2,7 +2,7 @@
 # tasks file for handbrake
 
 - name: Install HandBrake
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - handbrake
       - handbrake-gui

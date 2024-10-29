@@ -2,6 +2,6 @@
 # tasks file for ripgrep
 
 - name: Install ripgrep
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: ripgrep
     state: "{{ ripgrep_state }}"

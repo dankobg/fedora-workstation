@@ -2,5 +2,5 @@
 # handlers file for system
 
 - name: Remove packages not needed anymore
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     autoremove: true

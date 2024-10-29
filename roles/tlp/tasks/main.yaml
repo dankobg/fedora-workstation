@@ -5,14 +5,14 @@
   when: laptop and tlp_enabled
   block:
     - name: Install tlp
-      ansible.builtin.dnf:
+      ansible.builtin.dnf5:
         name:
           - tlp
           - tlp-rdw
         state: "{{ tlp_state }}"
 
     - name: Remove conflicting power profile daemon
-      ansible.builtin.dnf:
+      ansible.builtin.dnf5:
         name: power-profiles-daemon
         state: absent
 

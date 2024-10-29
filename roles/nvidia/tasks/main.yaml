@@ -2,7 +2,7 @@
 # tasks file for nvidia
 
 - name: Install Nvidia GPU drivers
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name:
       - mesa-vulkan-drivers
       - vulkan

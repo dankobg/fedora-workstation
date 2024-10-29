@@ -2,6 +2,6 @@
 # tasks file for blender
 
 - name: Install blender
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: blender
     state: "{{ blender_state }}"

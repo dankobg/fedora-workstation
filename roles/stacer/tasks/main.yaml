@@ -2,6 +2,6 @@
 # tasks file for stacer
 
 - name: Install Stacer
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: stacer
     state: "{{ stacer_state }}"

@@ -2,6 +2,6 @@
 # tasks file for thunderbird
 
 - name: Install Thunderbird
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: thunderbird
     state: "{{ thunderbird_state }}"

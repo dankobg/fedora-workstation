@@ -2,6 +2,6 @@
 # tasks file for zoxide
 
 - name: Install zoxide
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: zoxide
     state: "{{ zoxide_state }}"

@@ -2,6 +2,6 @@
 # tasks file for hugo
 
 - name: Install Hugo
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: hugo
     state: "{{ hugo_state }}"

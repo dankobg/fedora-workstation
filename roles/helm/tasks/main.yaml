@@ -2,6 +2,6 @@
 # tasks file for helm
 
 - name: Install Helm
-  ansible.builtin.dnf:
+  ansible.builtin.dnf5:
     name: helm
     state: "{{ helm_state }}"
