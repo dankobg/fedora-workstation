@@ -60,6 +60,15 @@
         mode: a+x
         remote_src: true
 
+    - name: Copy well known types
+      ansible.builtin.copy:
+        src: "{{ protoc_tempdir.path }}/include/google"
+        dest: /usr/local/include
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+        remote_src: true
+
     - name: Cleanup temp files
       ansible.builtin.file:
         path: "{{ protoc_tempdir.path }}"

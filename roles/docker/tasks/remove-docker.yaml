@@ -41,16 +41,18 @@
 
 - name: Disable repo # noqa no-changed-when
   vars:
-    docker_remove_repos_prefixes:
+    docker_remove_repos:
       - docker-ce-stable
+      - docker-ce-stable-debuginfo
+      - docker-ce-stable-source
       - docker-ce-test
+      - docker-ce-test-debuginfo
+      - docker-ce-test-source
       - docker-ce-nightly
-    docker_remove_repos_suffixes:
-      - ""
-      - debuginfo
-      - source
+      - docker-ce-nightly-debuginfo
+      - docker-ce-nightly-source
   ansible.builtin.command:
-    cmd: "dnf config-manager --set-disabled {{ docker_remove_repos_prefixes | product(docker_remove_repos_suffixes) | map('join') | join(' ') }}"
+    cmd: "sudo dnf5 config-manager setopt {{ docker_remove_repos | map('regex_replace', '^(.*)$', '\\1.enabled=0') | join(' ') }}"
 
 - name: Remove docker group
   ansible.builtin.group:

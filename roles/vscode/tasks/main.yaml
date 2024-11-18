@@ -19,7 +19,7 @@
 
 - name: Disable repo # noqa no-changed-when
   ansible.builtin.command:
-    cmd: dnf config-manager --set-disabled code
+    cmd: sudo dnf5 config-manager setopt code.enabled=0
   when: vscode_state == 'absent'
 
 - name: Remove yum repository
