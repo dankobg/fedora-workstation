@@ -9,20 +9,6 @@
     cmd: sudo dnf5 config-manager addrepo --overwrite --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo
     creates: /etc/yum.repos.d/docker-ce.repo
 
-- name: Ensure old packages don't exist
-  ansible.builtin.dnf5:
-    name:
-      - docker-client
-      - docker-client-latest
-      - docker-common
-      - docker-latest
-      - docker-latest-logrotate
-      - docker-logrotate
-      - docker-selinux
-      - docker-engine-selinux
-      - docker-engine
-    state: absent
-
 - name: Install Docker
   ansible.builtin.dnf5:
     name:
