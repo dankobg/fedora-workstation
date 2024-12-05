@@ -2,4 +2,6 @@
 # handlers file for nvidia
 
 - name: Reboot machine
-  ansible.builtin.reboot:
+  ansible.builtin.debug:
+    msg: "RESTART IS REQUIRED"
+  # ansible.builtin.reboot:
