@@ -115,3 +115,22 @@
       ansible.builtin.file:
         path: "{{ zed_tempdir.path }}"
         state: absent
+
+- name: Configure zed
+  block:
+    - name: Ensure config directory exists
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.config/zed"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      register: config_dir
+
+    - name: Copy config
+      ansible.builtin.template:
+        src: settings.json.j2
+        dest: "{{ config_dir.path }}/settings.json"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
