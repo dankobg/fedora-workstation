@@ -1,10 +1,19 @@
 ---
 # tasks file for nvidia
 
+- name: Remove non RPM Fusion mesa drivers
+  ansible.builtin.dnf5:
+    name:
+      - mesa-va-drivers
+      - mesa-vdpau-drivers
+    state: absent
+
 - name: Install Nvidia GPU drivers
   ansible.builtin.dnf5:
     name:
       - mesa-vulkan-drivers
+      - mesa-va-drivers-freeworld
+      - mesa-vdpau-drivers-freeworld
       - vulkan
       - vulkan-tools
       - akmod-nvidia
