@@ -6,14 +6,14 @@
     name:
       - mesa-va-drivers
       - mesa-vdpau-drivers
+      - mesa-va-drivers-freeworld
+      - mesa-vdpau-drivers-freeworld
     state: absent
 
 - name: Install Nvidia GPU drivers
   ansible.builtin.dnf5:
     name:
       - mesa-vulkan-drivers
-      - mesa-va-drivers-freeworld
-      - mesa-vdpau-drivers-freeworld
       - vulkan
       - vulkan-tools
       - akmod-nvidia
