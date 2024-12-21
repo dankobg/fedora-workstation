@@ -21,11 +21,11 @@
   register: kernel_module_status
   changed_when: false
   failed_when: >
-    not (kernel_module_status.stdout | regex_search('^\d+\.\d+\.\d+$') or 'Module nvidia not found' in kernel_module_status.stdout)
+    not (kernel_module_status.stdout | regex_search('^\d+\.\d+(\.\d+)?$') or 'Module nvidia not found' in kernel_module_status.stdout)
   retries: 10
   delay: 30
   until: >
-    kernel_module_status.stdout | regex_search('^\d+\.\d+\.\d+$')
+    kernel_module_status.stdout | regex_search('^\d+\.\d+(\.\d+)?$')
 
 - name: Display the kernel module status
   ansible.builtin.debug:
