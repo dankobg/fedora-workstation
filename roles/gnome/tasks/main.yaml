@@ -188,10 +188,12 @@
         value: "{{ item.value }}"
         state: "{{ item.state | default('present') }}"
       loop:
+        - key: /org/gnome/desktop/input-sources/current
+          value: "uint32 0"
         - key: /org/gnome/desktop/input-sources/mru-sources
           value: "[('xkb', 'us'), ('xkb', 'rs+alternatequotes'), ('xkb', 'rs+latinalternatequotes')]"
         - key: /org/gnome/desktop/input-sources/sources
-          value: "[('xkb', 'us'), ('xkb', 'rs+latinalternatequotes'), ('xkb', 'rs+alternatequotes')]"
+          value: "[('xkb', 'us'), ('xkb', 'rs+alternatequotes'), ('xkb', 'rs+latinalternatequotes')]"
         - key: /org/gnome/desktop/input-sources/xkb-options
           value: "['caps:escape']"
 
