@@ -63,6 +63,7 @@ roles_selected:
   - fzf
   - gearlever
   - gh
+  - ghostty
   - git
   - delta
   - glow
@@ -79,7 +80,7 @@ roles_selected:
   - k9s
   - kanata
   - kde_connect
-  - kitty
+  # - kitty
   - ksops
   - kubectl
   - kubectx

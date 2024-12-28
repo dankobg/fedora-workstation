@@ -11,3 +11,22 @@
   ansible.builtin.dnf5:
     name: ghostty
     state: "{{ ghostty_state }}"
+
+- name: Configure ghostty
+  block:
+    - name: Ensure config directory exists
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.config/ghostty"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      register: config_dir
+
+    - name: Copy config
+      ansible.builtin.template:
+        src: config.j2
+        dest: "{{ config_dir.path }}/config"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
