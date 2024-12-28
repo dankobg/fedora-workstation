@@ -1,0 +1,4 @@
+---
+# defaults file for ghostty
+
+ghostty_state: latest

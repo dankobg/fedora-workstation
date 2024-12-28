@@ -1,0 +1,13 @@
+---
+# tasks file for ghostty
+
+- name: Enable yum repository
+  community.general.copr:
+    host: copr.fedorainfracloud.org
+    state: "{{ 'enabled' if ghostty_state == 'latest' else 'disabled' }}"
+    name: pgdev/ghostty
+
+- name: Install ghostty
+  ansible.builtin.dnf5:
+    name: ghostty
+    state: "{{ ghostty_state }}"
