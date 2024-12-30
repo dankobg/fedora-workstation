@@ -3,5 +3,5 @@
 
 - name: Regenerate GRUB configuration file # noqa no-changed-when
   ansible.builtin.command:
-    cmd: grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
+    cmd: grub2-mkconfig -o /boot/grub2/grub.cfg
     # Not sure if i can use `creates` here, because it might not be run if grub.cfg already exists, but new generated cfg is different
