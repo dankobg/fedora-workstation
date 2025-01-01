@@ -31,7 +31,7 @@
     - name: Configure dconf-editor
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /ca/desrt/dconf-editor/show-warning
@@ -40,7 +40,7 @@
     - name: Configure TextEditor
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/TextEditor/indent-style
@@ -57,7 +57,7 @@
     - name: Configure Totem
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/Totem/active-plugins
@@ -71,7 +71,7 @@
     - name: Configure baobab
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/baobab/ui/active-chart
@@ -80,7 +80,7 @@
     - name: Configure boxes
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/boxes/first-run
@@ -91,7 +91,7 @@
     - name: Configure calculator
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/calculator/accuracy
@@ -124,7 +124,7 @@
     - name: Configure clocks
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/clocks/state/window/panel-id
@@ -133,7 +133,7 @@
     - name: Configure control-center
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/control-center/last-panel
@@ -142,7 +142,7 @@
     - name: Configure desktop app folders
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/app-folders/folder-children
@@ -167,7 +167,7 @@
     - name: Configure calendar
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/calendar/show-weekdate
@@ -176,7 +176,7 @@
     - name: Configure datetime
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/datetime/automatic-timezone
@@ -185,7 +185,7 @@
     - name: Configure input sources
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/input-sources/current
@@ -200,7 +200,7 @@
     - name: Configure interface
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/interface/clock-format
@@ -221,7 +221,7 @@
     - name: Configure notifications
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application-children
@@ -232,7 +232,7 @@
     - name: Configure vscode
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/code/application-id
@@ -241,7 +241,7 @@
     - name: Configure discord
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/discord/application-id
@@ -250,7 +250,7 @@
     - name: Configure gnome-power-panel
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/gnome-power-panel/application-id
@@ -259,7 +259,7 @@
     - name: Configure it-mijorus-smile
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/it-mijorus-smile/application-id
@@ -268,7 +268,7 @@
     - name: Configure org-freedesktop-problems-applet
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-freedesktop-problems-applet/application-id
@@ -277,7 +277,7 @@
     - name: Configure org-gnome-nautilus
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-nautilus/application-id
@@ -286,7 +286,7 @@
     - name: Configure org-gnome-rhythmbox3
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-rhythmbox3/application-id
@@ -295,7 +295,7 @@
     - name: Configure org-gnome-software
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-software/application-id
@@ -304,7 +304,7 @@
     - name: Configure org-gnome-solanum
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-solanum/application-id
@@ -313,7 +313,7 @@
     - name: Configure org-gnome-terminal
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-terminal/application-id
@@ -322,7 +322,7 @@
     - name: Configure org-gnome-texteditor
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-texteditor/application-id
@@ -331,7 +331,7 @@
     - name: Configure org-mozilla-firefox
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/notifications/application/org-mozilla-firefox/application-id
@@ -340,7 +340,7 @@
     - name: Configure peripherals keyboard
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/peripherals/keyboard/delay
@@ -353,7 +353,7 @@
     - name: Configure peripherals mouse
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/peripherals/mouse/accel-profile
@@ -364,7 +364,7 @@
     - name: Configure peripherals touchpad
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled
@@ -373,7 +373,7 @@
     - name: Configure privacy
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/privacy/old-files-age
@@ -384,7 +384,7 @@
     - name: Configure search-providers
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/search-providers/sort-order
@@ -393,7 +393,7 @@
     - name: Configure session
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/session/idle-delay
@@ -402,7 +402,7 @@
     - name: Configure evince
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/evince/document-directory
@@ -431,7 +431,7 @@
     - name: Configure evolution-data-server
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/evolution-data-server/migrated
@@ -440,7 +440,7 @@
     - name: Configure gnome-system-monitor
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/gnome-system-monitor/current-tab
@@ -455,7 +455,7 @@
     - name: Configure gnome-system-monitor
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/gnome-system-monitor/disktreenew/col-6-visible
@@ -472,7 +472,7 @@
     - name: Configure login-screen
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/login-screen/enable-fingerprint-authentication
@@ -483,7 +483,7 @@
     - name: Configure maps
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/maps/last-viewed-location
@@ -498,7 +498,7 @@
     - name: Configure nautilus
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /nautilus/compression/default-compression-format
@@ -521,7 +521,7 @@
     - name: Configure portal filechooser
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/portal/filechooser/code/last-folder-path
@@ -530,7 +530,7 @@
     - name: Configure it.mijorus.gearlever
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/portal/filechooser/it.mijorus.gearlever/last-folder-path
@@ -539,7 +539,7 @@
     - name: Configure org.gnome.Settings
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/portal/filechooser/org.gnome.Settings/last-folder-path
@@ -548,7 +548,7 @@
     - name: Configure rhythmbox
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/rhythmbox/position
@@ -578,7 +578,7 @@
     - name: Configure settings-daemon
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/settings-daemon/plugins/color/night-light-enabled
@@ -601,7 +601,7 @@
     - name: Configure gnome shell
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/shell/app-picker-layout
@@ -656,7 +656,7 @@
     - name: Configure software
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/software/download-updates
@@ -677,7 +677,7 @@
     - name: Configure legacy
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/terminal/legacy/theme-variant
@@ -709,7 +709,7 @@
     - name: Configure gtk4 file-chooser
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gtk/gtk4/settings/file-chooser/date-format
@@ -736,7 +736,7 @@
     - name: Configure color-chooser
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gtk/settings/color-chooser/custom-colors
@@ -747,7 +747,7 @@
     - name: Configure file-chooser
       community.general.dconf:
         key: "{{ item.key }}"
-        value: "{{ item.value }}"
+        value: "{{ item.value | string }}"
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gtk/settings/file-chooser/clock-format
