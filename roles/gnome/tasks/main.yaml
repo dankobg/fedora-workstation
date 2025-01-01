@@ -197,7 +197,7 @@
           value: "[('xkb', 'us')]"
           filter: true
         - key: /org/gnome/desktop/input-sources/sources
-          value: "[('xkb', 'us'), ('xkb', 'rs+alternatequotes'), ('xkb', 'rs+latinalternatequotes')]"
+          value: "[('xkb', 'us'), ('xkb', 'rs'), ('xkb', 'rs+latinyz')]"
           filter: true
         - key: /org/gnome/desktop/input-sources/xkb-options
           value: "['caps:escape']"
