@@ -648,12 +648,13 @@
           value:
             [
               "org.gnome.Nautilus.desktop",
-              "kitty.desktop",
+              "com.mitchellh.ghostty.desktop",
               "org.mozilla.firefox.desktop",
               "code.desktop",
               "zed.desktop",
               "io.beekeeperstudio.Studio.desktop",
               "bruno.desktop",
+              "com.usebruno.Bruno.desktop",
               "com.logseq.Logseq.desktop",
               "com.bitwarden.desktop.desktop",
               "discord.desktop",
@@ -664,8 +665,8 @@
             ]
         - key: /org/gnome/shell/welcome-dialog-last-shown-version
           value: "'46.4'"
-
     - name: Configure software
+
       community.general.dconf:
         key: "{{ item.key }}"
         value: "{{ item.value | string if item.filter | default(false) else item.value }}"
