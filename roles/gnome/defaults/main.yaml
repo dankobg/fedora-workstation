@@ -17,7 +17,8 @@ gnome_apps:
   - gnome-maps
   - gnome-software
   - gnome-system-monitor
-  - gnome-terminal
+  # - gnome-console
+  - ptyxis
   - gnome-text-editor
   - gnome-tour
   - gnome-user-docs

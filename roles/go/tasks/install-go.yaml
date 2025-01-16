@@ -3,6 +3,7 @@
   ansible.builtin.dnf5:
     name:
       - golang
+      - golang-bin
       - golang-src
     state: absent
     autoremove: true
