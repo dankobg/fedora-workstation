@@ -1,0 +1,34 @@
+# Fish aliases
+
+alias ..="cd ../"
+alias ...="cd ../../"
+alias ....="cd ../../../"
+
+alias dc="docker compose"
+alias k="kubectl"
+alias ld="lazydocker"
+alias lg="lazygit"
+alias z="zoxide"
+alias zj="zellij"
+alias wtr="curl wttr.in"
+
+if type -q eza
+  alias l='eza --color=auto --icons=auto --group-directories-first'
+  alias ls='eza --color=auto --icons=auto --group-directories-first'
+	alias la='eza --color=auto --icons=auto --group-directories-first -a'
+	alias ll='eza --color=auto --icons=auto --group-directories-first -lhgo --git'
+	alias lla='eza --color=auto --icons=auto --group-directories-first -alhgo --git'
+	alias tree='eza --color=auto --icons=auto --tree'
+else
+  alias l='ls --color=auto'
+  alias ls='ls --color=auto'
+  alias la='ls --color=auto -a'
+  alias ll='ls --color=auto -lh'
+  alias lla='ls --color=auto -lha'
+end
+
+if type -q bat
+	alias cat='bat --color=auto --style=auto'
+end
+
+alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"

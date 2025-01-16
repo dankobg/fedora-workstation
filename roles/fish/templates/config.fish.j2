@@ -1,0 +1,13 @@
+if test -f "$XDG_CONFIG_HOME/fish/fish_env"
+	source "$XDG_CONFIG_HOME/fish/fish_env"
+end
+
+if test -f "$XDG_CONFIG_HOME/fish/.aliasrc"
+	source "$XDG_CONFIG_HOME/fish/.aliasrc"
+end
+
+if status is-interactive
+end
+
+direnv hook fish | source
+zoxide init fish | source

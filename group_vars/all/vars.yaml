@@ -22,6 +22,7 @@ system_hosts:
 roles_selected:
   - dnf
   - zsh
+  # - fish
   - system
   - nvidia
   - firmware

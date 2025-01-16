@@ -1,0 +1,72 @@
+---
+# tasks file for fish
+
+- name: Install fish
+  ansible.builtin.dnf5:
+    name: fish
+    state: "{{ fish_state }}"
+
+- name: Configure fish
+  when: fish_state == 'latest'
+  block:
+    - name: Check if installed
+      become: true
+      become_user: "{{ username }}"
+      ansible.builtin.command:
+        cmd: command -v fish
+      register: fish_installed
+      changed_when: false
+      failed_when: fish_installed.rc != 0 and fish_installed.stderr != ""
+
+    - name: Set fish installed path
+      ansible.builtin.set_fact:
+        fish_path: "{{ fish_installed.stdout }}"
+
+    - name: Ensure fish config directory exists
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.config/fish"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      register: config_dir
+
+    - name: Copy fish config files
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "/home/{{ username }}/.config/fish/{{ item }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+      loop:
+        - "fish_env"
+        - ".aliasrc"
+        - "config.fish"
+
+    - name: Change shell to fish
+      ansible.builtin.user:
+        name: "{{ username }}"
+        shell: "{{ fish_path }}"
+
+- name: Remove fish files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/home/{{ username }}/.config/fish"
+  when: fish_state == 'absent'
+
+- name: Get bash path
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: command -v bash
+  register: bash_path
+  changed_when: false
+  when: fish_state == 'absent'
+
+- name: Change shell to bash
+  ansible.builtin.user:
+    name: "{{ username }}"
+    shell: "{{ bash_path.stdout }}"
+  when: fish_state == 'absent'
