@@ -660,7 +660,7 @@
             'org.qbittorrent.qBittorrent.desktop': <{'position': <13>}>, 'it.mijorus.smile.desktop': <{'position': <14>}>,
             'stacer.desktop': <{'position': <15>}>, 'org.mozilla.thunderbird.desktop': <{'position': <16>}>,
             'timeshift-gtk.desktop': <{'position': <17>}>, 'vlc.desktop': <{'position': <18>}>, 'syncthing-start.desktop': <{'position': <19>}>,
-            'syncthing-ui.desktop': <{'position': <20>}>, 'org.gnome.Terminal.desktop': <{'position': <21>}>,'zed.desktop': <{'position': <22>}>}]
+            'syncthing-ui.desktop': <{'position': <20>}>, 'org.gnome.Terminal.desktop': <{'position': <21>}>}]
         - key: /org/gnome/shell/disabled-extensions
           value: "'@as []'"
         - key: /org/gnome/shell/enabled-extensions
@@ -673,7 +673,7 @@
               "com.mitchellh.ghostty.desktop",
               "org.mozilla.firefox.desktop",
               "code.desktop",
-              "zed.desktop",
+              "dev.zed.Zed.desktop",
               "io.beekeeperstudio.Studio.desktop",
               "bruno.desktop",
               "com.usebruno.Bruno.desktop",

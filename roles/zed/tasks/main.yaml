@@ -1,10 +1,47 @@
 ---
 # tasks file for zed
 
-- name: Include tasks to install zed
-  ansible.builtin.include_tasks: install-zed.yaml
-  when: zed_state == 'present'
+- name: Add repo
+  ansible.builtin.command:
+    cmd: sudo dnf5 config-manager addrepo --overwrite --from-repofile https://github.com/terrapkg/subatomic-repos/raw/main/terra.repo
+    creates: /etc/yum.repos.d/terra.repo
 
-- name: Include tasks to remove zed
-  ansible.builtin.include_tasks: remove-zed.yaml
+- name: Install Zed
+  ansible.builtin.dnf5:
+    name: zed
+    state: "{{ zed_state }}"
+
+- name: Configure zed
+  block:
+    - name: Ensure config directory exists
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.config/zed"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+      register: config_dir
+
+    - name: Copy config
+      ansible.builtin.template:
+        src: settings.json.j2
+        dest: "{{ config_dir.path }}/settings.json"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0644"
+
+- name: Disable repo # noqa no-changed-when
+  ansible.builtin.command:
+    cmd: sudo dnf5 config-manager setopt zed.enabled=0
   when: zed_state == 'absent'
+
+- name: Remove yum repository
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/terra.repo
+    state: absent
+  when: zed_state == 'absent'
+
+- name: Ensure removed
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config/zed"
+    state: absent

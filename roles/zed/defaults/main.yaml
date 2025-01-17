@@ -1,33 +1,4 @@
 ---
 # defaults file for zed
 
-zed_state: present
-zed_version: latest
-zed_binary_name: zed
-zed_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ zed_binary_name }}"
-
-zed_archs:
-  x86_64: x86_64
-  amd64: x86_64
-  # x86:
-  aarch64: aarch64
-  arm64: aarch64
-  armv9l: aarch64
-  armv8l: aarch64
-  # armv7l:
-  # armv6l:
-  # aarch32:
-  # s390x:
-  # i386:
-  # i686:
-  # ppc64le:
-
-zed_arch: "{{ zed_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
-
-zed_force_download: false
-
-zed_latest_version_url: https://api.github.com/repos/zed-industries/zed/releases/latest
-zed_base_download_url: https://github.com/zed-industries/zed/releases/download
-zed_artifact_name: "zed-{{ ansible_facts.system | lower }}-{{ zed_arch }}.tar.gz"
-zed_artifact_download_url: "{{ zed_base_download_url }}/{{ zed_release_version }}/{{ zed_artifact_name }}"
-zed_artifact_basename: "{{ zed_artifact_name | regex_replace('.tar.gz', '') }}"
+zed_state: latest
