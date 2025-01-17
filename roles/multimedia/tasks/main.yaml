@@ -25,6 +25,7 @@
       - ffmpegthumbnailer
       - gstreamer1-plugins-bad-freeworld
       - gstreamer1-plugins-ugly
+      - libavcodec-freeworld
       - mozilla-openh264
     state: latest
     enablerepo: fedora-cisco-openh264
