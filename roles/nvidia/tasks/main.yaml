@@ -4,16 +4,24 @@
 - name: Install Nvidia GPU drivers
   ansible.builtin.dnf5:
     name:
-      - mesa-vulkan-drivers
-      - vulkan
-      - vulkan-tools
       - akmod-nvidia
       - xorg-x11-drv-nvidia
       - xorg-x11-drv-nvidia-cuda
+      - xorg-x11-drv-nvidia-cuda-libs
       - intel-media-driver
+      - vulkan-loader
+      - vulkan-tools
+      - mesa-vulkan-drivers
       - libva-nvidia-driver
+      - libva-utils
+      - vdpauinfo
     state: latest
     update_cache: true
+
+- name: Mark the drivers so they aren't considered as unneeded by accident
+  ansible.builtin.command:
+    cmd: dnf mark user akmod-nvidia -y
+  changed_when: false
 
 - name: Check the kernel module version
   ansible.builtin.command:

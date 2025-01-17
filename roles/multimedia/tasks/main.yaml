@@ -1,26 +1,31 @@
 ---
 # tasks file for multimedia
 
-- name: Install multimedia codecs
+- name: Swap ffmpeg-free with rpmfusion ffmpeg
+  ansible.builtin.command:
+    cmd: dnf swap -y --allowerasing ffmpeg-free ffmpeg
+  register: swap_result
+  changed_when: "'Nothing to do' not in swap_result.stdout"
+
+- name: Update group multimedia codecs
   ansible.builtin.dnf5:
     name:
-      - "@Multimedia"
-      - "@Sound and Video"
-      - "gstreamer1-plugins-base"
-      - "gstreamer1-plugins-bad-*"
-      - "gstreamer1-plugins-good-*"
-      - "gstreamer1-plugin-openh264"
-      - "gstreamer1-libav"
-      - "lame*"
-      - "ffmpeg"
-      - "ffmpeg-libs"
-      - "ffmpegthumbnailer"
-      - "mozilla-openh264"
+      - '@multimedia'
+      - '@sound-and-video'
+    state: latest
+    install_weak_deps: false
     exclude:
-      - "gstreamer1-plugins-bad-free-devel"
-      - "lame-devel"
-      - "PackageKit-gstreamer-plugin"
+      - PackageKit-gstreamer-plugin
+      - gstreamer1-plugins-bad-free
+      - gstreamer1-plugins-ugly-free
+
+- name: Install additional plugins
+  ansible.builtin.dnf5:
+    name:
+      - ffmpegthumbnailer
+      - gstreamer1-plugins-bad-freeworld
+      - gstreamer1-plugins-ugly
+      - mozilla-openh264
     state: latest
     enablerepo: fedora-cisco-openh264
     allowerasing: true
-    install_weak_deps: false
