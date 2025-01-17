@@ -345,7 +345,7 @@
         - key: /org/gnome/Ptyxis/Profiles/7c78a5c5777c575e1ecab7b767891158/bold-is-bright
           value: true
         - key: /org/gnome/Ptyxis/Profiles/7c78a5c5777c575e1ecab7b767891158/palette
-          value: gnome
+          value: "'gnome'"
 
     - name: Configure org-gnome-texteditor
       community.general.dconf:
