@@ -12,6 +12,7 @@
     state: "{{ zed_state }}"
 
 - name: Configure zed
+  when: zed_state == 'latest'
   block:
     - name: Ensure config directory exists
       ansible.builtin.file:
@@ -45,3 +46,4 @@
   ansible.builtin.file:
     path: "/home/{{ username }}/.config/zed"
     state: absent
+  when: zed_state == 'absent'
