@@ -137,7 +137,7 @@
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/control-center/last-panel
-          value: "'network'"
+          value: "'applications'"
 
     - name: Configure desktop app folders
       community.general.dconf:
@@ -223,6 +223,8 @@
           value: false
         - key: /org/gnome/desktop/interface/toolkit-accessibility
           value: false
+        - key: /org/gnome/desktop/interface/accent-color
+          value: "'purple'"
 
     - name: Configure notifications
       community.general.dconf:
@@ -324,6 +326,26 @@
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-terminal/application-id
           value: "'org.gnome.Terminal.desktop'"
+
+    - name: Configure org-gnome-Ptyxis
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value | string if item.filter | default(false) else item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/Ptyxis/profile-uuids
+          value: "['7c78a5c5777c575e1ecab7b767891158']"
+          filter: true
+        - key: /org/gnome/Ptyxis/default-profile-uuid
+          value: "'7c78a5c5777c575e1ecab7b767891158'"
+        - key: /org/gnome/Ptyxis/font-name
+          value: "'JetBrainsMonoNL Nerd Font Mono 11'"
+        - key: /org/gnome/Ptyxis/use-system-font
+          value: false
+        - key: /org/gnome/Ptyxis/Profiles/7c78a5c5777c575e1ecab7b767891158/bold-is-bright
+          value: true
+        - key: /org/gnome/Ptyxis/Profiles/7c78a5c5777c575e1ecab7b767891158/palette
+          value: gnome
 
     - name: Configure org-gnome-texteditor
       community.general.dconf:
