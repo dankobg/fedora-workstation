@@ -1,0 +1,33 @@
+---
+# defaults file for nix
+
+nix_state: present
+nix_installer_version: latest
+nix_installer_binary_name: nix-installer
+nix_installer_binary_path: "{{ binaries_path | default('/usr/local/bin') }}/{{ nix_installer_binary_name }}"
+
+nix_installer_archs:
+  x86_64: x86_64
+  amd64: x86_64
+  # x86:
+  aarch64: aarch64
+  arm64: aarch64
+  armv9l: aarch64
+  armv8l: aarch64
+  # armv7l:
+  # armv6l:
+  # aarch32:
+  # s390x:
+  # i386:
+  # i686:
+  # ppc64le:
+
+nix_installer_arch: "{{ nix_installer_archs.get(ansible_facts.architecture) | default(ansible_facts.architecture) }}"
+
+nix_installer_force_download: false
+
+nix_installer_latest_version_url: https://api.github.com/repos/DeterminateSystems/nix-installer/releases/latest
+nix_installer_base_download_url: https://github.com/DeterminateSystems/nix-installer/releases/download
+nix_installer_artifact_name: "nix-installer-{{ nix_installer_arch }}-{{ ansible_facts.system }}"
+nix_installer_artifact_download_url: "{{ nix_installer_base_download_url }}/{{ nix_installer_release_version }}/{{ nix_installer_artifact_name }}"
+nix_installer_artifact_basename: "{{ nix_installer_artifact_name }}"

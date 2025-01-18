@@ -1,0 +1,75 @@
+---
+- name: Check if determinate nix installer is installed
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: "command -v {{ nix_installer_binary_name }}"
+  register: nix_installer_installed
+  changed_when: false
+  failed_when: nix_installer_installed.rc != 0 and nix_installer_installed.stderr != ""
+
+- name: Get determinate nix installer installed version data
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command:
+    cmd: "{{ nix_installer_binary_name }} --version"
+  register: nix_installer_installed_version_data
+  changed_when: false
+  failed_when: >
+    nix_installer_installed_version_data.rc != 0 or (nix_installer_installed_version_data.rc == 0 and 'nix' not in nix_installer_installed_version_data.stdout)
+  when: nix_installer_installed.rc == 0
+
+- name: Set determinate nix installer installed version
+  ansible.builtin.set_fact:
+    nix_installer_installed_version: "{{ 'v' + nix_installer_installed_version_data.stdout.split()[1] if nix_installer_installed.rc == 0 else '' }}"
+
+- name: Get the latest determinate nix installer release data
+  ansible.builtin.uri:
+    url: "{{ nix_installer_latest_version_url }}"
+    return_content: true
+    headers:
+      Authorization: "{{ 'Bearer ' + github_pat if github_pat is defined else omit }}"
+  register: nix_installer_latest_release_data
+  retries: 3
+  delay: 5
+
+- name: Set the determinate nix installer release version
+  ansible.builtin.set_fact:
+    nix_installer_release_version: "{{ nix_installer_latest_release_data.json.tag_name if nix_installer_version == 'latest' else nix_installer_version }}"
+
+- name: Download and install determinate nix installer
+  when: nix_installer_force_download or nix_installer_installed_version != nix_installer_release_version
+  block:
+    - name: Create download temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: nix_installer_
+      register: nix_installer_tempdir
+
+    - name: Download artifact
+      ansible.builtin.get_url:
+        url: "{{ nix_installer_artifact_download_url }}"
+        dest: "{{ nix_installer_tempdir.path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+      register: downloaded_artifact
+
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: "{{ downloaded_artifact.dest }}"
+        dest: "{{ nix_installer_binary_path }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: a+x
+        remote_src: true
+
+    - name: Cleanup temp files
+      ansible.builtin.file:
+        path: "{{ nix_installer_tempdir.path }}"
+        state: absent
+
+- name: Install nix
+  ansible.builtin.command:
+    cmd: "{{ nix_installer_binary_name }} install --no-confirm"
+  creates: /nix

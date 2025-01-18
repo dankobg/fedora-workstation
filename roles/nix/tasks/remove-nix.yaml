@@ -1,0 +1,7 @@
+---
+- name: Ensure removed
+  ansible.builtin.command:
+    cmd: "{{ nix_installer_binary_path }} uninstall --no-confirm"
+  # ansible.builtin.file:
+  #   path: "{{ nix_binary_path }}"
+  #   state: absent

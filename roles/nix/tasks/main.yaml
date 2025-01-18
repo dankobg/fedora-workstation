@@ -1,0 +1,10 @@
+---
+# tasks file for nix
+
+- name: Include tasks to install nix
+  ansible.builtin.include_tasks: install-nix.yaml
+  when: nix_state == 'present'
+
+- name: Include tasks to remove nix
+  ansible.builtin.include_tasks: remove-nix.yaml
+  when: nix_state == 'absent'

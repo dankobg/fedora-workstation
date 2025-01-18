@@ -43,12 +43,13 @@ roles_selected:
   - bat
   - beekeeper_studio
   - bitwarden
-  - bw
   - bleachbit
   - bruno
   - btop
+  - bw
   - czkawka
   - dconf_editor
+  - delta
   - deno
   - devspace
   - direnv
@@ -66,7 +67,6 @@ roles_selected:
   - gh
   - ghostty
   - git
-  - delta
   - glow
   - go
   - google_chrome
@@ -93,6 +93,7 @@ roles_selected:
   - mkcert
   - ncdu
   - network_tools
+  # - nix
   - node
   - onefetch
   - pika_backup
@@ -127,10 +128,10 @@ roles_selected:
   # maybe tag these with (audio/video/editting or something, i don't use them right now)
   # - audacity
   # - blender
+  # - davinciresolve
   # - gimp
   # - inkscape
-  # - obs
   # - kdenlive
-  # - davinciresolve
   # - krita
+  # - obs
   # - tlp
