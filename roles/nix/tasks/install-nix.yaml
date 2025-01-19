@@ -72,4 +72,4 @@
 - name: Install nix
   ansible.builtin.command:
     cmd: "{{ nix_installer_binary_name }} install --no-confirm"
-  creates: /nix
+    creates: /nix

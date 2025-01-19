@@ -93,7 +93,7 @@ roles_selected:
   - mkcert
   - ncdu
   - network_tools
-  # - nix
+  - nix
   - node
   - onefetch
   - pika_backup

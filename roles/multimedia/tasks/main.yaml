@@ -25,8 +25,12 @@
       - ffmpegthumbnailer
       - gstreamer1-plugins-bad-freeworld
       - gstreamer1-plugins-ugly
-      - libavcodec-freeworld
+      # - libavcodec-freeworld
       - mozilla-openh264
     state: latest
     enablerepo: fedora-cisco-openh264
     allowerasing: true
+
+- name: Temp fix because of dnf5 bug
+  ansible.builtin.command:
+    cmd: dnf install libavcodec-freeworld -y --allowerasing
