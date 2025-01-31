@@ -13,6 +13,7 @@
     state: "{{ ghostty_state }}"
 
 - name: Configure ghostty
+  when: ghostty_state == 'latest'
   block:
     - name: Ensure config directory exists
       ansible.builtin.file:
@@ -30,3 +31,9 @@
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0644"
+
+- name: Remove config
+  when: ghostty_state == 'absent'
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config/ghostty"
+    state: absent
