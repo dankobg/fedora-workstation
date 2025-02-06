@@ -19,7 +19,6 @@ x86_64:
 
 not fully idempotent yet, they make small changes:
 
-- docker (hmm need to see what is going on, takes a bit of time. Should be idempotent because it's only dnf module. Ensure old deleted - says changed even though they dont exist)
 - go (go install tools like gopls,dlv,goimports etc. Don't know how to make it idempotent)
 
 TODO:
