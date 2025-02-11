@@ -1,17 +1,17 @@
 [[language]]
 name = "html"
-auto-format = true
 formatter = { command = 'prettier', args = ["--parser", "html"] }
+auto-format = true
 
 [[language]]
 name = "css"
-auto-format = true
 formatter = { command = 'prettier', args = ["--parser", "css"] }
+auto-format = true
 
 [[language]]
 name = "scss"
-auto-format = true
 formatter = { command = 'prettier', args = ["--parser", "scss"] }
+auto-format = true
 
 [[language]]
 name = "json"
@@ -29,30 +29,39 @@ formatter = { command = "prettier", args = ["--parser", "yaml"] }
 auto-format = true
 
 [[language]]
-name = "javascript"
+name = "markdown"
+formatter = { command = 'prettier', args = ["--parser", "markdown"] }
 auto-format = true
+
+[[language]]
+name = "graphql"
+formatter = { command = 'prettier', args = ["--parser", "graphql"] }
+auto-format = true
+
+[[language]]
+name = "javascript"
 formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
 
 [[language]]
 name = "typescript"
-auto-format = true
 formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
 
 [[language]]
 name = "tsx"
-auto-format = true
 formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "graphql"
+formatter = { command = 'prettier', args = ["--parser", "graphql"] }
+auto-format = true
 
 [[language]]
 name = "go"
-auto-format = true
 formatter = { command = "goimports" }
+auto-format = true
 
 [language-server.rust-analyzer.config.check]
 command = "clippy"
-
-[[language]]
-name = "svelte"
-auto-format = true
-formatter = { command = "prettier", args = ["--plugin", "prettier-plugin-svelte", "--parser", "svelte"] }
-
