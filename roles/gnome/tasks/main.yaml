@@ -621,7 +621,7 @@
         - key: /org/gnome/settings-daemon/plugins/media-keys/volume-step
           value: 5
         - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding
-          value: "'<Control>period'"
+          value: "'<Control>e'"
         - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command
           value: "'flatpak run it.mijorus.smile'"
         - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name
