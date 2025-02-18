@@ -4,8 +4,20 @@
 - name: Swap ffmpeg-free with rpmfusion ffmpeg
   ansible.builtin.command:
     cmd: dnf swap -y --allowerasing ffmpeg-free ffmpeg
-  register: swap_result
-  changed_when: "'Nothing to do' not in swap_result.stdout"
+  register: swap_ffmpeg_result
+  changed_when: "'Nothing to do' not in swap_ffmpeg_result.stdout"
+
+- name: Swap mesa-va-drivers with rpmfusion mesa-va-drivers-freeworld
+  ansible.builtin.command:
+    cmd: dnf swap mesa-va-drivers mesa-va-drivers-freeworld
+  register: swap_mesa_result1
+  changed_when: "'Nothing to do' not in swap_mesa_result1.stdout"
+
+- name: Swap mesa-vdpau-drivers with rpmfusion mesa-vdpau-drivers-freeworld
+  ansible.builtin.command:
+    cmd: dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
+  register: swap_mesa_result2
+  changed_when: "'Nothing to do' not in swap_mesa_result2.stdout"
 
 - name: Update group multimedia codecs
   ansible.builtin.dnf5:
