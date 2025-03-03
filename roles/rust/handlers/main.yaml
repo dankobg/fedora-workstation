@@ -2,6 +2,8 @@
 # handlers file for rust
 
 - name: Update rust toolchain
+  become: true
+  become_user: "{{ username }}"
   ansible.builtin.command:
     cmd: rustup update
   changed_when: "'unchanged' not in rustup_update.stdout"
