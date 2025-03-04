@@ -6,6 +6,12 @@
     name: flatpak
     state: latest
 
+- name: Remove fedora flatpak repo
+  community.general.flatpak_remote:
+    name: fedora
+    state: absent
+    enabled: false
+
 - name: Add Flathub repository
   community.general.flatpak_remote:
     name: flathub
