@@ -1,7 +1,0 @@
----
-# tasks file for solanum
-
-- name: Install Solanum
-  community.general.flatpak:
-    name: org.gnome.Solanum
-    state: "{{ solanum_state }}"

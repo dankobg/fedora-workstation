@@ -235,7 +235,7 @@
         - key: /org/gnome/desktop/notifications/application-children
           value: >
             ['org-gnome-software', 'gnome-power-panel', 'org-gnome-texteditor', 'org-gnome-nautilus', 'org-mozilla-firefox',
-            'org-gnome-terminal', 'org-freedesktop-problems-applet', 'code', 'it-mijorus-smile', 'discord', 'org-gnome-solanum']
+            'org-gnome-terminal', 'org-freedesktop-problems-applet', 'code', 'it-mijorus-smile', 'discord']
 
     - name: Configure vscode
       community.general.dconf:
@@ -308,15 +308,6 @@
       loop:
         - key: /org/gnome/desktop/notifications/application/org-gnome-software/application-id
           value: "'org.gnome.Software.desktop'"
-
-    - name: Configure org-gnome-solanum
-      community.general.dconf:
-        key: "{{ item.key }}"
-        value: "{{ item.value | string if item.filter | default(false) else item.value }}"
-        state: "{{ item.state | default('present') }}"
-      loop:
-        - key: /org/gnome/desktop/notifications/application/org-gnome-solanum/application-id
-          value: "'org.gnome.Solanum.desktop'"
 
     - name: Configure org-gnome-terminal
       community.general.dconf:
@@ -681,7 +672,6 @@
               "com.bitwarden.desktop.desktop",
               "discord.desktop",
               "com.slack.Slack.desktop",
-              "org.gnome.Solanum.desktop",
               "org.gnome.TextEditor.desktop",
               "org.gnome.Software.desktop",
             ]
