@@ -28,8 +28,8 @@
 - name: Install development tools and libraries group packages
   ansible.builtin.dnf5:
     name:
-      - "@Development Tools"
-      - "@C Development Tools and Libraries"
+      - "@development-tools"
+      - "@c-development"
     state: latest
   notify: Remove packages not needed anymore
 
