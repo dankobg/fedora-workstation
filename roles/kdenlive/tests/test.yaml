@@ -1,6 +1,0 @@
----
-- name: Test kdenlive
-  hosts: localhost
-  remote_user: root
-  roles:
-    - kdenlive

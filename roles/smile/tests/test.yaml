@@ -1,6 +1,0 @@
----
-- name: Test smile
-  hosts: localhost
-  remote_user: root
-  roles:
-    - smile

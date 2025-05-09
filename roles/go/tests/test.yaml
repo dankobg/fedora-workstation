@@ -1,6 +1,0 @@
----
-- name: Test go
-  hosts: localhost
-  remote_user: root
-  roles:
-    - go

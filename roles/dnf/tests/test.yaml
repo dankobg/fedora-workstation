@@ -1,6 +1,0 @@
----
-- name: Test dnf
-  hosts: localhost
-  remote_user: root
-  roles:
-    - dnf

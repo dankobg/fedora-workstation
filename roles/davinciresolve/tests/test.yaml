@@ -1,6 +1,0 @@
----
-- name: Test davinciresolve
-  hosts: localhost
-  remote_user: root
-  roles:
-    - davinciresolve

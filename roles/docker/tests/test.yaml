@@ -1,6 +1,0 @@
----
-- name: Test docker
-  hosts: localhost
-  remote_user: root
-  roles:
-    - docker

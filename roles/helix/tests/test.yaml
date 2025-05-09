@@ -1,6 +1,0 @@
----
-- name: Test helix
-  hosts: localhost
-  remote_user: root
-  roles:
-    - helix

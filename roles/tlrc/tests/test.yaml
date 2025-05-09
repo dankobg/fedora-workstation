@@ -1,6 +1,0 @@
----
-- name: Test tlrc
-  hosts: localhost
-  remote_user: root
-  roles:
-    - tlrc

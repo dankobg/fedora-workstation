@@ -1,6 +1,0 @@
----
-- name: Test sd
-  hosts: localhost
-  remote_user: root
-  roles:
-    - sd

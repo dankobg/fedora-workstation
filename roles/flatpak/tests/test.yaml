@@ -1,6 +1,0 @@
----
-- name: Test flatpak
-  hosts: localhost
-  remote_user: root
-  roles:
-    - flatpak

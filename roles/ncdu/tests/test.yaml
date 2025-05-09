@@ -1,6 +1,0 @@
----
-- name: Test ncdu
-  hosts: localhost
-  remote_user: root
-  roles:
-    - ncdu

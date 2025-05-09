@@ -1,6 +1,0 @@
----
-- name: Test k9s
-  hosts: localhost
-  remote_user: root
-  roles:
-    - k9s

@@ -1,6 +1,0 @@
----
-- name: Test btop
-  hosts: localhost
-  remote_user: root
-  roles:
-    - btop

@@ -1,6 +1,0 @@
----
-- name: Test blender
-  hosts: localhost
-  remote_user: root
-  roles:
-    - blender

@@ -1,6 +1,0 @@
----
-- name: Test age
-  hosts: localhost
-  remote_user: root
-  roles:
-    - age

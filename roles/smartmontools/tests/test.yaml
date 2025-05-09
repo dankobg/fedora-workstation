@@ -1,6 +1,0 @@
----
-- name: Test smartmontools
-  hosts: localhost
-  remote_user: root
-  roles:
-    - smartmontools

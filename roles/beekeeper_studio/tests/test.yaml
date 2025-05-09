@@ -1,6 +1,0 @@
----
-- name: Test beekeeper_studio
-  hosts: localhost
-  remote_user: root
-  roles:
-    - beekeeper_studio
