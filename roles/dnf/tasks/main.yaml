@@ -9,13 +9,13 @@
     group: root
     mode: "0644"
 
-# - name: Add RPM Fusion free and nonfree GPG keys
-#   ansible.builtin.rpm_key:
-#     key: "{{ item }}"
-#     state: present
-#   loop:
-#     - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020"
-#     - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
+- name: Add RPM Fusion free and nonfree GPG keys
+  ansible.builtin.rpm_key:
+    key: "{{ item }}"
+    state: present
+  loop:
+    - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020"
+    - "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
 
 - name: Enable RPM Fusion free and nonfree repositories
   ansible.builtin.dnf5:

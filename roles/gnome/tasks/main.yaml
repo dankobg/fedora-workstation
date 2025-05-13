@@ -363,12 +363,11 @@
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/peripherals/keyboard/delay
-          value: "uint32 300"
+          value: "uint32 250"
         - key: /org/gnome/desktop/peripherals/keyboard/numlock-state
           value: false
         - key: /org/gnome/desktop/peripherals/keyboard/repeat-interval
-          value: "uint32 15"
-
+          value: "uint32 12"
     - name: Configure peripherals mouse
       community.general.dconf:
         key: "{{ item.key }}"
@@ -612,7 +611,7 @@
         - key: /org/gnome/settings-daemon/plugins/media-keys/volume-step
           value: 5
         - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding
-          value: "'<Control>e'"
+          value: "'<Super>period'"
         - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command
           value: "'flatpak run it.mijorus.smile'"
         - key: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name
