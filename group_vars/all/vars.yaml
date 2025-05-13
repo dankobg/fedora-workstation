@@ -36,18 +36,20 @@ roles_selected:
   - fonts
   - gnome
   - nautilus
-  - libreoffice
   - age
   - ansible
   - atlas
+  - audacity
   - bat
   - beekeeper_studio
   - bitwarden
   - bleachbit
+  # - blender
   - bruno
   - btop
   - bw
   - czkawka
+  # - davinciresolve
   - dconf_editor
   - delta
   - deno
@@ -66,6 +68,7 @@ roles_selected:
   - gearlever
   - gh
   - ghostty
+  # - gimp
   - git
   - glow
   - go
@@ -75,13 +78,16 @@ roles_selected:
   - helm
   - hostctl
   - hugo
+  # - inkscape
   - jq
   - just
   - k3d
   - k9s
   - kanata
   - kde_connect
+  # - kdenlive
   # - kitty
+  # - krita
   - ksops
   - kubectl
   - kubectx
@@ -89,12 +95,14 @@ roles_selected:
   - kustomize
   - lazydocker
   - lazygit
+  - libreoffice
   - logseq
   - mkcert
   - ncdu
   - network_tools
   - nix
   - node
+  # - obs
   - onefetch
   - pika_backup
   - protoc
@@ -115,6 +123,7 @@ roles_selected:
   - task
   - thunderbird
   - timeshift
+  # - tlp
   - tlrc
   - vlc
   - vscode
@@ -123,14 +132,3 @@ roles_selected:
   - zed
   - zellij
   - zoxide
-
-  # maybe tag these with (audio/video/editting or something, i don't use them right now)
-  # - audacity
-  # - blender
-  # - davinciresolve
-  # - gimp
-  # - inkscape
-  # - kdenlive
-  # - krita
-  # - obs
-  # - tlp
