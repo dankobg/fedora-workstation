@@ -1,5 +1,10 @@
-set -gx LIBVA_DRIVER_NAME "nvidia"
-set -gx __GLX_VENDOR_LIBRARY_NAME "nvidia"
+set -gx EGL_PLATFORM wayland
+set -gx XDG_SESSION_TYPE wayland
+set -gx LIBVA_DRIVER_NAME nvidia
+set -gx __GLX_VENDOR_LIBRARY_NAME nvidia
+set -gx MOZ_ENABLE_WAYLAND 1
+set -gx NVD_BACKEND direct
+set -gx MOZ_DISABLE_RDD_SANDBOX 1
 
 set -gx XDG_CONFIG_HOME "$HOME/.config"
 set -gx XDG_DATA_HOME "$HOME/.local/share"
@@ -11,27 +16,34 @@ set -gx XDG_DATA_DIRS "/usr/local/share:/usr/share"
 set -gx XDG_DESKTOP_DIR "$HOME/Desktop"
 set -gx XDG_DOWNLOAD_DIR "$HOME/Downloads"
 
+set -gx HISTFILE "$XDG_STATE_HOME/bash/history"
+set -gx CUDA_CACHE_PATH "$XDG_CACHE_HOME/nv"
+set -gx DOTNET_CLI_HOME "$XDG_DATA_HOME/dotnet"
 set -gx ZDOTDIR "$XDG_CONFIG_HOME/zsh"
-set -gx EDITOR "/usr/local/bin/hx"
+set -gx EDITOR hx
 set -gx ANSIBLE_HOME "$XDG_DATA_HOME/ansible"
 set -gx GOPATH "/usr/local/lib/go"
 set -gx PYTHON_HISTORY "$XDG_STATE_HOME/python"
 set -gx NPM_CONFIG_PREFIX "/usr/local/lib/npm-global"
+set -gx NPM_CONFIG_INIT_MODULE "$XDG_CONFIG_HOME/npm/config/npm-init.js"
+set -gx NPM_CONFIG_CACHE "$XDG_CACHE_HOME/npm"
+set -gx NPM_CONFIG_TMP "$XDG_RUNTIME_DIR/npm"
+set -gx PNPM_HOME "$HOME/.local/share/pnpm"
 set -gx RUSTUP_HOME "/usr/local/lib/rustup"
 set -gx CARGO_HOME "/usr/local/lib/cargo"
 
-set -gx PATH "/usr/lib64/ccache"
-set -gx PATH $PATH /sbin
-set -gx PATH $PATH /bin
-set -gx PATH $PATH /usr/sbin
-set -gx PATH $PATH /usr/bin
-set -gx PATH $PATH /usr/local/sbin
-set -gx PATH $PATH /usr/local/bin
-set -gx PATH $PATH /usr/games
-set -gx PATH $PATH /usr/local/games
-set -gx PATH $PATH $HOME/bin
-set -gx PATH $PATH $HOME/.local/bin
-set -gx PATH $PATH /usr/local/go/bin
-set -gx PATH $PATH $NPM_CONFIG_PREFIX/bin
-set -gx PATH $PATH $GOPATH/bin
-set -gx PATH $PATH $CARGO_HOME/bin
+set -gx PATH $PATH "/usr/lib64/ccache"
+set -gx PATH $PATH "/sbin"
+set -gx PATH $PATH "/bin"
+set -gx PATH $PATH "/usr/sbin"
+set -gx PATH $PATH "/usr/bin"
+set -gx PATH $PATH "/usr/local/sbin"
+set -gx PATH $PATH "/usr/local/bin"
+set -gx PATH $PATH "/usr/games"
+set -gx PATH $PATH "/usr/local/games"
+set -gx PATH $PATH "$HOME/bin"
+set -gx PATH $PATH "$HOME/.local/bin"
+set -gx PATH $PATH "/usr/local/go/bin"
+set -gx PATH $PATH "$NPM_CONFIG_PREFIX/bin"
+set -gx PATH $PATH "$GOPATH/bin"
+set -gx PATH $PATH "$CARGO_HOME/bin"
