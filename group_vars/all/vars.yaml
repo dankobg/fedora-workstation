@@ -2,7 +2,6 @@
 username: danko
 hostname: fedora
 user_hashed_password: "{{ vault_user_hashed_password }}"
-laptop: false
 dual_boot: true
 sudo_password: "{{ vault_sudo_password }}"
 
@@ -123,7 +122,6 @@ roles_selected:
   - task
   - thunderbird
   - timeshift
-  # - tlp
   - tlrc
   - vlc
   - vscode

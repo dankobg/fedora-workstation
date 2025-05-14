@@ -36,6 +36,25 @@
       loop:
         - key: /ca/desrt/dconf-editor/show-warning
           value: false
+        - key: /ca/desrt/dconf-editor/saved-pathbar-path
+          value: "'/'"
+        - key: /ca/desrt/dconf-editor/saved-view
+          value: "'/'"
+
+    - name: Configure Console
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value | string if item.filter | default(false) else item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/Console/audible-bell
+          value: false
+        - key: /org/gnome/Console/custom-font
+          value: "'JetBrainsMono Nerd Font 11'"
+        - key: /org/gnome/Console/font-scale
+          value: 1.0
+        - key: /org/gnome/Console/use-system-font
+          value: false
 
     - name: Configure TextEditor
       community.general.dconf:
@@ -137,7 +156,7 @@
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/control-center/last-panel
-          value: "'applications'"
+          value: "'network'"
 
     - name: Configure desktop app folders
       community.general.dconf:
@@ -146,12 +165,12 @@
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/app-folders/folder-children
-          value: "['Utilities', '4999c2ff-841b-41a1-8870-3ef9c4058011']"
+          value: "['Utilities', 'LibreOffice']"
           filter: true
-        - key: /org/gnome/desktop/app-folders/folders/4999c2ff-841b-41a1-8870-3ef9c4058011/apps
+        - key: /org/gnome/desktop/app-folders/folders/LibreOffice/apps
           value: "['libreoffice-impress.desktop', 'libreoffice-calc.desktop', 'libreoffice-writer.desktop']"
           filter: true
-        - key: /org/gnome/desktop/app-folders/folders/4999c2ff-841b-41a1-8870-3ef9c4058011/name
+        - key: /org/gnome/desktop/app-folders/folders/LibreOffice/name
           value: "'Office'"
         - key: /org/gnome/desktop/app-folders/folders/Utilities/apps
           value: >
@@ -165,6 +184,53 @@
         - key: /org/gnome/desktop/app-folders/folders/Utilities/name
           value: "'X-GNOME-Utilities.directory'"
         - key: /org/gnome/desktop/app-folders/folders/Utilities/translate
+          value: true
+
+    - name: Configure background
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value | string if item.filter | default(false) else item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/background/color-shading-type
+          value: "'solid'"
+        - key: /org/gnome/desktop/background/picture-options
+          value: "'zoom'"
+        - key: /org/gnome/desktop/background/picture-uri
+          value: "'file:///usr/share/backgrounds/f42/default/f42-01-day.jxl'"
+        - key: /org/gnome/desktop/background/picture-uri-dark
+          value: "'file:///usr/share/backgrounds/f42/default/f42-01-night.jxl'"
+        - key: /org/gnome/desktop/background/primary-color
+          value: "'#51a2da'"
+        - key: /org/gnome/desktop/background/secondary-color
+          value: "'#294172'"
+
+    - name: Configure screensaver
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value | string if item.filter | default(false) else item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/desktop/screensaver/color-shading-type
+          value: "'solid'"
+        - key: /org/gnome/desktop/screensaver/picture-options
+          value: "'zoom'"
+        - key: /org/gnome/desktop/screensaver/picture-uri
+          value: "'file:///usr/share/backgrounds/f42/default/f42-01-day.jxl'"
+        - key: /org/gnome/desktop/screensaver/primary-color
+          value: "'#51a2da'"
+        - key: /org/gnome/desktop/screensaver/secondary-color
+          value: "'#294172'"
+
+    - name: Configure mutter
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value | string if item.filter | default(false) else item.value }}"
+        state: "{{ item.state | default('present') }}"
+      loop:
+        - key: /org/gnome/mutter/edge-tiling
+          value: true
+        - key: /org/gnome/mutter/dynamic-workspaces
           value: true
 
     - name: Configure calendar
@@ -183,7 +249,7 @@
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/datetime/automatic-timezone
-          value: false
+          value: true
 
     - name: Configure input sources
       community.general.dconf:
@@ -209,22 +275,22 @@
         value: "{{ item.value | string if item.filter | default(false) else item.value }}"
         state: "{{ item.state | default('present') }}"
       loop:
+        - key: /org/gnome/desktop/interface/color-scheme
+          value: "'prefer-dark'"
+        - key: /org/gnome/desktop/interface/accent-color
+          value: "'purple'"
         - key: /org/gnome/desktop/interface/clock-format
           value: "'24h'"
         - key: /org/gnome/desktop/interface/clock-show-date
           value: true
-        - key: /org/gnome/desktop/interface/clock-show-seconds
-          value: false
         - key: /org/gnome/desktop/interface/clock-show-weekday
           value: true
-        - key: /org/gnome/desktop/interface/color-scheme
-          value: "'prefer-dark'"
+        - key: /org/gnome/desktop/interface/clock-show-seconds
+          value: false
         - key: /org/gnome/desktop/interface/gtk-enable-primary-paste
           value: false
         - key: /org/gnome/desktop/interface/toolkit-accessibility
           value: false
-        - key: /org/gnome/desktop/interface/accent-color
-          value: "'purple'"
 
     - name: Configure notifications
       community.general.dconf:
@@ -464,8 +530,6 @@
       loop:
         - key: /org/gnome/gnome-system-monitor/current-tab
           value: "'resources'"
-        - key: /org/gnome/gnome-system-monitor/maximized
-          value: true
         - key: /org/gnome/gnome-system-monitor/show-dependencies
           value: false
         - key: /org/gnome/gnome-system-monitor/show-whose-processes
@@ -619,7 +683,7 @@
         - key: /org/gnome/settings-daemon/plugins/power/power-button-action
           value: "'interactive'"
         - key: /org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-timeout
-          value: 1800
+          value: 2700
 
     - name: Configure gnome shell
       community.general.dconf:
@@ -630,54 +694,41 @@
         - key: /org/gnome/shell/app-picker-layout
           value: >
             [{'4999c2ff-841b-41a1-8870-3ef9c4058011': <{'position': <0>}>, 'Utilities': <{'position': <1>}>,
-             'org.gnome.Snapshot.desktop': <{'position': <2>}>, 'org.gnome.Contacts.desktop': <{'position': <3>}>,
-             'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Weather.desktop': <{'position': <5>}>,
-            'org.gnome.clocks.desktop': <{'position': <6>}>, 'org.gnome.Maps.desktop': <{'position': <7>}>,
-            'org.fedoraproject.MediaWriter.desktop': <{'position': <8>}>, 'simple-scan.desktop': <{'position': <9>}>,
-            'org.gnome.Totem.desktop': <{'position': <10>}>, 'org.gnome.Rhythmbox3.desktop': <{'position': <11>}>,
-            'org.gnome.Calculator.desktop': <{'position': <12>}>, 'org.gnome.Settings.desktop': <{'position': <13>}>,
-            'org.gnome.SystemMonitor.desktop': <{'position': <14>}>, 'org.gnome.Boxes.desktop': <{'position': <15>}>,
-            'nvidia-settings.desktop': <{'position': <16>}>, 'org.gnome.Tour.desktop': <{'position': <17>}>,
-            'yelp.desktop': <{'position': <18>}>, 'google-chrome.desktop': <{'position': <19>}>, 'htop.desktop': <{'position': <20>}>,
-            'org.bleachbit.BleachBit.desktop': <{'position': <21>}>, 'btop.desktop': <{'position': <22>}>,
-            'com.github.qarmin.czkawka.desktop': <{'position': <23>}>}, {'ca.desrt.dconf-editor.desktop': <{'position': <0>}>,
-            'com.mattjakeman.ExtensionManager.desktop': <{'position': <1>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <2>}>,
-            'org.codeberg.dnkl.foot.desktop': <{'position': <3>}>, 'org.codeberg.dnkl.footclient.desktop': <{'position': <4>}>,
-            'org.codeberg.dnkl.foot-server.desktop': <{'position': <5>}>, 'it.mijorus.gearlever.desktop': <{'position': <6>}>,
-            'fr.handbrake.ghb.desktop': <{'position': <7>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <8>}>,
-            'org.kde.kdeconnect.nonplasma.desktop': <{'position': <9>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <10>}>,
-            'org.kde.kdeconnect.sms.desktop': <{'position': <11>}>, 'org.gnome.World.PikaBackup.desktop': <{'position': <12>}>,
-            'org.qbittorrent.qBittorrent.desktop': <{'position': <13>}>, 'it.mijorus.smile.desktop': <{'position': <14>}>,
-            'stacer.desktop': <{'position': <15>}>, 'org.mozilla.thunderbird.desktop': <{'position': <16>}>,
-            'timeshift-gtk.desktop': <{'position': <17>}>, 'vlc.desktop': <{'position': <18>}>, 'syncthing-start.desktop': <{'position': <19>}>,
-            'syncthing-ui.desktop': <{'position': <20>}>, 'org.gnome.Terminal.desktop': <{'position': <21>}>}]
+            'org.gnome.Contacts.desktop': <{'position': <2>}>, 'org.gnome.Weather.desktop': <{'position': <3>}>,
+            'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Calculator.desktop': <{'position': <5>}>,
+            'org.gnome.Snapshot.desktop': <{'position': <6>}>, 'org.gnome.clocks.desktop': <{'position': <7>}>,
+            'org.gnome.Maps.desktop': <{'position': <8>}>, 'org.gnome.font-viewer.desktop': <{'position': <9>}>,
+            'org.fedoraproject.MediaWriter.desktop': <{'position': <10>}>, 'vlc.desktop': <{'position': <11>}>,
+            'org.gnome.Totem.desktop': <{'position': <12>}>, 'org.gnome.Decibels.desktop': <{'position': <13>}>,
+            'org.gnome.Rhythmbox3.desktop': <{'position': <14>}>, 'org.gnome.Characters.desktop': <{'position': <15>}>,
+            'it.mijorus.smile.desktop': <{'position': <16>}>, 'nvidia-settings.desktop': <{'position': <17>}>,
+            'org.gnome.SystemMonitor.desktop': <{'position': <18>}>, 'org.gnome.Settings.desktop': <{'position': <19>}>,
+            'org.gnome.Ptyxis.desktop': <{'position': <20>}>, 'google-chrome.desktop': <{'position': <21>}>,
+            'com.mattjakeman.ExtensionManager.desktop': <{'position': <22>}>,
+            'net.thunderbird.Thunderbird.desktop': <{'position': <23>}>}, {'htop.desktop': <{'position': <0>}>,
+            'btop.desktop': <{'position': <1>}>, 'org.bleachbit.BleachBit.desktop': <{'position': <2>}>,
+            'stacer.desktop': <{'position': <3>}>, 'com.github.qarmin.czkawka.desktop': <{'position': <4>}>,
+            'ca.desrt.dconf-editor.desktop': <{'position': <5>}>, 'org.gnome.Boxes.desktop': <{'position': <6>}>,
+            'it.mijorus.gearlever.desktop': <{'position': <7>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <8>}>,
+            'fr.handbrake.ghb.desktop': <{'position': <9>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <10>}>,
+            'org.kde.kdeconnect.nonplasma.desktop': <{'position': <11>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <12>}>,
+            'org.kde.kdeconnect.sms.desktop': <{'position': <13>}>, 'timeshift-gtk.desktop': <{'position': <14>}>,
+            'org.gnome.World.PikaBackup.desktop': <{'position': <15>}>, 'syncthing-start.desktop': <{'position': <16>}>,
+            'syncthing-ui.desktop': <{'position': <17>}>, 'org.qbittorrent.qBittorrent.desktop': <{'position': <18>}>}]
         - key: /org/gnome/shell/disabled-extensions
           value: "'@as []'"
         - key: /org/gnome/shell/enabled-extensions
           value: "['background-logo@fedorahosted.org', 'appindicatorsupport@rgcjonas.gmail.com']"
           filter: true
         - key: /org/gnome/shell/favorite-apps
-          value:
-            [
-              "org.gnome.Nautilus.desktop",
-              "com.mitchellh.ghostty.desktop",
-              "org.mozilla.firefox.desktop",
-              "code.desktop",
-              "dev.zed.Zed.desktop",
-              "io.beekeeperstudio.Studio.desktop",
-              "bruno.desktop",
-              "com.usebruno.Bruno.desktop",
-              "com.logseq.Logseq.desktop",
-              "com.bitwarden.desktop.desktop",
-              "discord.desktop",
-              "com.slack.Slack.desktop",
-              "org.gnome.TextEditor.desktop",
-              "org.gnome.Software.desktop",
-            ]
+          value: >
+            ['com.mitchellh.ghostty.desktop', 'org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'code.desktop', 'dev.zed.Zed.desktop',
+            'org.gnome.TextEditor.desktop', 'com.logseq.Logseq.desktop', 'com.usebruno.Bruno.desktop', 'io.beekeeperstudio.Studio.desktop',
+            'discord.desktop', 'com.slack.Slack.desktop', 'com.bitwarden.desktop.desktop', 'org.gnome.Software.desktop']
         - key: /org/gnome/shell/welcome-dialog-last-shown-version
-          value: "'46.4'"
-    - name: Configure software
+          value: "'48'"
 
+    - name: Configure software
       community.general.dconf:
         key: "{{ item.key }}"
         value: "{{ item.value | string if item.filter | default(false) else item.value }}"
@@ -698,7 +749,7 @@
         - key: /org/gnome/software/update-notification-timestamp
           value: "int64 1728298682"
 
-    - name: Configure legacy
+    - name: Configure terminal legacy
       community.general.dconf:
         key: "{{ item.key }}"
         value: "{{ item.value | string if item.filter | default(false) else item.value }}"
