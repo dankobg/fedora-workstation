@@ -165,19 +165,18 @@
         state: "{{ item.state | default('present') }}"
       loop:
         - key: /org/gnome/desktop/app-folders/folder-children
-          value: "['Utilities', 'LibreOffice']"
+          value: "['Utilities', 'Office']"
           filter: true
-        - key: /org/gnome/desktop/app-folders/folders/LibreOffice/apps
+        - key: /org/gnome/desktop/app-folders/folders/Office/apps
           value: "['libreoffice-impress.desktop', 'libreoffice-calc.desktop', 'libreoffice-writer.desktop']"
           filter: true
-        - key: /org/gnome/desktop/app-folders/folders/LibreOffice/name
-          value: "'Office'"
+        - key: /org/gnome/desktop/app-folders/folders/Office/name
+          value: "'LibreOffice'"
         - key: /org/gnome/desktop/app-folders/folders/Utilities/apps
           value: >
-            ['gnome-abrt.desktop', 'gnome-system-log.desktop', 'nm-connection-editor.desktop', 'org.gnome.baobab.desktop', 'org.gnome.Connections.desktop',
-            'org.gnome.DejaDup.desktop', 'org.gnome.Dictionary.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Evince.desktop',
-            'org.gnome.FileRoller.desktop', 'org.gnome.fonts.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.seahorse.Application.desktop',
-            'org.gnome.tweaks.desktop', 'org.gnome.Usage.desktop', 'vinagre.desktop']
+            ['org.gnome.baobab.desktop', 'org.gnome.Connections.desktop', 'org.gnome.DiskUtility.desktop', 'simple-scan.desktop',
+            'org.gnome.Evince.desktop', 'org.gnome.Loupe.desktop', 'org.freedesktop.MalcontentControl.desktop', 'yelp.desktop',
+            'org.gnome.Tour.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.GnomeAbrt.desktop']
         - key: /org/gnome/desktop/app-folders/folders/Utilities/categories
           value: "['X-GNOME-Utilities']"
           filter: true
@@ -693,28 +692,27 @@
       loop:
         - key: /org/gnome/shell/app-picker-layout
           value: >
-            [{'4999c2ff-841b-41a1-8870-3ef9c4058011': <{'position': <0>}>, 'Utilities': <{'position': <1>}>,
-            'org.gnome.Contacts.desktop': <{'position': <2>}>, 'org.gnome.Weather.desktop': <{'position': <3>}>,
-            'org.gnome.Calendar.desktop': <{'position': <4>}>, 'org.gnome.Calculator.desktop': <{'position': <5>}>,
-            'org.gnome.Snapshot.desktop': <{'position': <6>}>, 'org.gnome.clocks.desktop': <{'position': <7>}>,
-            'org.gnome.Maps.desktop': <{'position': <8>}>, 'org.gnome.font-viewer.desktop': <{'position': <9>}>,
-            'org.fedoraproject.MediaWriter.desktop': <{'position': <10>}>, 'vlc.desktop': <{'position': <11>}>,
-            'org.gnome.Totem.desktop': <{'position': <12>}>, 'org.gnome.Decibels.desktop': <{'position': <13>}>,
-            'org.gnome.Rhythmbox3.desktop': <{'position': <14>}>, 'org.gnome.Characters.desktop': <{'position': <15>}>,
-            'it.mijorus.smile.desktop': <{'position': <16>}>, 'nvidia-settings.desktop': <{'position': <17>}>,
-            'org.gnome.SystemMonitor.desktop': <{'position': <18>}>, 'org.gnome.Settings.desktop': <{'position': <19>}>,
-            'org.gnome.Ptyxis.desktop': <{'position': <20>}>, 'google-chrome.desktop': <{'position': <21>}>,
-            'com.mattjakeman.ExtensionManager.desktop': <{'position': <22>}>,
-            'net.thunderbird.Thunderbird.desktop': <{'position': <23>}>}, {'htop.desktop': <{'position': <0>}>,
-            'btop.desktop': <{'position': <1>}>, 'org.bleachbit.BleachBit.desktop': <{'position': <2>}>,
-            'stacer.desktop': <{'position': <3>}>, 'com.github.qarmin.czkawka.desktop': <{'position': <4>}>,
-            'ca.desrt.dconf-editor.desktop': <{'position': <5>}>, 'org.gnome.Boxes.desktop': <{'position': <6>}>,
-            'it.mijorus.gearlever.desktop': <{'position': <7>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <8>}>,
-            'fr.handbrake.ghb.desktop': <{'position': <9>}>, 'org.kde.kdeconnect.app.desktop': <{'position': <10>}>,
-            'org.kde.kdeconnect.nonplasma.desktop': <{'position': <11>}>, 'org.kde.kdeconnect-settings.desktop': <{'position': <12>}>,
-            'org.kde.kdeconnect.sms.desktop': <{'position': <13>}>, 'timeshift-gtk.desktop': <{'position': <14>}>,
-            'org.gnome.World.PikaBackup.desktop': <{'position': <15>}>, 'syncthing-start.desktop': <{'position': <16>}>,
-            'syncthing-ui.desktop': <{'position': <17>}>, 'org.qbittorrent.qBittorrent.desktop': <{'position': <18>}>}]
+            [{'Utilities': <{'position': <0>}>, 'Office': <{'position': <1>}>, 'org.gnome.Contacts.desktop': <{'position': <2>}>,
+            'org.gnome.Weather.desktop': <{'position': <3>}>, 'org.gnome.Calendar.desktop': <{'position': <4>}>,
+            'org.gnome.Calculator.desktop': <{'position': <5>}>, 'org.gnome.Snapshot.desktop': <{'position': <6>}>,
+            'org.gnome.clocks.desktop': <{'position': <7>}>, 'org.gnome.Maps.desktop': <{'position': <8>}>,
+            'org.gnome.font-viewer.desktop': <{'position': <9>}>, 'org.fedoraproject.MediaWriter.desktop': <{'position': <10>}>,
+            'vlc.desktop': <{'position': <11>}>, 'org.gnome.Totem.desktop': <{'position': <12>}>,
+            'org.gnome.Decibels.desktop': <{'position': <13>}>, 'org.gnome.Rhythmbox3.desktop': <{'position': <14>}>,
+            'fr.handbrake.ghb.desktop': <{'position': <15>}>, 'org.gnome.Characters.desktop': <{'position': <16>}>,
+            'it.mijorus.smile.desktop': <{'position': <17>}>, 'nvidia-settings.desktop': <{'position': <18>}>,
+            'org.gnome.SystemMonitor.desktop': <{'position': <19>}>, 'org.gnome.Settings.desktop': <{'position': <20>}>,
+            'org.gnome.Ptyxis.desktop': <{'position': <21>}>, 'google-chrome.desktop': <{'position': <22>}>,
+            'com.mattjakeman.ExtensionManager.desktop': <{'position': <23>}>}, {'net.thunderbird.Thunderbird.desktop': <{'position': <0>}>,
+            'org.qbittorrent.qBittorrent.desktop': <{'position': <1>}>, 'htop.desktop': <{'position': <2>}>,
+            'btop.desktop': <{'position': <3>}>, 'org.bleachbit.BleachBit.desktop': <{'position': <4>}>,
+            'stacer.desktop': <{'position': <5>}>, 'com.github.qarmin.czkawka.desktop': <{'position': <6>}>,
+            'ca.desrt.dconf-editor.desktop': <{'position': <7>}>, 'org.gnome.Boxes.desktop': <{'position': <8>}>,
+            'it.mijorus.gearlever.desktop': <{'position': <9>}>, 'com.github.tchx84.Flatseal.desktop': <{'position': <10>}>,
+            'org.kde.kdeconnect.app.desktop': <{'position': <11>}>, 'org.kde.kdeconnect.nonplasma.desktop': <{'position': <12>}>,
+            'org.kde.kdeconnect-settings.desktop': <{'position': <13>}>, 'org.kde.kdeconnect.sms.desktop': <{'position': <14>}>,
+            'timeshift-gtk.desktop': <{'position': <15>}>, 'org.gnome.World.PikaBackup.desktop': <{'position': <16>}>,
+            'syncthing-start.desktop': <{'position': <17>}>, 'syncthing-ui.desktop': <{'position': <18>}>}]
         - key: /org/gnome/shell/disabled-extensions
           value: "'@as []'"
         - key: /org/gnome/shell/enabled-extensions
