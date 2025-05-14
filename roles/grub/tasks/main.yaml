@@ -13,9 +13,13 @@
       ansible.builtin.set_fact:
         grub_content: "{{ grub_data.content | b64decode }}"
 
-    - name: Find the default grub entry
+    - name: Find all grub entries
       ansible.builtin.set_fact:
-        grub_default_entry: "{{ grub_content | regex_search(\"menuentry '(.*?)'\", '\\1') | first }}"
+        grub_entries: "{{ grub_content | regex_findall(\"menuentry '(.*?)'\", '\\1') | unique }}"
+
+    - name: Find first grub entry matching grub_default
+      ansible.builtin.set_fact:
+        grub_default_entry: "{{ grub_entries | select('search', grub_default) | list | first | default('saved') }}"
 
 - name: Copy grub configuration file
   ansible.builtin.template:

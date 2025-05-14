@@ -3,6 +3,10 @@ username: danko
 hostname: fedora
 user_hashed_password: "{{ vault_user_hashed_password }}"
 dual_boot: true
+
+grub_default: Windows
+grub_default_fallback: saved
+
 sudo_password: "{{ vault_sudo_password }}"
 
 git_user_name: "{{ vault_git_user_name }}"

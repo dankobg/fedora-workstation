@@ -2,3 +2,5 @@
 # defaults file for grub
 
 grub_dual_boot: "{{ dual_boot | default(false) }}"
+grub_default: Windows
+grub_default_fallback: saved
