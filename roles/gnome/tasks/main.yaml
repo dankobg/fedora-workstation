@@ -203,6 +203,8 @@
           value: "'#51a2da'"
         - key: /org/gnome/desktop/background/secondary-color
           value: "'#294172'"
+        - key: /org/gnome/desktop/wg/preferences/audible-bell
+          value: false
 
     - name: Configure screensaver
       community.general.dconf:
@@ -389,6 +391,8 @@
         value: "{{ item.value | string if item.filter | default(false) else item.value }}"
         state: "{{ item.state | default('present') }}"
       loop:
+        - key: /org/gnome/Ptyxis/audible-bell
+          value: false
         - key: /org/gnome/Ptyxis/profile-uuids
           value: "['7c78a5c5777c575e1ecab7b767891158']"
           filter: true
