@@ -15,12 +15,13 @@
     cmd: "{{ task_binary_name }} --version"
   register: task_installed_version_data
   changed_when: false
-  failed_when: "task_installed_version_data.rc != 0 or (task_installed_version_data.rc == 0 and 'version' not in task_installed_version_data.stdout)"
+  failed_when: >
+    task_installed_version_data.rc != 0 or not (task_installed_version_data.stdout | regex_search('^\d+\.\d+\.\d+$'))
   when: task_installed.rc == 0
 
 - name: Set installed version
   ansible.builtin.set_fact:
-    task_installed_version: "{{ task_installed_version_data.stdout.split()[2] if task_installed.rc == 0 else '' }}"
+    task_installed_version: "{{ task_installed_version_data.stdout if task_installed.rc == 0 else '' }}"
 
 - name: Get the latest release data
   ansible.builtin.uri:
