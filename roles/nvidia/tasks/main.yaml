@@ -1,6 +1,16 @@
 ---
 # tasks file for nvidia
 
+# etc/modprobe.d/blacklist-nouveau.conf
+
+- name: Blacklist nouveau
+  ansible.builtin.copy:
+    src: blacklist-nouveau.conf
+    dest: /etc/modprobe.d/blacklist-nouveau.conf
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
 - name: Install Nvidia GPU drivers
   ansible.builtin.dnf5:
     name:
