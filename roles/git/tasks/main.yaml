@@ -34,6 +34,30 @@
         access_time: preserve
       register: config_file
 
+    - name: Set column ui
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: column.ui
+        scope: file
+        value: auto
+        state: present
+
+    - name: Set branch sort
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: branch.sort
+        scope: file
+        value: -committerdate
+        state: present
+
+    - name: Set tag sort
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: tag.sort
+        scope: file
+        value: version:refname
+        state: present
+
     - name: Set color ui
       community.general.git_config:
         file: "{{ config_file.dest }}"
@@ -56,6 +80,14 @@
         name: color.branch
         scope: file
         value: auto
+        state: present
+
+    - name: Set diff algorithm
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: diff.algorithm
+        scope: file
+        value: histogram
         state: present
 
     - name: Set diff colorMoved
@@ -110,6 +142,30 @@
       community.general.git_config:
         file: "{{ config_file.dest }}"
         name: fetch.prune
+        scope: file
+        value: true
+        state: present
+
+    - name: Set help autocorrect
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: help.autocorrect
+        scope: file
+        value: prompt
+        state: present
+
+    - name: Set rerere
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: rerere.enabled
+        scope: file
+        value: true
+        state: present
+
+    - name: Set rerere autoupdate
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: rerere.autoupdate
         scope: file
         value: true
         state: present
