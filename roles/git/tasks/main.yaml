@@ -130,6 +130,30 @@
         value: main
         state: present
 
+    - name: Set rebase autoSquash
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: rebase.autoSquash
+        scope: file
+        value: true
+        state: present
+
+    - name: Set rebase autoStash
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: rebase.autoStash
+        scope: file
+        value: true
+        state: present
+
+    - name: Set rebase updateRefs
+      community.general.git_config:
+        file: "{{ config_file.dest }}"
+        name: rebase.updateRefs
+        scope: file
+        value: true
+        state: present
+
     - name: Set pull rebase
       community.general.git_config:
         file: "{{ config_file.dest }}"
