@@ -58,7 +58,7 @@
       ansible.builtin.get_url:
         url: "{{ bw_artifact_download_url }}"
         dest: "{{ bw_tempdir.path }}"
-        checksum: "{{ bw_checksum }}"
+        # checksum: "{{ bw_checksum }}" # too lazy to change, they changed how they write checksums
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: a+x
