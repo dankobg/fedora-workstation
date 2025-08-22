@@ -28,7 +28,7 @@ lazygit_force_download: false
 
 lazygit_latest_version_url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
 lazygit_base_download_url: https://github.com/jesseduffield/lazygit/releases/download
-lazygit_artifact_name: "lazygit_{{ lazygit_release_version[1:] }}_{{ ansible_facts.system }}_{{ lazygit_arch }}.tar.gz"
+lazygit_artifact_name: "lazygit_{{ lazygit_release_version[1:] }}_{{ ansible_facts.system | lower }}_{{ lazygit_arch }}.tar.gz"
 lazygit_artifact_download_url: "{{ lazygit_base_download_url }}/{{ lazygit_release_version }}/{{ lazygit_artifact_name }}"
 lazygit_artifact_basename: "{{ lazygit_artifact_name | regex_replace('.tar.gz', '') }}"
 
