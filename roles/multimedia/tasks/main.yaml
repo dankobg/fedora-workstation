@@ -9,13 +9,13 @@
 
 - name: Swap mesa-va-drivers with rpmfusion mesa-va-drivers-freeworld
   ansible.builtin.command:
-    cmd: dnf swap -y --allowerasing mesa-va-drivers mesa-va-drivers-freeworld
+    cmd: dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
   register: swap_mesa_result1
   changed_when: "'Nothing to do' not in swap_mesa_result1.stdout"
 
 - name: Swap mesa-vdpau-drivers with rpmfusion mesa-vdpau-drivers-freeworld
   ansible.builtin.command:
-    cmd: dnf swap -y --allowerasing mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
+    cmd: dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
   register: swap_mesa_result2
   changed_when: "'Nothing to do' not in swap_mesa_result2.stdout"
 
@@ -42,3 +42,10 @@
     state: latest
     enablerepo: fedora-cisco-openh264
     allowerasing: true
+
+- name: Install AppStream metadata
+  ansible.builtin.dnf5:
+    name:
+      - rpmfusion-free-appstream-data
+      - rpmfusion-nonfree-appstream-data
+    state: latest
